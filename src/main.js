@@ -7,15 +7,40 @@ import 'primeicons/primeicons.css';
 import Material from '@primeuix/themes/material';
 import PrimeVue from 'primevue/config';
 import {
-    Button,
+    Avatar,
+    Button, ButtonGroup,
+    Calendar,
     Card,
-    Checkbox, Column,
-    ConfirmationService ,
+    Checkbox,
+    Column,
+    ConfirmationService,
     ConfirmDialog,
-    DataTable, Dialog,
-    DialogService, Drawer, FileUpload, FloatLabel, IconField, InputIcon, InputNumber, InputText, Menu,
-    Rating, Row, Select, SelectButton, Tag, Textarea, Toast,
-    ToastService, Toolbar, Tooltip
+    DataTable,
+    Dialog,
+    DialogService,
+    Divider,
+    Drawer, Dropdown,
+    FileUpload,
+    FloatLabel,
+    IconField,
+    InputIcon,
+    InputMask,
+    InputNumber,
+    InputText,
+    Menu,
+    Menubar, Message,
+    Rating,
+    Row,
+    Select,
+    SelectButton,
+    Sidebar,
+    Steps,
+    Tag,
+    Textarea,
+    Toast,
+    ToastService,
+    Toolbar,
+    Tooltip
 } from "primevue";
 import router from "./router.js";
 import pinia from "./pinia.js";
@@ -50,6 +75,28 @@ createApp(App)
     .component('pv-toolbar',        Toolbar)
     .component('pv-toast',          Toast)
     .directive('tooltip',           Tooltip)
+    .component('PvCard', Card)
+    .component('PvButton', Button)
+    .component('PvSelectButton', SelectButton)
+    .component('PvSidebar', Sidebar)
+    .component('PvAvatar', Avatar)
+    .component('PvMenu', Menu)
+    .component('PvMenubar', Menubar)
+    .component('PvToolbar', Toolbar)
+    .component('PvDataTable', DataTable)
+    .component('PvColumn', Column)
+    .component('PvSteps', Steps)
+    .component('PvInputText', InputText)
+    .component('PvDivider', Divider)
+    .component('PvCalendar', Calendar)
+    .component('PvRating', Rating)
+    .component('PvInputNumber', InputNumber)
+    .component('PvInputMask', InputMask)
+    .component('PvMessage', Message)
+    .component('PvButtonGroup', ButtonGroup)
+    .component('PvIconField', IconField)
+    .component('PvInputIcon', InputIcon)
+    .component('PvTextarea', Textarea)
+    .component('PvDropdown', Dropdown)
     .use(router)
-    .use(pinia)
     .mount('#app')

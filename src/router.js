@@ -1,26 +1,34 @@
-import {createRouter, createWebHistory} from "vue-router";
-import Home from "./shared/presentation/views/home.vue";
-const about = () => import('./shared/presentation/views/about.vue');
-const pageNotFound = () => import('./shared/presentation/views/page-not-found.vue');
+import { createRouter, createWebHistory } from 'vue-router'
+import generalLoginComponent from "./login/general-login-component.vue";
+import profileView from "./shared/views/profile-view.vue";
+import EditProfile from "./shared/views/EditProfile.vue";
+import Support from "./shared/views/Support.vue";
+import registerIncident from "@/shared/views/register-incident.vue";
+import newproject from "./shared/views/newproject.vue";
+import comboDetail from "@/shared/views/ComboDetail.vue";
+import PropertyDetail from "@/shared/views/PropertyDetail.vue";
+import MyProperties from "@/shared/views/MyProperties.vue";
+
 
 const routes = [
-    {path: "/home",             name: 'home',       component: Home,            meta: {title: 'Home'}},
-    {path: "/about",            name: 'about',      component: about,           meta: {title: 'About'}},
-    {path: "/",                 redirect: "/home"},
-    {path: "/:pathMatch(.*)*",  name: 'not-found',  component: pageNotFound,    meta: {title: 'Page Not Found'}}
-];
+    { path: '/', component: generalLoginComponent },
+    { path: '/login-customer', component: generalLoginComponent },
+    {path: '/profile', component: profileView },
+    {path: '/edit-profile', component: EditProfile },
+    {path: '/support',component: Support},
+    {path: '/register-incident', component: registerIncident },
+    {path: '/new-project', component: newproject},
+    {path: '/combo/:id', component: comboDetail,props:true},
+    { path: '/my-properties', component: MyProperties },
+    { path: '/property/:id', component: PropertyDetail, props: true }
+
+
+
+]
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
-    routes: routes
-});
+    history: createWebHistory(),
+    routes
+})
 
-
-router.beforeEach((to, from, next) => {
-    console.log(`Navigating from ${from.name} to ${to.name}`);
-    let baseTitle = 'ACME Learning Center';
-    document.title = to.meta.title ? `${to.meta.title} | ${baseTitle}` : baseTitle;
-    next();
-});
-
-export default router;
+export default router
