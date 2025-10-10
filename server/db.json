@@ -1,0 +1,152 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "fullName": "Mario Vargas",
+      "email": "mario@example.com",
+      "password": "1234",
+      "phone": "999999999",
+      "createdAt": "2025-10-01T06:00:00Z"
+    }
+  ],
+  "iotDevices": [
+    {
+      "id": 1,
+      "projectId": 1,
+      "type": "Temperature Sensor",
+      "status": "active",
+      "installedAt": "2025-10-01T08:00:00Z"
+    }
+  ],
+  "documents": [
+    {
+      "id": 1,
+      "projectId": 1,
+      "type": "Blueprint",
+      "filePath": "/docs/plan1.pdf",
+      "createdAt": "2025-10-01T10:00:00Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": 1,
+      "paymentId": 1,
+      "number": "INV-001",
+      "issueDate": "2025-10-01",
+      "createdAt": "2025-10-01T11:00:00Z"
+    }
+  ],
+  "incidents": [
+    {
+      "id": 1,
+      "projectId": 1,
+      "description": "Water leak in bathroom",
+      "status": "pending",
+      "createdAt": "2025-10-01T09:30:00Z",
+      "updatedAt": null
+    }
+  ],
+  "notifications": [
+    {
+      "id": 1,
+      "userId": 1,
+      "projectId": 1,
+      "message": "New task assigned",
+      "createdAt": "2025-10-01T07:00:00Z"
+    }
+  ],
+  "payments": [
+    {
+      "id": 1,
+      "projectId": 1,
+      "amount": 1500.5,
+      "date": "2025-10-01T12:00:00Z",
+      "status": "paid",
+      "createdAt": "2025-10-01T12:10:00Z"
+    }
+  ],
+  "remodelPlans": [
+    {
+      "id": 1,
+      "propertyId": 1,
+      "planName": "Kitchen Renovation",
+      "scopeSummary": "Furniture replacement and gas installation",
+      "startDate": "2025-10-01T08:00:00Z",
+      "endDate": "2025-11-01T08:00:00Z",
+      "createdAt": "2025-10-01T08:00:00Z"
+    }
+  ],
+  "budgets": [
+    {
+      "id": 1,
+      "projectId": 1,
+      "providerId": 1,
+      "amount": 10000.0,
+      "estimatedDays": 30,
+      "createdAt": "2025-10-01T13:00:00Z"
+    }
+  ],
+  "properties": [
+    {
+      "id": 1,
+      "ownerId": 1,
+      "address": "742 Evergreen Terrace",
+      "ubigeo": "150101",
+      "province": "Lima",
+      "region": "Lima",
+      "areaM2": 120.5,
+      "yearsOld": 10,
+      "status": "occupied",
+      "createdAt": "2025-10-01T10:00:00Z"
+    }
+  ],
+  "owners": [
+    {
+      "id": 1,
+      "ownerTypeId": "T1",
+      "businessName": "Juan Pérez SAC",
+      "documentType": "RUC",
+      "documentNumber": "12345678901",
+      "phone": "987654321",
+      "email": "juanperez@example.com",
+      "address": "123 Fake Street",
+      "createdAt": "2025-10-01T09:00:00Z"
+    }
+  ],
+  "providers": [
+    {
+      "id": 1,
+      "name": "Construcciones S.A.",
+      "contact": "contact@construcciones.com"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "propertyId": 1,
+      "userId": 1,
+      "name": "House Renovation 1",
+      "status": "in_progress",
+      "startDate": "2025-10-01",
+      "endDate": "2025-12-01",
+      "createdAt": "2025-10-01T08:00:00Z"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "projectId": 1,
+      "name": "Install wiring",
+      "description": "Run network cables throughout the house",
+      "status": "pending",
+      "createdAt": "2025-10-01T09:00:00Z"
+    }
+  ],
+  "ownerTypes": [
+    {
+      "id": "T1",
+      "typeName": "Legal Entity",
+      "createdAt": "2025-10-01T07:00:00Z"
+    }
+  ]
+}

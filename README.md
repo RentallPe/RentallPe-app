@@ -30,9 +30,14 @@ npm install
 ```sh
 npm run dev
 ```
+### Local server setup
 
+```sh
+ json-server --watch ./server/db.json --routes ./server/routes.json
+```
 ### Compile and Minify for Production
 
 ```sh
 npm run build
 ```
+
