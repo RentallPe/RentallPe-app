@@ -1,20 +1,52 @@
-// src/Rental/domain/model/property.entity.js
-export class Property {
-    constructor({ id, name, country, department, address, number, image, handoverDate, progress, alerts = [], locks = [] }) {
-        this.id = id || Date.now();
-        this.name = name || "New Property";
-        this.country = country;
-        this.department = department;
-        this.address = address;
-        this.number = number;
-        this.image = image;
-        this.handoverDate = handoverDate ? new Date(handoverDate) : null;
-        this.progress = progress || 0;
-        this.alerts = alerts;
-        this.locks = locks;
-    }
+/*
+*  {
+      "id": 1,
+      "ownerId": 1,
+      "address": "742 Evergreen Terrace",
+      "ubigeo": "150101",
+      "province": "Lima",
+      "region": "Lima",
+      "areaM2": 120.5,
+      "yearsOld": 10,
+      "status": "occupied",
+      "createdAt": "2025-10-01T10:00:00Z"
+    }*/
 
-    isCompleted() {
-        return this.progress === 100;
+import { Owner } from "./owner.entity";
+
+export class Propertie {
+  constructor({
+    id,
+    ownerId,
+    address,
+    ubigeo,
+    province,
+    region,
+    areaM2,
+    yearsOld,
+    status,
+    createdAt,
+  }) {
+    this.id = id;
+    this.ownerId = new Owner();
+    this.address = address;
+    this.ubigeo = ubigeo;
+    this.province = province;
+    this.region = region;
+    this.areaM2 = areaM2;
+    this.yearsOld = yearsOld;
+    this.status = status;
+    this.createdAt = createdAt;
+  }
+
+  setOwner(owner) {
+    if (owner instanceof Owner) {
+      this.owner = owner;
+    } else {
+      throw new Error("Invalid Owner");
     }
+  }
+  getOwner() {
+    return this.owner;
+  }
 }
