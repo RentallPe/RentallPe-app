@@ -7,53 +7,55 @@
     <nav class="sidebar-nav">
       <router-link to="/dashboard" class="nav-item" active-class="active">
         <i class="pi pi-home"></i>
-        <span>Dashboard</span>
+        <span>{{ t('menu.dashboard') }}</span>
       </router-link>
 
       <router-link to="/profile" class="nav-item" active-class="active">
-        <i class="pi pi-sign-in"></i>
-        <span>Profile</span>
+        <i class="pi pi-user"></i>
+        <span>{{ t('menu.profile') }}</span>
       </router-link>
 
       <router-link to="/new-project" class="nav-item" active-class="active">
         <i class="pi pi-plus-circle"></i>
-        <span>New project +</span>
+        <span>{{ t('menu.newProject') }}</span>
       </router-link>
 
       <router-link to="/my-properties" class="nav-item" active-class="active">
         <i class="pi pi-building"></i>
-        <span>My properties</span>
+        <span>{{ t('menu.myProperties') }}</span>
       </router-link>
 
       <router-link to="/support" class="nav-item" active-class="active">
         <i class="pi pi-question-circle"></i>
-        <span>Support</span>
+        <span>{{ t('menu.support') }}</span>
       </router-link>
 
       <router-link to="/alerts" class="nav-item" active-class="active">
         <i class="pi pi-bell"></i>
-        <span>Alerts</span>
+        <span>{{ t('menu.alerts') }}</span>
       </router-link>
 
       <router-link to="/consumption" class="nav-item" active-class="active">
         <i class="pi pi-chart-line"></i>
-        <span>Consumption</span>
+        <span>{{ t('menu.consumption') }}</span>
       </router-link>
 
       <router-link to="/billing" class="nav-item" active-class="active">
         <i class="pi pi-credit-card"></i>
-        <span>Billing</span>
+        <span>{{ t('menu.billing') }}</span>
       </router-link>
     </nav>
 
+    <!-- Footer con selector de idioma -->
     <div class="sidebar-footer">
-      <i class="pi pi-globe"></i>
-      <i class="pi pi-language"></i>
+      <pv-select-button v-model="locale" :options="availableLocales" />
     </div>
   </aside>
 </template>
 
 <script setup>
+import { useI18n } from "vue-i18n";
+const { t, locale, availableLocales } = useI18n();
 
 </script>
 
@@ -116,5 +118,8 @@
   justify-content: space-evenly;
   padding: 1rem 0;
   font-size: 1.2rem;
+}
+.p-togglebutton {
+ background: #a14949;
 }
 </style>

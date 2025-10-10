@@ -4,7 +4,7 @@
       <template #title>
         <div class="flex align-items-center gap-2">
           <i class="pi pi-user-edit text-primary text-2xl"></i>
-          <h2 class="m-0 text-black">Editing my profile</h2>
+          <h2 class="m-0 text-black">{{ t('editProfile.title') }}</h2>
         </div>
       </template>
 
@@ -14,7 +14,7 @@
           <div class="col-12 md:col-4 flex flex-column align-items-center">
             <img :src="editUser.photo" alt="Profile photo" class="avatar-large" />
             <pv-button
-                label="Change profile pic"
+                :label="t('editProfile.changePhoto')"
                 icon="pi pi-image"
                 class="mt-3"
                 severity="info"
@@ -23,25 +23,25 @@
 
           <!-- Información editable -->
           <div class="col-12 md:col-8">
-            <h3 class="text-black mb-3">Information</h3>
+            <h3 class="text-black mb-3">{{ t('editProfile.information') }}</h3>
 
             <div class="info-grid">
               <div class="info-item">
-                <label class="info-label" for="name">Name</label>
+                <label class="info-label" for="name">{{ t('editProfile.name') }}</label>
                 <pv-input-text id="name" v-model="editUser.name" class="info-input" />
               </div>
               <div class="info-item">
-                <label class="info-label" for="country">Country</label>
+                <label class="info-label" for="country">{{ t('editProfile.country') }}</label>
                 <pv-input-text id="country" v-model="editUser.country" class="info-input" />
               </div>
               <div class="info-item">
-                <label class="info-label" for="department">Department</label>
+                <label class="info-label" for="department">{{ t('editProfile.department') }}</label>
                 <pv-input-text id="department" v-model="editUser.department" class="info-input" />
               </div>
 
               <!-- Métodos de pago -->
               <div class="info-item">
-                <label class="info-label">Payment Methods</label>
+                <label class="info-label">{{ t('editProfile.paymentMethods') }}</label>
                 <div
                     v-for="method in editUser.paymentMethods"
                     :key="method.id"
@@ -63,9 +63,9 @@
 
             <!-- Botones -->
             <div class="flex gap-2 mt-4">
-              <pv-button label="Save" severity="success" @click="saveUser" />
+              <pv-button :label="t('editProfile.save')" severity="success" @click="saveUser" />
               <router-link to="/profile">
-                <pv-button label="Cancel" severity="danger" />
+                <pv-button :label="t('editProfile.cancel')" severity="danger" />
               </router-link>
             </div>
           </div>
@@ -77,7 +77,9 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const user = ref({});
 const editUser = ref({});
 
@@ -107,7 +109,6 @@ function deletePayment(id) {
   editUser.value.paymentMethods = editUser.value.paymentMethods.filter(m => m.id !== id);
 }
 </script>
-
 <style scoped>
 .edit-profile-wrapper {
   padding: 2rem;
