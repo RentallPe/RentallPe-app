@@ -37,8 +37,8 @@ const endpointKeys = [
  * @property {(name: string) => CrudGroup} getEndpoint
  */
 
-/** @type {LearningPlatformApi} */
-export class LearningPlatformApi extends BaseApi {
+/** @type {RentalApi } */
+export class RentalApi extends BaseApi {
     #endpoints = {};
 
     constructor() {
