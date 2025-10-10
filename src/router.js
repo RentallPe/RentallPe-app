@@ -8,11 +8,7 @@ import newproject from "./shared/views/newproject.vue";
 import comboDetail from "@/shared/views/ComboDetail.vue";
 import PropertyDetail from "@/shared/views/PropertyDetail.vue";
 import MyProperties from "@/shared/views/MyProperties.vue";
-import AddProperty from "@/shared/views/AddProperty.vue";
-import Billing from "@/shared/views/Billing.vue";
-import Alerts from "@/shared/views/alerts.vue";
-import Dashboard from "@/shared/views/Dashboard.vue";
-import pageNotFound from "@/shared/views/page-not-found.vue";
+
 
 const routes = [
     { path: '/', component: generalLoginComponent },
@@ -24,12 +20,7 @@ const routes = [
     {path: '/new-project', component: newproject},
     {path: '/combo/:id', component: comboDetail,props:true},
     { path: '/my-properties', component: MyProperties },
-    { path: '/property/:id', component: PropertyDetail, props: true },
-    {path: '/add-property', component: AddProperty },
-    {path: '/billing/', component: Billing},
-    {path: '/alerts' , component: Alerts},
-    {path:'/dashboard', component: Dashboard},
-    {path: '/:pathMatch(.*)*', name:'NorFound', component: pageNotFound},
+    { path: '/property/:id', component: PropertyDetail, props: true }
 
 
 

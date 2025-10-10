@@ -1,141 +1,64 @@
 {
-  "menu": {
-    "dashboard": "Dashboard",
-    "profile": "Profile",
-    "newProject": "New project +",
-    "myProperties": "My properties",
-    "support": "Support",
-    "alerts": "Alerts",
-    "consumption": "Consumption",
-    "billing": "Billing"
+  "option": {
+    "home": "Home",
+    "about": "About",
+    "categories": "Categories",
+    "tutorials": "Tutorials"
   },
-  "addProperty": {
-    "title": "Add a property",
-    "uploadPhoto": "Upload photo",
-    "propertyDirection": "Property Direction",
-    "country": "Country",
-    "department": "Department",
-    "address": "Address",
-    "number": "Property Number",
-    "done": "Done"
+  "authoring-phrase": {
+    "intro": "Made with",
+    "use": "using",
+    "author": "by {brand} Development Team"
   },
-  "alerts": {
-    "title": "Alerts",
-    "latest": "Latest alerts",
-    "lock": "Lock"
+  "about": {
+    "title": "About Us",
+    "content": "ACME Learning Center is an Education Business Platform, part of ACME Corporation."
   },
-  "billing": {
-    "title": "My pending payments",
-    "address": "Address",
-    "installment": "Installment",
-    "amount": "Amount",
-    "dueDate": "Due date"
+  "home": {
+    "title": "Welcome",
+    "content": "Welcome to ACME Learning Center, your gateway to quality education."
   },
-  "comboDetail": {
-    "description": "Description",
-    "installationTime": "Installation time",
-    "days": "days",
-    "sendTo": "Send to",
-    "selectAddress": "Select address",
-    "price": "Price",
-    "buy": "Buy",
-    "dialogTitle": "Select the address",
-    "alertSelectAddress": "Please select an address first.",
-    "alertPurchased": "Combo purchased and assigned to property!"
+  "page-not-found": {
+    "title": "Page Not Found",
+    "content": "The path {unavailable-route} does not exist.",
+    "go-home": "Go Home"
   },
-  "dashboard": {
-    "welcome": "Welcome back!",
-    "myProperties": "My Properties",
-    "viewAll": "View all",
-    "latestAlerts": "Latest Alerts",
-    "seeAlerts": "See alerts",
-    "pendingPayments": "Pending Payments",
-    "goToBilling": "Go to billing",
-    "incidents": "Incidents",
-    "manageIncidents": "Manage incidents",
-    "amount": "Amount",
-    "due": "Due",
-    "status": "Status"
-  },
-  "editProfile": {
-    "title": "Editing my profile",
-    "changePhoto": "Change profile pic",
-    "information": "Information",
+  "categories": {
+    "title": "Categories",
+    "id": "ID",
     "name": "Name",
-    "country": "Country",
-    "department": "Department",
-    "paymentMethods": "Payment Methods",
+    "actions": "Actions",
+    "new": "New Category",
+    "confirm-delete": "Are you sure you want to delete {name}?",
+    "delete-header": "Confirm Deletion"
+  },
+  "category": {
+    "new-title": "Create New Category",
+    "edit-title": "Edit Category",
+    "name": "Name",
     "save": "Save",
     "cancel": "Cancel"
   },
-  "properties": {
-    "title": "My Properties",
-    "handoverDate": "Handover date",
-    "notDefined": "Not defined",
-    "completed": "completed",
-    "addProperty": "Add property"
+  "tutorials": {
+    "title": "Tutorials",
+    "id": "ID",
+    "summary": "Summary",
+    "category-id": "Category ID",
+    "actions": "Actions",
+    "new": "New Tutorial",
+    "confirm-delete": "Are you sure you want to delete {name}?",
+    "delete-header": "Confirm Deletion"
   },
-  "newProject": {
-    "title": "New Project",
-    "ourCombos": "Our combos",
-    "comboDetail": "Combo detail",
-    "installationTime": "Installation time",
-    "days": "days",
-    "sendTo": "Send to",
-    "selectAddress": "Select address",
-    "buy": "Buy",
-    "buyWithPrice": "Buy - $${price}",
-    "alertSelectAddress": "Please select an address first.",
-    "alertPurchased": "Combo purchased and assigned to property!"
+  "tutorial": {
+    "new-title": "Create New Tutorial",
+    "edit-title": "Edit Tutorial",
+    "title": "Title",
+    "summary": "Summary",
+    "category": "Category",
+    "save": "Save",
+    "cancel": "Cancel"
   },
-  "profile": {
-    "title": "My Profile",
-    "information": "Information",
-    "name": "Name",
-    "country": "Country",
-    "department": "Department",
-    "paymentMethods": "Payment Methods",
-    "addAnotherPayment": "Add another payment method",
-    "myProperties": "My Properties",
-    "addPaymentOption": "Add Payment Option",
-    "type": "Type",
-    "number": "Number",
-    "expiry": "Expiration Date",
-    "cvv": "Security Code",
-    "cancel": "Cancel",
-    "accept": "Accept"
-  },
-  "propertyDetail": {
-    "address": "Address",
-    "handoverDate": "Handover date",
-    "notDefined": "Not defined",
-    "progress": "Progress"
-  },
-  "incident": {
-    "title": "Register incident",
-    "back": "Back",
-    "subtitle": "Tell us your problem",
-    "placeholder": "Describe the issue you're experiencing...",
-    "send": "Send",
-    "alertEmpty": "Please describe the incident before submitting.",
-    "statusPending": "Pending"
-  },
-  "support": {
-    "title": "Support",
-    "phoneContacts": "Our phone contacts",
-    "department": "Department",
-    "number": "Number",
-    "incidents": "Incidents",
-    "incNumber": "INC number",
-    "status": "Status",
-    "registerIncident": "Register incident",
-    "incidentDetail": "Incident detail",
-    "date": "Date",
-    "description": "Description"
+  "errors": {
+    "occurred": "Errors occurred"
   }
-
-
-
-
-
 }

@@ -20,12 +20,9 @@
 
           <!-- Columna 2: Info -->
           <div class="col-12 md:col-6">
-            <p><strong>{{ t('propertyDetail.address') }}:</strong> {{ property?.address }}</p>
-            <p>
-              <strong>{{ t('propertyDetail.handoverDate') }}:</strong>
-              {{ property?.handoverDate || t('propertyDetail.notDefined') }}
-            </p>
-            <p><strong>{{ t('propertyDetail.progress') }}:</strong> {{ property?.progress }}%</p>
+            <p><strong>Address:</strong> {{ property?.address }}</p>
+            <p><strong>Handover date:</strong> {{ property?.handoverDate || 'Not defined' }}</p>
+            <p><strong>Progress:</strong> {{ property?.progress }}%</p>
 
             <div class="progress-bar">
               <div class="progress-fill" :style="{ width: property?.progress + '%' }"></div>
@@ -40,9 +37,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { useI18n } from "vue-i18n";
 
-const { t } = useI18n();
 const route = useRoute();
 const property = ref(null);
 

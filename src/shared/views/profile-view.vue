@@ -5,10 +5,15 @@
       <template #title>
         <div class="flex align-items-center gap-2">
           <i class="pi pi-user text-primary text-2xl"></i>
-          <h2 class="m-0 text-black">{{ t('profile.title') }}</h2>
+          <h2 class="m-0 text-black">My Profile</h2>
+          <!-- Botón que lleva a la página de edición -->
           <router-link to="/edit-profile">
-            <pv-button icon="pi pi-pencil" size="small" />
+            <pv-button
+                icon="pi pi-pencil"
+                size="small"
+            />
           </router-link>
+
         </div>
       </template>
 
@@ -26,23 +31,23 @@
 
           <!-- Información -->
           <div class="col-12 md:col-8">
-            <h3 class="text-black mb-3">{{ t('profile.information') }}</h3>
+            <h3 class="text-black mb-3">Information</h3>
 
             <div class="info-grid">
               <div class="info-item">
-                <span class="info-label">{{ t('profile.name') }}</span>
+                <span class="info-label">Name</span>
                 <span class="info-value">{{ user.name }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">{{ t('profile.country') }}</span>
+                <span class="info-label">Country</span>
                 <span class="info-value">{{ user.country }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">{{ t('profile.department') }}</span>
+                <span class="info-label">Department</span>
                 <span class="info-value">{{ user.department }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">{{ t('profile.paymentMethods') }}</span>
+                <span class="info-label">Payment Methods</span>
                 <div
                     v-for="method in user.paymentMethods"
                     :key="method.id"
@@ -53,7 +58,7 @@
                   </span>
                 </div>
                 <a href="#" class="add-payment" @click.prevent="showDialog = true">
-                  + {{ t('profile.addAnotherPayment') }}
+                  + Add another payment method
                 </a>
               </div>
             </div>
@@ -62,7 +67,7 @@
 
         <!-- Propiedades -->
         <div class="mt-5">
-          <h3 class="text-black mb-3">{{ t('profile.myProperties') }}</h3>
+          <h3 class="text-black mb-3">My Properties</h3>
 
           <div class="grid">
             <div
@@ -71,9 +76,10 @@
                 class="col-12 md:col-6 lg:col-4"
             >
               <pv-card class="property-card">
+
                 <template #header>
                   <router-link :to="`/property/${property.id}`">
-                    <img :src="property.image" alt="Property image" class="property-image" />
+                  <img :src="property.image" alt="Property image" class="property-image" />
                   </router-link>
                 </template>
                 <template #content>
@@ -88,21 +94,21 @@
     </pv-card>
 
     <!-- Diálogo para añadir método de pago -->
-    <pv-dialog v-model:visible="showDialog" modal :header="t('profile.addPaymentOption')" :style="{ width: '400px' }">
+    <pv-dialog v-model:visible="showDialog" modal header="Add Payment Option" :style="{ width: '400px' }">
       <div class="p-fluid">
         <div class="field">
-          <label for="cardType">{{ t('profile.type') }}</label>
+          <label for="cardType">Type</label>
           <pv-dropdown
               id="cardType"
               v-model="newPayment.type"
               :options="cardTypes"
               optionLabel="label"
               optionValue="value"
-              :placeholder="t('profile.type')"
+              placeholder="Select card type"
           />
         </div>
         <div class="field">
-          <label for="cardNumber">{{ t('profile.number') }}</label>
+          <label for="cardNumber">Number</label>
           <pv-input-mask
               id="cardNumber"
               v-model="newPayment.number"
@@ -111,7 +117,7 @@
           />
         </div>
         <div class="field">
-          <label for="expiry">{{ t('profile.expiry') }}</label>
+          <label for="expiry">Expiration Date</label>
           <pv-input-mask
               id="expiry"
               v-model="newPayment.expiry"
@@ -120,7 +126,7 @@
           />
         </div>
         <div class="field">
-          <label for="cvv">{{ t('profile.cvv') }}</label>
+          <label for="cvv">Security Code</label>
           <pv-input-mask
               id="cvv"
               v-model="newPayment.cvv"
@@ -131,18 +137,16 @@
       </div>
 
       <template #footer>
-        <pv-button :label="t('profile.cancel')" severity="danger" @click="showDialog = false" />
-        <pv-button :label="t('profile.accept')" severity="success" @click="savePayment" />
+        <pv-button label="Cancel" severity="danger" @click="showDialog = false" />
+        <pv-button label="Accept" severity="success" @click="savePayment" />
       </template>
     </pv-dialog>
+
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
-
-const { t } = useI18n();
 
 const user = ref({});
 const showDialog = ref(false);
@@ -153,11 +157,11 @@ const newPayment = ref({
   expiry: "",
   cvv: ""
 });
-
 const cardTypes = [
   { label: "Visa", value: "Visa" },
-  { label: "MasterCard", value: "MasterCard" }
+  { label: "MasterCard", value: "MasterCard" },
 ];
+
 
 onMounted(async () => {
   const res = await fetch("http://localhost:3000/user");
@@ -171,6 +175,7 @@ async function savePayment() {
     ...newPayment.value
   };
 
+  // PATCH al backend (json-server)
   await fetch("http://localhost:3000/user", {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
@@ -179,12 +184,15 @@ async function savePayment() {
     })
   });
 
+  // Actualizar en memoria
   user.value.paymentMethods.push(newMethod);
 
+  // Resetear y cerrar
   showDialog.value = false;
   newPayment.value = { type: "", number: "", expiry: "", cvv: "" };
 }
 </script>
+
 <style scoped>
 .profile-wrapper {
   padding: 2rem;
@@ -245,17 +253,5 @@ async function savePayment() {
   margin-top: 0.3rem;
   text-decoration: none;
   cursor: pointer;
-}
-.p-card {
-  background: #ffffff;
-}
-p{
-  color: #111111;
-}
-.m-0{
-  color: #303030;
-}
-.text-600 {
-  color: #000000 !important;
 }
 </style>

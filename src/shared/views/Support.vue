@@ -4,23 +4,25 @@
       <template #title>
         <div class="flex align-items-center gap-2">
           <i class="pi pi-phone text-primary text-2xl"></i>
-          <h2 class="m-0 text-black">{{ t('support.title') }}</h2>
+          <h2 class="m-0 text-black">Support</h2>
         </div>
       </template>
 
       <template #content>
         <!-- Teléfonos -->
-        <h3 class="text-black mb-3">{{ t('support.phoneContacts') }}</h3>
+        <h3 class="text-black mb-3">Our phone contacts</h3>
         <pv-data-table :value="contacts" class="minimal-table">
-          <pv-column field="department" :header="t('support.department')"></pv-column>
-          <pv-column field="number" :header="t('support.number')"></pv-column>
+          <pv-column field="department" header="Department"></pv-column>
+          <pv-column field="number" header="Number"></pv-column>
         </pv-data-table>
 
+
+
         <!-- Incidentes -->
-        <h3 class="text-black mb-3">{{ t('support.incidents') }}</h3>
+        <h3 class="text-black mb-3">Incidents</h3>
         <pv-data-table :value="user.incidents" class="minimal-table mt-4">
-          <pv-column field="incNumber" :header="t('support.incNumber')"></pv-column>
-          <pv-column field="status" :header="t('support.status')">
+          <pv-column field="incNumber" header="INC number"></pv-column>
+          <pv-column field="status" header="Status">
             <template #body="slotProps">
               <span class="status pending">{{ slotProps.data.status }}</span>
             </template>
@@ -32,21 +34,23 @@
           </pv-column>
         </pv-data-table>
 
+
+
         <!-- Botón registrar -->
         <div class="flex justify-content-end mt-4">
           <router-link to="/register-incident">
-            <pv-button :label="t('support.registerIncident')" icon="pi pi-exclamation-triangle" severity="danger" />
+            <pv-button label="Register incident" icon="pi pi-exclamation-triangle" severity="danger" />
           </router-link>
         </div>
       </template>
     </pv-card>
 
     <!-- Dialogo de detalle -->
-    <pv-dialog v-model:visible="dialogVisible" :header="t('support.incidentDetail')" modal :style="{ width: '40vw' }">
-      <p><strong>{{ t('support.incNumber') }}:</strong> {{ selectedIncident?.incNumber }}</p>
-      <p><strong>{{ t('support.status') }}:</strong> {{ selectedIncident?.status }}</p>
-      <p><strong>{{ t('support.date') }}:</strong> {{ formatDate(selectedIncident?.date) }}</p>
-      <p><strong>{{ t('support.description') }}:</strong></p>
+    <pv-dialog v-model:visible="dialogVisible" header="Incident detail" modal :style="{ width: '40vw' }">
+      <p><strong>INC:</strong> {{ selectedIncident?.incNumber }}</p>
+      <p><strong>Status:</strong> {{ selectedIncident?.status }}</p>
+      <p><strong>Date:</strong> {{ formatDate(selectedIncident?.date) }}</p>
+      <p><strong>Description:</strong></p>
       <p>{{ selectedIncident?.description }}</p>
     </pv-dialog>
   </div>
@@ -54,9 +58,6 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useI18n } from "vue-i18n";
-
-const { t } = useI18n();
 
 const contacts = ref([
   { department: "Lima", number: "265-1998" },
