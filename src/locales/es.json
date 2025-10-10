@@ -1,141 +1,64 @@
 {
-  "menu": {
-    "dashboard": "Panel",
-    "profile": "Perfil",
-    "newProject": "Nuevo proyecto +",
-    "myProperties": "Mis propiedades",
-    "support": "Soporte",
-    "alerts": "Alertas",
-    "consumption": "Consumo",
-    "billing": "Facturación"
+  "option": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "categories": "Categorías",
+    "tutorials": "Tutoriales"
   },
-  "addProperty": {
-    "title": "Añadir una propiedad",
-    "uploadPhoto": "Subir foto",
-    "propertyDirection": "Dirección de la propiedad",
-    "country": "País",
-    "department": "Departamento",
-    "address": "Dirección",
-    "number": "Número de propiedad",
-    "done": "Hecho"
+  "authoring-phrase": {
+    "intro": "Hecho con",
+    "use": "utilizando",
+    "author": "por el Equipo de Desarrollo de {brand}"
   },
-  "alerts": {
-    "title": "Alertas",
-    "latest": "Últimas alertas",
-    "lock": "Cerradura"
+  "about": {
+    "title": "Acerca de Nosotros",
+    "content": "ACME Learning Center es una plataforma educativa empresarial, parte de ACME Corporation."
   },
-  "billing": {
-    "title": "Mis pagos pendientes",
-    "address": "Dirección",
-    "installment": "Cuota",
-    "amount": "Monto",
-    "dueDate": "Vencimiento"
+  "home": {
+    "title": "Bienvenido",
+    "content": "Bienvenido a ACME Learning Center, tu punto de entrada para la educación de calidad."
   },
-  "comboDetail": {
-    "description": "Descripción",
-    "installationTime": "Tiempo de instalación",
-    "days": "días",
-    "sendTo": "Enviar a",
-    "selectAddress": "Seleccionar dirección",
-    "price": "Precio",
-    "buy": "Comprar",
-    "dialogTitle": "Seleccionar la dirección",
-    "alertSelectAddress": "Por favor selecciona una dirección primero.",
-    "alertPurchased": "¡Combo comprado y asignado a la propiedad!"
+  "page-not-found": {
+    "title": "Página No Encontrada",
+    "content": "La ruta {unavailable-route} no existe.",
+    "go-home": "Ir al Inicio"
   },
-  "dashboard": {
-    "welcome": "¡Bienvenido de nuevo!",
-    "myProperties": "Mis propiedades",
-    "viewAll": "Ver todas",
-    "latestAlerts": "Últimas alertas",
-    "seeAlerts": "Ver alertas",
-    "pendingPayments": "Pagos pendientes",
-    "goToBilling": "Ir a facturación",
-    "incidents": "Incidentes",
-    "manageIncidents": "Gestionar incidentes",
-    "amount": "Monto",
-    "due": "Vencimiento",
-    "status": "Estado"
-  },
-  "editProfile": {
-    "title": "Editar mi perfil",
-    "changePhoto": "Cambiar foto de perfil",
-    "information": "Información",
+  "categories": {
+    "title": "Categorías",
+    "id": "ID",
     "name": "Nombre",
-    "country": "País",
-    "department": "Departamento",
-    "paymentMethods": "Métodos de pago",
+    "actions": "Acciones",
+    "new": "Nueva Categoría",
+    "confirm-delete": "¿Estás seguro de que deseas eliminar {name}?",
+    "delete-header": "Confirmar Eliminación"
+  },
+  "category": {
+    "new-title": "Crear Nueva Categoría",
+    "edit-title": "Editar Categoría",
+    "name": "Nombre",
     "save": "Guardar",
     "cancel": "Cancelar"
   },
-  "properties": {
-    "title": "Mis propiedades",
-    "handoverDate": "Fecha de entrega",
-    "notDefined": "No definida",
-    "completed": "completado",
-    "addProperty": "Añadir propiedad"
+  "tutorials": {
+    "title": "Tutoriales",
+    "id": "ID",
+    "summary": "Resumen",
+    "category-id": "ID de Categoría",
+    "actions": "Acciones",
+    "new": "Nuevo Tutorial",
+    "confirm-delete": "¿Estás seguro de que deseas eliminar {name}?",
+    "delete-header": "Confirmar Eliminación"
   },
-  "newProject": {
-    "title": "Nuevo proyecto",
-    "ourCombos": "Nuestros combos",
-    "comboDetail": "Detalle del combo",
-    "installationTime": "Tiempo de instalación",
-    "days": "días",
-    "sendTo": "Enviar a",
-    "selectAddress": "Seleccionar dirección",
-    "buy": "Comprar",
-    "buyWithPrice": "Comprar - ${price}",
-    "alertSelectAddress": "Por favor selecciona una dirección primero.",
-    "alertPurchased": "¡Combo comprado y asignado a la propiedad!"
+  "tutorial": {
+    "new-title": "Crear Nuevo Tutorial",
+    "edit-title": "Editar Tutorial",
+    "title": "Título",
+    "summary": "Resumen",
+    "category": "Categoría",
+    "save": "Guardar",
+    "cancel": "Cancelar"
   },
-  "profile": {
-    "title": "Mi perfil",
-    "information": "Información",
-    "name": "Nombre",
-    "country": "País",
-    "department": "Departamento",
-    "paymentMethods": "Métodos de pago",
-    "addAnotherPayment": "Añadir otro método de pago",
-    "myProperties": "Mis propiedades",
-    "addPaymentOption": "Añadir método de pago",
-    "type": "Tipo",
-    "number": "Número",
-    "expiry": "Fecha de expiración",
-    "cvv": "Código de seguridad",
-    "cancel": "Cancelar",
-    "accept": "Aceptar"
-  },
-  "propertyDetail": {
-    "address": "Dirección",
-    "handoverDate": "Fecha de entrega",
-    "notDefined": "No definida",
-    "progress": "Progreso"
-  },
-  "incident": {
-    "title": "Registrar incidente",
-    "back": "Regresar",
-    "subtitle": "Cuéntanos tu problema",
-    "placeholder": "Describe el problema que estás experimentando...",
-    "send": "Enviar",
-    "alertEmpty": "Por favor describe el incidente antes de enviarlo.",
-    "statusPending": "Pendiente"
-  },
-  "support": {
-    "title": "Soporte",
-    "phoneContacts": "Nuestros teléfonos de contacto",
-    "department": "Departamento",
-    "number": "Número",
-    "incidents": "Incidentes",
-    "incNumber": "Número INC",
-    "status": "Estado",
-    "registerIncident": "Registrar incidente",
-    "incidentDetail": "Detalle del incidente",
-    "date": "Fecha",
-    "description": "Descripción"
+  "errors": {
+    "occurred": "Ocurrieron errores"
   }
-
-
-
-
-
 }

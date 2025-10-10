@@ -19,34 +19,25 @@
         "id": 1,
         "name": "Urban Cottage",
         "address": "Fifth Avenue 14032, Surco, Lima",
-        "image": "https://picsum.photos/300/200?random=1",
-        "alerts": [
-          {
-            "id": 1,
-            "time": "2025-10-09T16:00:00Z",
-            "message": "Remodeling team left"
-          },
-          {
-            "id": 2,
-            "time": "2025-10-09T08:00:00Z",
-            "message": "Remodeling team arrived"
-          }
-        ],
-        "locks": [
-          {
-            "id": 1,
-            "time": "2025-10-09T17:10:00Z",
-            "action": "Lock opened"
-          },
+        "image": "https://picsum.photos/300/200?random=1"
+      },
+      {
+        "id": 2,
+        "name": "Hillside Home",
+        "address": "Palm Avenue 14032, Miraflores, Lima",
+        "image": "https://picsum.photos/300/200?random=2",
+        "combos": [
           {
             "id": 2,
-            "time": "2025-10-09T15:50:00Z",
-            "action": "Lock opened"
+            "name": "8 cameras",
+            "image": "https://picsum.photos/300/200?random=11",
+            "description": "Paquete de 8 cámaras de seguridad con DVR avanzado.",
+            "installDays": 5,
+            "price": 2000
           }
         ]
       }
-    ]
-  ,
+    ],
     "paymentMethods": [
       {
         "id": 1,
