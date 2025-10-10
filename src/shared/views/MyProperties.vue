@@ -3,9 +3,10 @@
     <pv-card class="new-project-card">
       <template #title>
         <div>
-        <h2 class="page-title">My Properties</h2>
+          <h2 class="page-title">{{ t('properties.title') }}</h2>
         </div>
       </template>
+
       <template #content>
         <div class="grid property-grid">
           <div
@@ -20,28 +21,34 @@
                 </router-link>
                 <h3 class="property-title">{{ property.name }}</h3>
                 <p class="property-address">{{ property.address }}</p>
-                <p><strong>Handover date:</strong> {{ property.handoverDate || 'Not defined' }}</p>
+                <p>
+                  <strong>{{ t('properties.handoverDate') }}:</strong>
+                  {{ property.handoverDate || t('properties.notDefined') }}
+                </p>
                 <div class="progress-bar">
                   <div class="progress-fill" :style="{ width: property.progress + '%' }"></div>
                 </div>
-                <p>{{ property.progress }}% completed</p>
+                <p>{{ property.progress }}% {{ t('properties.completed') }}</p>
               </template>
             </pv-card>
           </div>
         </div>
 
         <div class="flex justify-content-end mt-4">
-          <pv-button label="Add property" icon="pi pi-plus" severity="primary" />
+          <router-link to="/add-property">
+            <pv-button :label="t('properties.addProperty')" icon="pi pi-plus" severity="primary" />
+          </router-link>
         </div>
       </template>
-
     </pv-card>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const user = ref({ properties: [] });
 
 onMounted(async () => {
@@ -58,6 +65,7 @@ onMounted(async () => {
   background-color: #f9fafb;
   min-height: 100vh;
 }
+
 .page-title {
   font-size: 1.8rem;
   margin-bottom: 1.5rem;

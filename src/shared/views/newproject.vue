@@ -1,17 +1,17 @@
 <template>
   <div class="new-project-wrapper">
     <pv-card class="new-project-card">
-      <!-- Título del card -->
+      <!-- Título -->
       <template #title>
         <div class="flex align-items-center gap-2">
           <i class="pi pi-user text-primary text-2xl"></i>
-          <h2 class="m-0 text-black">New Project</h2>
+          <h2 class="m-0 text-black">{{ t('newProject.title') }}</h2>
         </div>
       </template>
 
-      <!-- Contenido del card -->
+      <!-- Contenido -->
       <template #content>
-        <h3 class="m-0 subtitle">Our combos</h3>
+        <h3 class="m-0 subtitle">{{ t('newProject.ourCombos') }}</h3>
 
         <div class="grid">
           <div v-for="combo in combos" :key="combo.id" class="col-12 md:col-4">
@@ -22,21 +22,23 @@
           </div>
         </div>
       </template>
-
     </pv-card>
 
     <!-- Dialog detalle -->
-    <pv-dialog v-model:visible="dialogVisible" header="Combo detail" modal :style="{ width: '40vw' }">
+    <pv-dialog v-model:visible="dialogVisible" :header="t('newProject.comboDetail')" modal :style="{ width: '40vw' }">
       <template v-if="selectedCombo">
         <img :src="selectedCombo.image" alt="" class="combo-img mb-3" />
         <h3>{{ selectedCombo.name }}</h3>
         <p>{{ selectedCombo.description }}</p>
-        <p><strong>Installation time:</strong> {{ selectedCombo.installDays }} days</p>
+        <p>
+          <strong>{{ t('newProject.installationTime') }}:</strong>
+          {{ selectedCombo.installDays }} {{ t('newProject.days') }}
+        </p>
 
         <div class="flex align-items-center gap-2 mt-3">
-          <span><strong>Send to:</strong></span>
+          <span><strong>{{ t('newProject.sendTo') }}:</strong></span>
           <pv-button
-              :label="selectedAddress?.address || 'Select address'"
+              :label="selectedAddress?.address || t('newProject.selectAddress')"
               icon="pi pi-map-marker"
               @click="addressDialog = true"
           />
@@ -44,7 +46,7 @@
 
         <div class="flex justify-content-end mt-4">
           <pv-button
-              :label="`Buy - $${selectedCombo.price}`"
+              :label="t('newProject.buyWithPrice', { price: selectedCombo.price })"
               severity="danger"
               icon="pi pi-shopping-cart"
               @click="buyCombo"
@@ -54,10 +56,14 @@
     </pv-dialog>
 
     <!-- Dialog selección de dirección -->
-    <pv-dialog v-model:visible="addressDialog" header="Select address" modal :style="{ width: '30vw' }">
+    <pv-dialog v-model:visible="addressDialog" :header="t('newProject.selectAddress')" modal :style="{ width: '30vw' }">
       <ul>
-        <li v-for="property in user.properties" :key="property.id" class="cursor-pointer mb-2"
-            @click="selectAddress(property)">
+        <li
+            v-for="property in user.properties"
+            :key="property.id"
+            class="cursor-pointer mb-2"
+            @click="selectAddress(property)"
+        >
           {{ property.name }} - {{ property.address }}
         </li>
       </ul>
@@ -67,6 +73,9 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const combos = ref([]);
 const user = ref({ properties: [] });
@@ -97,11 +106,10 @@ function selectAddress(property) {
 
 async function buyCombo() {
   if (!selectedAddress.value) {
-    alert("Please select an address first.");
+    alert(t('newProject.alertSelectAddress'));
     return;
   }
 
-  // Agregar combo a la propiedad seleccionada
   const updatedProperties = user.value.properties.map(p => {
     if (p.id === selectedAddress.value.id) {
       return {
@@ -118,11 +126,10 @@ async function buyCombo() {
     body: JSON.stringify({ properties: updatedProperties })
   });
 
-  alert("Combo purchased and assigned to property!");
+  alert(t('newProject.alertPurchased'));
   dialogVisible.value = false;
 }
 </script>
-
 <style scoped>
 .new-project-wrapper {
   padding: 2rem;

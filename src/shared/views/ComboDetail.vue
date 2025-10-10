@@ -3,45 +3,36 @@
     <pv-card class="combo-detail-card">
       <template #title>
         <div class="flex align-items-center justify-content-between">
-          <!-- Título -->
           <h2 class="m-0 text-black">{{ combo?.name }}</h2>
-
           <router-link to="/new-project">
-            <pv-button
-                icon="pi pi-arrow-left"
-                severity="secondary"
-                class="square-btn"
-            />
+            <pv-button icon="pi pi-arrow-left" severity="secondary" class="square-btn" />
           </router-link>
         </div>
       </template>
 
-
       <template #content>
         <div class="grid">
-
+          <!-- Imagen -->
           <div class="col-12 md:col-4 flex justify-content-center">
             <img :src="combo?.image" alt="" class="combo-img" />
           </div>
 
-
+          <!-- Descripción -->
           <div class="col-12 md:col-4">
-            <h3>Description</h3>
-
+            <h3>{{ t('comboDetail.description') }}</h3>
             <p>{{ combo?.description }}</p>
-            <p><strong>Installation time:</strong> {{ combo?.installDays }} days</p>
-
+            <p>
+              <strong>{{ t('comboDetail.installationTime') }}:</strong>
+              {{ combo?.installDays }} {{ t('comboDetail.days') }}
+            </p>
           </div>
 
-
-
-
+          <!-- Envío y compra -->
           <div class="col-12 md:col-4 flex flex-column justify-content-between">
-
             <div>
-              <h3>Send to</h3>
+              <h3>{{ t('comboDetail.sendTo') }}</h3>
               <pv-button
-                  :label="selectedAddress?.address || 'Select address'"
+                  :label="selectedAddress?.address || t('comboDetail.selectAddress')"
                   icon="pi pi-map-marker"
                   class="mb-3"
                   @click="addressDialog = true"
@@ -49,10 +40,10 @@
             </div>
             <div class="address-divider"></div>
             <div class="mt-auto">
-              <h3>Price</h3>
+              <h3>{{ t('comboDetail.price') }}</h3>
               <p class="price-text">$ {{ combo?.price }}</p>
               <pv-button
-                  label="Buy"
+                  :label="t('comboDetail.buy')"
                   severity="danger"
                   icon="pi pi-shopping-cart"
                   class="w-full"
@@ -65,11 +56,9 @@
     </pv-card>
 
     <!-- Dialog selección de dirección -->
-    <pv-dialog v-model:visible="addressDialog" header="Select the direction" modal :style="{ width: '30vw' }">
+    <pv-dialog v-model:visible="addressDialog" :header="t('comboDetail.dialogTitle')" modal :style="{ width: '30vw' }">
       <div class="address-dropdown">
-
         <div class="address-divider"></div>
-
         <ul class="address-list">
           <li
               v-for="property in user.properties"
@@ -82,14 +71,15 @@
         </ul>
       </div>
     </pv-dialog>
-
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const route = useRoute();
 const combo = ref(null);
 const user = ref({ properties: [] });
@@ -112,7 +102,7 @@ function selectAddress(property) {
 
 async function buyCombo() {
   if (!selectedAddress.value) {
-    alert("Please select an address first.");
+    alert(t('comboDetail.alertSelectAddress'));
     return;
   }
 
@@ -132,7 +122,7 @@ async function buyCombo() {
     body: JSON.stringify({ properties: updatedProperties })
   });
 
-  alert("Combo purchased and assigned to property!");
+  alert(t('comboDetail.alertPurchased'));
 }
 </script>
 
@@ -204,10 +194,10 @@ async function buyCombo() {
   font-weight: 600;
 }
 .address-divider-vertical {
-  width: 3px;                  /* grosor de la línea */
-  height: 100%;                /* ocupa todo el alto del contenedor */
-  background-color: #b22222;   /* rojo ladrillo */
-  margin: 0 1rem;              /* espacio a los lados */
+  width: 3px;
+  height: 100%;
+  background-color: #b22222;
+  margin: 0 1rem;
   border-radius: 2px;
 }
 </style>
