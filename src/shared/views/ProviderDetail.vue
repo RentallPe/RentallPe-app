@@ -34,7 +34,7 @@
       </template>
     </pv-card>
 
-    <!-- Dialog detalle combo -->
+    <!-- Dialog detalle combo d-->
     <pv-dialog v-model:visible="dialogVisible" header="Combo detail" modal :style="{ width: '40vw' }">
       <template v-if="selectedCombo">
         <img :src="selectedCombo.image" alt="" class="combo-img mb-3" />

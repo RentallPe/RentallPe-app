@@ -11,7 +11,7 @@
 
       <p class="text-muted mt-3">
         <a @click="$router.push('/register')" class="link">Registrarse</a> |
-        <a href="#" class="link">¿olvidó su contraseña?</a>
+        <a href="#" class="link">¿olvido su contraseña?</a>
       </p>
     </div>
   </div>
