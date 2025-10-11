@@ -14,7 +14,7 @@
 
 import { Owner } from "./owner.entity";
 
-export class Propertie {
+export class Property {
   constructor({
     id,
     ownerId,
