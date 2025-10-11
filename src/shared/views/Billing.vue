@@ -32,32 +32,53 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
+import { useRentalStore } from "@/Rental/application/rental-store";
 
 const { t } = useI18n();
-const pendingPayments = ref([]);
+const rental = useRentalStore();
 
 onMounted(async () => {
-  const res = await fetch("http://localhost:3000/user");
-  const user = await res.json();
+  
+  await Promise.all([
+    rental.fetchAll("payments"),
+    rental.fetchAll("projects"),
+    rental.fetchAll("properties"),
+  ]);
+});
 
-  pendingPayments.value = user.payments || [
-    {
-      propertyName: "Urban Cottage",
-      address: "Fifth Avenue 1412, Sienna, Lima",
-      installment: 1,
-      amount: 1200,
-      maturityDate: "12/11/2023"
-    },
-    {
-      propertyName: "Hillside Home",
-      address: "Palm Avenue 1412, Miraflores, Lima",
-      installment: 1,
-      amount: 3000,
-      maturityDate: "20/10/2023"
-    }
-  ];
+const payments  = rental.list("payments");
+const projects  = rental.list("projects");
+const properties = rental.list("properties");
+
+function formatDate(s) {
+  if (!s) return "—";
+  const d = new Date(s);
+  return d.toLocaleString("es-PE", { day: "2-digit", month: "2-digit", year: "numeric" });
+}
+
+
+const pendingPayments = computed(() => {
+  const ps = payments.value || [];
+  const pr = projects.value || [];
+  const pp = properties.value || [];
+
+  const mapped = ps
+    .filter(p => (p.status || "").toLowerCase() !== "paid") 
+    .map(p => {
+      const proj = pr.find(x => String(x.id) === String(p.projectId)) || {};
+      const prop = pp.find(x => String(x.id) === String(proj.propertyId)) || {};
+      return {
+        propertyName: prop.name || (prop.id ? `Property ${prop.id}` : "Property"),
+        address: prop.address || "",
+        installment: p.installment ?? 1,
+        amount: p.amount,
+        maturityDate: formatDate(p.date || p.maturityDate),
+      };
+    });
+
+  return mapped;
 });
 </script>
 

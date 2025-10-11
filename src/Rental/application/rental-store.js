@@ -17,6 +17,7 @@ import { OwnerTypeAssembler } from '@/Rental/infrastructure/ownerType.assembler.
 import { PaymentAssembler } from '@/Rental/infrastructure/payment.assembler.js';
 import { RemodelPlanAssembler } from '@/Rental/infrastructure/remodelPlan.assembler.js';
 import { BudgetAssembler } from '@/Rental/infrastructure/budget.assembler.js';
+import { ComboAssembler } from '@/Rental/infrastructure/combo.assembler.js';
 
 const api = new RentalApi();
 
@@ -35,7 +36,8 @@ const assemblers = {
     payments: PaymentAssembler,
     owner_types: OwnerTypeAssembler,
     remodel_plans: RemodelPlanAssembler,
-    budgets: BudgetAssembler
+    budgets: BudgetAssembler,
+    combos: ComboAssembler
 };
 
 export const useRentalStore = defineStore('rental', () => {

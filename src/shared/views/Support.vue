@@ -1,5 +1,5 @@
 <template>
-  <div class="support-wrapper">
+  <div class="support-wrap">
     <pv-card class="support-card">
       <template #title>
         <div class="flex align-items-center gap-2">
@@ -9,30 +9,31 @@
       </template>
 
       <template #content>
-        <!-- Teléfonos -->
         <h3 class="text-black mb-3">Our phone contacts</h3>
-        <pv-data-table :value="contacts" class="minimal-table">
-          <pv-column field="department" header="Department"></pv-column>
-          <pv-column field="number" header="Number"></pv-column>
-        </pv-data-table>
+        <div class="table-wrap">
+          <pv-data-table :value="contacts" class="minimal-table">
+            <pv-column field="department" header="Department" />
+            <pv-column field="number" header="Number" />
+          </pv-data-table>
+        </div>
 
-        <!-- Incidentes -->
-        <h3 class="text-black mb-3">Incidents</h3>
-        <pv-data-table :value="incidents" class="minimal-table mt-4">
-          <pv-column field="id" header="INC number"></pv-column>
-          <pv-column field="status" header="Status">
-            <template #body="slotProps">
-              <span class="status pending">{{ slotProps.data.status }}</span>
-            </template>
-          </pv-column>
-          <pv-column header="">
-            <template #body="slotProps">
-              <i class="pi pi-angle-right cursor-pointer" @click="showIncident(slotProps.data)"></i>
-            </template>
-          </pv-column>
-        </pv-data-table>
+        <h3 class="text-black mb-3 mt-4">Incidents</h3>
+        <div class="table-wrap">
+          <pv-data-table :value="incidents" class="minimal-table">
+            <pv-column field="id" header="INC number" />
+            <pv-column header="Status">
+              <template #body="{ data }">
+                <span class="status pending">{{ data.status }}</span>
+              </template>
+            </pv-column>
+            <pv-column header="">
+              <template #body="{ data }">
+                <i class="pi pi-angle-right cursor-pointer" @click="openIncident(data)" />
+              </template>
+            </pv-column>
+          </pv-data-table>
+        </div>
 
-        <!-- Botón registrar -->
         <div class="flex justify-content-end mt-4">
           <router-link to="/register-incident">
             <pv-button label="Register incident" icon="pi pi-exclamation-triangle" severity="danger" />
@@ -41,113 +42,136 @@
       </template>
     </pv-card>
 
-    <!-- Dialogo de detalle -->
-    <pv-dialog v-model:visible="dialogVisible" header="Incident detail" modal :style="{ width: '40vw' }">
-      <p><strong>INC:</strong> {{ selectedIncident?.id }}</p>
-      <p><strong>Status:</strong> {{ selectedIncident?.status }}</p>
-      <p><strong>Date:</strong> {{ formatDate(selectedIncident?.createdAt) }}</p>
+    <pv-dialog
+      v-model:visible="dialogVisible"
+      header="Incident detail"
+      modal
+      :style="{ width: 'min(90vw, 560px)' }"
+    >
+      <p><strong>INC:</strong> {{ selected?.id ?? '—' }}</p>
+      <p><strong>Status:</strong> {{ selected?.status ?? '—' }}</p>
+      <p><strong>Date:</strong> {{ formatDate(selected?.createdAt) }}</p>
       <p><strong>Description:</strong></p>
-      <p>{{ selectedIncident?.description }}</p>
+      <p>{{ selected?.description ?? '—' }}</p>
     </pv-dialog>
   </div>
 </template>
 
+
 <script setup>
-import { ref, onMounted } from "vue";
-import axios from "axios";
-import { IncidentAssembler } from "@/Rental/infrastructure/incident.assembler.js";
+import { ref, onMounted, computed } from 'vue';
+import { useRentalStore } from '@/Rental/application/rental-store';
 
-const contacts = ref([
-  { department: "Lima", number: "265-1998" },
-  { department: "Lima", number: "471-5978" },
-  { department: "Ica", number: "265-1658" }
-]);
+const contacts = [
+  { department: 'Lima', number: '265-1998' },
+  { department: 'Lima', number: '471-5978' },
+  { department: 'Ica',  number: '265-1658' }
+];
 
-const incidents = ref([]);
+const store = useRentalStore();
+onMounted(() => store.fetchAll('incidents'));
+
+const incidents = computed(() => store.list('incidents').value ?? []);
+
 const dialogVisible = ref(false);
-const selectedIncident = ref(null);
+const selected = ref(null);
 
-onMounted(async () => {
-  const res = await axios.get("http://localhost:3000/incidents");
-  incidents.value = IncidentAssembler.toEntitiesFromResponse(res);
-});
-
-function formatDate(date) {
-  if (!date) return "—";
-  return new Date(date).toLocaleString("es-PE", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
-  });
+function openIncident(inc) {
+  selected.value = inc;
+  dialogVisible.value = true;
 }
 
-function showIncident(incident) {
-  selectedIncident.value = incident;
-  dialogVisible.value = true;
+function formatDate(s) {
+  if (!s) return '—';
+  const d = new Date(s);
+  return isNaN(+d)
+    ? String(s)
+    : d.toLocaleString('es-PE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
 }
 </script>
 
 <style scoped>
-.support-wrapper {
-  padding: 2rem;
-  display: flex;
-  justify-content: center;
-  background-color: #eeeeee;
-  min-height: 100vh;
-}
 
-.support-card {
-  width: 100%;
-  max-width: 900px;
-  background: #fff;
-  border-radius: 16px;
-}
-
-.text-black {
-  color: #000;
-}
-
-.status.pending {
-  color: #f76c6c;
-  font-weight: 600;
-}
-/* Color corporativo */
-:root {
-  --brick-red: #f76c6c;
-}
-
-.minimal-table :deep(.p-datatable-thead > tr > th) {
-  background: #f76c6c;
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  padding: 0.75rem 1rem;
+.support-wrap{
+  --sbw:260px;       
+  box-sizing:border-box;
+  margin-left:0;
+  width:100%;
+  padding:1rem;
+  min-height:100dvh;
+  background:#f9fafb;
+  overflow-x:hidden; 
 }
 
 
-.minimal-table :deep(.p-datatable-tbody > tr > td) {
-  background: #fff;
-  color: #000;
-  border: none;
-  padding: 0.7rem 1rem;
+@media (min-width: 993px){
+  .support-wrap{
+    margin-left:var(--sbw);
+    width:calc(100% - var(--sbw));
+    padding:2rem;
+  }
+}
+
+.support-card{
+  width:min(100%, 1100px);
+  margin:0 auto;
+  background:#fff;
+  border-radius:16px;
+  overflow:hidden; 
+}
+
+.text-black{ color:#000; }
+
+.table-wrap{
+  width:100%;
+  overflow-x:auto;           
+  -webkit-overflow-scrolling: touch;
 }
 
 
-.minimal-table :deep(.p-datatable-tbody > tr:hover > td) {
-  background: #fafafa;
+.minimal-table :deep(.p-datatable){ width:100%; }
+.minimal-table :deep(.p-datatable-wrapper){ overflow:visible; }
+.minimal-table :deep(table){
+  width:100%;
+  min-width:560px;          
+  table-layout:fixed;       
+  border-collapse:separate;
+  border-spacing:0;
+}
+.minimal-table :deep(th),
+.minimal-table :deep(td){
+  word-break:break-word;
+}
+
+/* Estilo */
+.minimal-table :deep(.p-datatable-thead > tr > th){
+  background:#f76c6c;
+  color:#fff;
+  font-weight:600;
+  border:none;
+  padding:.75rem 1rem;
+  white-space:nowrap;
+}
+.minimal-table :deep(.p-datatable-tbody > tr > td){
+  background:#fff;
+  color:#000;
+  border:none;
+  padding:.7rem 1rem;
+}
+.minimal-table :deep(.p-datatable-tbody > tr + tr > td){
+  border-top:1px solid #e5e7eb;
+}
+.minimal-table :deep(.p-datatable-tbody > tr:hover > td){
+  background:#fafafa;
 }
 
 
-.minimal-table :deep(.p-datatable-tbody > tr + tr > td) {
-  border-top: 1px solid #cfcfcf;
-}
+.status.pending{ color:#f76c6c; font-weight:600; }
 
-/* Estado pendiente en rojo ladrillo (consistente con tu diseño) */
-.status.pending {
-  color: #f76c6c;
-  font-weight: 600;
-}
 
+@media (max-width: 480px){
+  .minimal-table :deep(th){ font-size:.9rem; }
+  .minimal-table :deep(td){ font-size:.95rem; }
+}
 </style>
+
