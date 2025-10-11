@@ -10,13 +10,13 @@
     "billing": "Facturación"
   },
   "addProperty": {
-    "title": "Añadir una propiedad",
-    "uploadPhoto": "Subir foto",
-    "propertyDirection": "Dirección de la propiedad",
-    "country": "País",
-    "department": "Departamento",
+    "title": "Agregar Propiedad",
+    "uploadPhoto": "Subir Foto",
+    "propertyDirection": "Información de la Propiedad",
+    "region": "Región",
+    "province": "Provincia",
     "address": "Dirección",
-    "number": "Número de propiedad",
+    "ubigeo": "Ubigeo",
     "done": "Hecho"
   },
   "alerts": {

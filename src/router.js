@@ -12,7 +12,9 @@ import AddProperty from "@/shared/views/AddProperty.vue";
 import Billing from "@/shared/views/Billing.vue";
 import Alerts from "@/shared/views/alerts.vue";
 import Dashboard from "@/shared/views/Dashboard.vue";
+import Register from "@/shared/views/register.vue";
 import pageNotFound from "@/shared/views/page-not-found.vue";
+import ProviderDetail from "@/shared/views/ProviderDetail.vue";
 
 const routes = [
     { path: '/', component: generalLoginComponent },
@@ -30,6 +32,11 @@ const routes = [
     {path: '/alerts' , component: Alerts},
     {path:'/dashboard', component: Dashboard},
     {path: '/:pathMatch(.*)*', name:'NorFound', component: pageNotFound},
+    {path: '/register', component: Register},
+    {path: "/provider/:id",name: "ProviderDetail",component: ProviderDetail,props: true},
+
+
+
 
 
 

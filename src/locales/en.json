@@ -10,15 +10,15 @@
     "billing": "Billing"
   },
   "addProperty": {
-    "title": "Add a property",
-    "uploadPhoto": "Upload photo",
-    "propertyDirection": "Property Direction",
-    "country": "Country",
-    "department": "Department",
-    "address": "Address",
-    "number": "Property Number",
-    "done": "Done"
-  },
+  "title": "Add Property",
+  "uploadPhoto": "Upload Photo",
+  "propertyDirection": "Property Information",
+  "region": "Region",
+  "province": "Province",
+  "address": "Address",
+  "ubigeo": "Ubigeo",
+  "done": "Done"
+},
   "alerts": {
     "title": "Alerts",
     "latest": "Latest alerts",

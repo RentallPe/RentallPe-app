@@ -1,18 +1,21 @@
 <template>
-  <div class="new-project-wrapper">
-    <pv-card class="new-project-card">
+  <div class="provider-detail-wrapper">
+    <pv-card class="provider-detail-card">
       <!-- Título -->
       <template #title>
-        <div class="flex align-items-center gap-2">
-          <i class="pi pi-home text-primary text-2xl"></i>
-          <h2 class="m-0 text-black">New Project</h2>
+        <div class="flex align-items-center justify-content-between">
+          <h2 class="m-0 text-black">{{ provider?.name }}</h2>
+          <router-link to="/new-project">
+            <pv-button icon="pi pi-arrow-left" severity="secondary" class="square-btn" />
+          </router-link>
         </div>
       </template>
 
       <!-- Contenido -->
       <template #content>
-        <!-- Combos -->
-        <h3 class="m-0 subtitle">Our combos</h3>
+        <p><strong>Contact:</strong> {{ provider?.contact }}</p>
+
+        <h3 class="mt-4">Combos offered</h3>
         <div class="grid">
           <div
               v-for="combo in combos"
@@ -22,24 +25,10 @@
           >
             <div class="combo-card cursor-pointer">
               <img :src="combo.image" alt="" class="combo-img" />
-              <h3 class="combo-title">{{ combo.name }}</h3>
-              <p class="text-sm">Provider: {{ getProviderName(combo.providerId) }}</p>
+              <h4>{{ combo.name }}</h4>
+              <p class="text-sm">{{ combo.description }}</p>
+              <p class="text-sm"><strong>Price:</strong> ${{ combo.price }}</p>
             </div>
-          </div>
-        </div>
-
-        <!-- Providers -->
-        <h3 class="m-0 subtitle mt-5">Providers</h3>
-        <div class="grid small-providers">
-          <div v-for="provider in providers" :key="provider.id" class="col-12 md:col-3">
-            <router-link :to="`/provider/${provider.id}`" class="no-underline">
-              <pv-card class="provider-card">
-                <template #title>{{ provider.name }}</template>
-                <template #content>
-                  <p class="text-sm">{{ provider.contact }}</p>
-                </template>
-              </pv-card>
-            </router-link>
           </div>
         </div>
       </template>
@@ -52,7 +41,7 @@
         <h3>{{ selectedCombo.name }}</h3>
         <p>{{ selectedCombo.description }}</p>
         <p><strong>Installation time:</strong> {{ selectedCombo.installDays }} days</p>
-        <p><strong>Provider:</strong> {{ getProviderName(selectedCombo.providerId) }}</p>
+        <p><strong>Provider:</strong> {{ provider?.name }}</p>
 
         <div class="flex align-items-center gap-2 mt-3">
           <span><strong>Send to:</strong></span>
@@ -92,10 +81,14 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import axios from "axios";
 
+const route = useRoute();
+const router = useRouter();
+
+const provider = ref(null);
 const combos = ref([]);
-const providers = ref([]);
 const properties = ref([]);
 
 const dialogVisible = ref(false);
@@ -105,12 +98,15 @@ const selectedCombo = ref(null);
 const selectedAddress = ref(null);
 
 onMounted(async () => {
-  const resCombos = await axios.get("http://localhost:3000/combos");
+  // Cargar proveedor
+  const resProvider = await axios.get(`http://localhost:3000/providers/${route.params.id}`);
+  provider.value = resProvider.data;
+
+  // Cargar combos de este proveedor
+  const resCombos = await axios.get(`http://localhost:3000/combos?providerId=${route.params.id}`);
   combos.value = resCombos.data;
 
-  const resProviders = await axios.get("http://localhost:3000/providers");
-  providers.value = resProviders.data;
-
+  // Cargar propiedades del usuario
   const resProperties = await axios.get("http://localhost:3000/properties");
   properties.value = resProperties.data;
 });
@@ -141,31 +137,21 @@ async function buyCombo() {
   alert("Combo purchased and assigned to property!");
   dialogVisible.value = false;
 }
-
-function getProviderName(providerId) {
-  const provider = providers.value.find(p => p.id === providerId);
-  return provider ? provider.name : "Unknown";
-}
 </script>
 
 <style scoped>
-.new-project-wrapper {
+.provider-detail-wrapper {
   padding: 2rem;
   display: flex;
   justify-content: center;
   background-color: #f9fafb;
   min-height: 100vh;
 }
-.new-project-card {
+.provider-detail-card {
   width: 100%;
   max-width: 1000px;
   background: #fff;
   border-radius: 16px;
-}
-.subtitle {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-  color: #555;
 }
 .combo-card {
   transition: transform 0.2s;
@@ -183,16 +169,10 @@ function getProviderName(providerId) {
   width: 100%;
   border-radius: 8px;
 }
-.combo-title {
-  margin-top: 0.5rem;
-  font-weight: 600;
-  color: #111111;
-}
-.small-providers .provider-card {
-  font-size: 0.85rem;
-  padding: 0.5rem;
-}
-.text-black {
-  color: #000;
+.square-btn {
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border-radius: 8px;
 }
 </style>
