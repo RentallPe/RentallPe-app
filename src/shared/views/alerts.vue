@@ -47,42 +47,41 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import axios from "axios";
+import { onMounted, computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
-import { PropertyAssembler } from "@/Rental/infrastructure/property.assembler.js";
+import { useRentalStore } from "@/Rental/application/rental-store";
 
 const { t } = useI18n();
+const rental = useRentalStore();
 
-const properties = ref([]);
 const loading = ref(true);
 const error = ref("");
 
+
 onMounted(async () => {
   try {
-    const res = await axios.get("http://localhost:3000/properties");
-    let list = PropertyAssembler.toEntitiesFromResponse(res);
-
-    // Log para verificar contenido
-    console.log("Properties raw:", res.data);
-    console.log("Properties entities:", list);
-
-    // Filtrar por usuario (si aplica)
-    list = list.filter(p => p.ownerId === 1);
-
-    // Garantizar arrays
-    properties.value = list.map(p => ({
-      ...p,
-      alerts: Array.isArray(p.alerts) ? p.alerts : [],
-      locks: Array.isArray(p.locks) ? p.locks : []
-    }));
+    await rental.fetchAll("properties");     
   } catch (e) {
-    console.error("Error cargando propiedades:", e);
+    console.error(e);
     error.value = e?.message || "No se pudieron cargar las propiedades";
   } finally {
     loading.value = false;
   }
 });
+
+
+const list = rental.list("properties");
+
+
+const properties = computed(() =>
+  (list.value || [])
+    .filter(p => p.ownerId === 1)
+    .map(p => ({
+      ...p,
+      alerts: Array.isArray(p.alerts) ? p.alerts : [],
+      locks: Array.isArray(p.locks) ? p.locks : [],
+    }))
+);
 
 function formatDate(dateStr) {
   if (!dateStr) return "—";
@@ -92,7 +91,7 @@ function formatDate(dateStr) {
     month: "2-digit",
     year: "numeric",
     hour: "2-digit",
-    minute: "2-digit"
+    minute: "2-digit",
   });
 }
 </script>

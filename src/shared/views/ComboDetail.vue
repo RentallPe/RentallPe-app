@@ -87,23 +87,46 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
+import { useRentalStore } from "@/Rental/application/rental-store";
 
 const route = useRoute();
+const rental = useRentalStore();
+
+const providers = rental.list("providers");
+const properties = rental.list("properties");
+
 const combo = ref(null);
-const user = ref({ properties: [] });
 const selectedAddress = ref(null);
 const addressDialog = ref(false);
 
 onMounted(async () => {
-  const resCombo = await fetch(`http://localhost:3000/combos/${route.params.id}`);
-  combo.value = await resCombo.json();
+  await Promise.all([
+    rental.fetchAll("providers"),
+    rental.fetchAll("properties"),
+  ]);
 
-  const resUser = await fetch("http://localhost:3000/user");
-  user.value = await resUser.json();
-  selectedAddress.value = user.value.properties[0];
+  const id = String(route.params.id || "");
+  combo.value = buildComboFromId(id, providers.value || []);
+  selectedAddress.value = (properties.value || [])[0] || null;
 });
+
+function buildComboFromId(id, provs) {
+  
+  const m = id.match(/^c-(.+?)-basic$/);
+  const providerId = m ? m[1] : id;
+  const p = (provs || []).find(x => String(x.id) === String(providerId)) || {};
+  return {
+    id: `c-${providerId}-basic`,
+    name: `Basic combo by ${p.name || "Provider"}`,
+    description: "Basic sensors + installation.",
+    price: 199,
+    installDays: 3,
+    providerId: p.id,
+    image: `https://picsum.photos/seed/combo-${providerId}/640/360`,
+  };
+}
 
 function selectAddress(property) {
   selectedAddress.value = property;
@@ -111,30 +134,30 @@ function selectAddress(property) {
 }
 
 async function buyCombo() {
-  if (!selectedAddress.value) {
-    alert("Please select an address first.");
-    return;
-  }
+  if (!selectedAddress.value || !combo.value) return;
+  const target = { ...selectedAddress.value };
+  const prev = Array.isArray(target.combos) ? target.combos : [];
+  target.combos = [
+    ...prev,
+    {
+      id: combo.value.id,
+      name: combo.value.name,
+      providerId: combo.value.providerId,
+      price: combo.value.price,
+      installDays: combo.value.installDays,
+    },
+  ];
+  await rental.update("properties", target); 
+}
 
-  const updatedProperties = user.value.properties.map(p => {
-    if (p.id === selectedAddress.value.id) {
-      return {
-        ...p,
-        combos: [...(p.combos || []), combo.value]
-      };
-    }
-    return p;
-  });
-
-  await fetch("http://localhost:3000/user", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ properties: updatedProperties })
-  });
-
-  alert("Combo purchased and assigned to property!");
+const providerNameById = computed(() =>
+  Object.fromEntries((providers.value || []).map(p => [String(p.id), p.name]))
+);
+function getProviderName(id) {
+  return providerNameById.value[String(id)] || "Unknown";
 }
 </script>
+
 
 <style scoped>
 .combo-detail-wrapper {

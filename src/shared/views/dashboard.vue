@@ -1,17 +1,17 @@
 <template>
-  <div class="dashboard-wrapper">
-    <pv-card class="dashboard-card">
+  <div class="dash-wrap">
+    <pv-card class="dash-card">
       <template #title>
         <h2 class="page-title">{{ t('dashboard.welcome') }}</h2>
       </template>
 
       <template #content>
-        <div class="grid">
-          <!-- Mis propiedades -->
+        <div class="grid grid-reset">
+          <!-- My Properties -->
           <div class="col-12 md:col-6 lg:col-4">
             <div class="section">
               <h3 class="section-title">{{ t('dashboard.myProperties') }}</h3>
-              <ul class="summary-list">
+              <ul class="summary-list" v-if="user?.properties?.length">
                 <li v-for="p in user.properties.slice(0,3)" :key="p.id">
                   <img :src="p.image" class="thumb" />
                   <div>
@@ -26,14 +26,14 @@
             </div>
           </div>
 
-          <!-- Últimas alertas -->
-          <div class="col-12 md:col-6 lg:col-3">
+          <!-- Latest Alerts -->
+          <div class="col-12 md:col-6 lg:col-4">
             <div class="section">
               <h3 class="section-title">{{ t('dashboard.latestAlerts') }}</h3>
-              <ul class="summary-list">
-                <li v-for="alert in latestAlerts" :key="alert.id">
-                  <span class="time">{{ formatDate(alert.time) }}</span>
-                  <span class="text-black">{{ alert.message }}</span>
+              <ul class="summary-list" v-if="latestAlerts?.length">
+                <li v-for="a in latestAlerts" :key="a.id">
+                  <span class="time">{{ formatDate(a.time) }}</span>
+                  <span class="text-black">{{ a.message }}</span>
                 </li>
               </ul>
               <router-link to="/alerts">
@@ -42,33 +42,17 @@
             </div>
           </div>
 
-          <!-- Pagos pendientes -->
-          <div class="col-12 md:col-6 lg:col-3">
-            <div class="section">
-              <h3 class="section-title">{{ t('dashboard.pendingPayments') }}</h3>
-              <ul class="summary-list">
-                <li v-for="pay in pendingPayments.slice(0,3)" :key="pay.id">
-                  <p class="text-black">{{ pay.propertyName }}</p>
-                  <small>{{ t('dashboard.amount') }}: ${{ pay.amount }} | {{ t('dashboard.due') }}: {{ pay.date }}</small>
-                </li>
-              </ul>
-              <router-link to="/billing">
-                <pv-button :label="t('dashboard.goToBilling')" text />
-              </router-link>
-            </div>
-          </div>
-
-          <!-- Incidentes -->
-          <div class="col-12 md:col-6 lg:col-3">
+          <!-- Incidents -->
+          <div class="col-12 md:col-6 lg:col-4">
             <div class="section">
               <h3 class="section-title">{{ t('dashboard.incidents') }}</h3>
-              <ul class="summary-list">
+              <ul class="summary-list" v-if="user?.incidents?.length">
                 <li v-for="inc in user.incidents" :key="inc.id">
                   <p class="text-black">{{ inc.incNumber }}</p>
                   <small>{{ t('dashboard.status') }}: {{ inc.status }}</small>
                 </li>
               </ul>
-              <router-link to="/alerts">
+              <router-link to="/support">
                 <pv-button :label="t('dashboard.manageIncidents')" text />
               </router-link>
             </div>
@@ -78,6 +62,7 @@
     </pv-card>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from "vue";
@@ -114,60 +99,66 @@ function formatDate(dateStr) {
 </script>
 
 <style scoped>
-.dashboard-wrapper {
-  padding: 2rem;
-  display: flex;
-  justify-content: center;
-  background-color: #f9fafb;
-  min-height: 100vh;
-}
-.dashboard-card {
+
+.dash-wrap{
+  --sbw: 260px;         
+  --gutter: .75rem;    
+  box-sizing: border-box;
+  margin-left: 0;
   width: 100%;
-  max-width: 1000px;
+  padding: 1rem;
+  min-height: 100dvh;
+  background: #f9fafb;
+  overflow-x: hidden;  
+}
+
+@media (min-width: 993px){
+  .dash-wrap{
+    margin-left: var(--sbw);
+    width: calc(100% - var(--sbw));
+    padding: 2rem;
+  }
+}
+
+.dash-card{
+  width: min(100%, 1100px);
+  margin: 0 auto;
   background: #fff;
   border-radius: 16px;
+  overflow: hidden;
 }
-.page-title {
-  font-size: 1.8rem;
-  margin: 0;
-  color: #000;
+
+
+.grid-reset{ margin-left: 0 !important; margin-right: 0 !important; }
+.grid-reset > [class^="col-"],
+.grid-reset > [class*=" col-"]{
+  padding-left: var(--gutter) !important;
+  padding-right: var(--gutter) !important;
+  min-width: 0;  
 }
-.section {
-  padding: 0.5rem 0;
-}
-.section-title {
+
+.page-title{ font-size: 1.8rem; margin: 0; color:#000; }
+
+.section{ padding: .5rem 0; }
+.section-title{
   font-size: 1.1rem;
   font-weight: 600;
-  margin-bottom: 0.5rem;
-  color: #b22222;
+  margin-bottom: .5rem;
+  color:#b22222;
 }
-.summary-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 0.5rem 0;
+
+.summary-list{ list-style:none; padding:0; margin:0 0 .5rem 0; }
+.summary-list li{
+  display:flex; align-items:center; gap:.8rem;
+  padding:.4rem 0; border-bottom:1px solid #eee;
 }
-.summary-list li {
-  display: flex;
-  align-items: center;
-  gap: 0.8rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid #eee;
-}
-.thumb {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  object-fit: cover;
-}
-.text-black {
-  color: #000;
-}
-.time {
-  font-size: 0.8rem;
-  color: #666;
-  min-width: 80px;
-}
-.p-card{
-  color: #2b2b2b;
+.thumb{ width:40px; height:40px; border-radius:6px; object-fit:cover; flex: 0 0 40px; }
+.text-black{ color:#000; }
+.time{ font-size:.8rem; color:#666; min-width:84px; }
+
+
+@media (max-width: 480px){
+  .page-title{ font-size: 1.4rem; }
+  .section-title{ font-size: 1rem; }
 }
 </style>

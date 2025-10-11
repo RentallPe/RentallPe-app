@@ -71,6 +71,7 @@ export class RentalApi extends BaseApi {
       projects:     import.meta.env.VITE_PROJECTS_ENDPOINT_PATH,
       tasks:        import.meta.env.VITE_TASKS_ENDPOINT_PATH,
       owner_types:  import.meta.env.VITE_OWNER_TYPES_ENDPOINT_PATH,
+      combos:       import.meta.env.VITE_COMBOS_ENDPOINT_PATH,
     };
 
     const jsonKeyMap = {

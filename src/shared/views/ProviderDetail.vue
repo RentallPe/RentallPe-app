@@ -80,35 +80,61 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useRoute, useRouter } from "vue-router";
-import axios from "axios";
+import { ref, onMounted, computed } from "vue";
+import { useRoute } from "vue-router";
+import { useRentalStore } from "@/Rental/application/rental-store";
 
 const route = useRoute();
-const router = useRouter();
-
-const provider = ref(null);
-const combos = ref([]);
-const properties = ref([]);
+const rental = useRentalStore();
 
 const dialogVisible = ref(false);
 const addressDialog = ref(false);
-
 const selectedCombo = ref(null);
 const selectedAddress = ref(null);
 
+const providerId = computed(() => String(route.params.id || ""));
+
+
+const providers = rental.list("providers");
+const properties = rental.list("properties");
+
+
+const provider = computed(
+  () => (providers.value || []).find(p => String(p.id) === providerId.value) || null
+);
+
+
+const combos = computed(() => {
+  const p = provider.value;
+  if (!p?.id) return [];
+  return [
+    {
+      id: `c-${p.id}-basic`,
+      name: `Basic combo by ${p.name}`,
+      description: "Basic sensors + installation.",
+      price: 199,
+      installDays: 3,
+      providerId: p.id,
+      image: `https://picsum.photos/seed/combo-${p.id}-1/640/360`,
+    },
+    {
+      id: `c-${p.id}-pro`,
+      name: `Pro combo by ${p.name}`,
+      description: "Extended sensors + monitoring.",
+      price: 349,
+      installDays: 5,
+      providerId: p.id,
+      image: `https://picsum.photos/seed/combo-${p.id}-2/640/360`,
+    },
+  ];
+});
+
 onMounted(async () => {
-  // Cargar proveedor
-  const resProvider = await axios.get(`http://localhost:3000/providers/${route.params.id}`);
-  provider.value = resProvider.data;
-
-  // Cargar combos de este proveedor
-  const resCombos = await axios.get(`http://localhost:3000/combos?providerId=${route.params.id}`);
-  combos.value = resCombos.data;
-
-  // Cargar propiedades del usuario
-  const resProperties = await axios.get("http://localhost:3000/properties");
-  properties.value = resProperties.data;
+  await Promise.all([
+    rental.fetchAll("providers"),
+    rental.fetchAll("properties"),
+  ]);
+  selectedAddress.value = (properties.value || [])[0] || null;
 });
 
 function selectCombo(combo) {
@@ -122,22 +148,29 @@ function selectAddress(property) {
 }
 
 async function buyCombo() {
-  if (!selectedAddress.value) {
-    alert("Please select an address first.");
-    return;
-  }
+  const target = selectedAddress.value;
+  const combo = selectedCombo.value;
+  if (!target || !combo) return;
 
-  const updatedProperty = {
-    ...selectedAddress.value,
-    combos: [...(selectedAddress.value.combos || []), selectedCombo.value]
+  const next = {
+    ...target,
+    combos: [
+      ...(Array.isArray(target.combos) ? target.combos : []),
+      {
+        id: combo.id,
+        name: combo.name,
+        providerId: combo.providerId,
+        price: combo.price,
+        installDays: combo.installDays,
+      },
+    ],
   };
 
-  await axios.patch(`http://localhost:3000/properties/${selectedAddress.value.id}`, updatedProperty);
-
-  alert("Combo purchased and assigned to property!");
+  await rental.update("properties", next); 
   dialogVisible.value = false;
 }
 </script>
+
 
 <style scoped>
 .provider-detail-wrapper {

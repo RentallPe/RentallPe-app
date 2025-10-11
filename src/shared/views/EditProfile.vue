@@ -65,36 +65,76 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
+import { useRentalStore } from "@/Rental/application/rental-store";
 
-const user = ref({});
-const editUser = ref({});
+const router = useRouter();
+const rental = useRentalStore();
+const USER_ID = 1;
+
+const user = ref(null);
+const editUser = ref({
+  fullName: "",
+  email: "",
+  phone: "",
+  photo: "",
+  paymentMethods: [],
+});
+
+const loading = ref(true);
+const saving  = ref(false);
 
 onMounted(async () => {
-  const res = await fetch("http://localhost:3000/users/1");
-  const data = await res.json();
-  user.value = data;
+  
+  let u = await rental.fetchById("users", USER_ID);
+  if (!u) {
+    await rental.fetchAll("users", { force: true });
+    u = rental.getLocalById("users", USER_ID);
+  }
+  if (!u) {
+    console.error("Usuario 1 no existe en el backend");
+    loading.value = false;
+    return;
+  }
+
+  user.value = u;
   editUser.value = {
-    fullName: data.fullName,
-    email: data.email,
-    phone: data.phone,
-    photo: data.photo || "https://randomuser.me/api/portraits/men/75.jpg",
-    paymentMethods: data.paymentMethods || []
+    fullName: u.fullName ?? "",
+    email: u.email ?? "",
+    phone: u.phone ?? "",
+    photo: u.photo || "https://randomuser.me/api/portraits/men/75.jpg",
+    paymentMethods: Array.isArray(u.paymentMethods) ? [...u.paymentMethods] : [],
   };
+
+  loading.value = false;
 });
 
 async function saveUser() {
-  await fetch("http://localhost:3000/users/1", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(editUser.value)
-  });
-  window.location.href = "/profile";
+  if (!user.value) return;
+  saving.value = true;
+  try {
+    
+    const payload = {
+      ...user.value,
+      ...editUser.value,
+      id: user.value.id,
+    };
+    await rental.update("users", payload);  
+    router.push("/profile");                
+  } catch (e) {
+    console.error("[edit-profile] save error:", e);
+    alert("No se pudieron guardar los cambios.");
+  } finally {
+    saving.value = false;
+  }
 }
 
 function deletePayment(id) {
-  editUser.value.paymentMethods = editUser.value.paymentMethods.filter(m => m.id !== id);
+  editUser.value.paymentMethods =
+    (editUser.value.paymentMethods || []).filter(m => m.id !== id);
 }
 </script>
+
 
 <style scoped>
 

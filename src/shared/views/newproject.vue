@@ -12,14 +12,9 @@
       <!-- Contenido -->
       <template #content>
         <!-- Combos -->
-        <h3 class="m-0 subtitle">Our combos</h3>
-        <div class="grid">
-          <div
-              v-for="combo in combos"
-              :key="combo.id"
-              class="col-12 md:col-4"
-              @click="selectCombo(combo)"
-          >
+     <h3 class="m-0 subtitle">Our combos</h3>
+      <div class="grid grid-reset">
+        <div v-for="combo in combos" :key="combo.id" class="col-12 md:col-4 col-fix" @click="selectCombo(combo)">
             <div class="combo-card cursor-pointer">
               <img :src="combo.image" alt="" class="combo-img" />
               <h3 class="combo-title">{{ combo.name }}</h3>
@@ -27,11 +22,11 @@
             </div>
           </div>
         </div>
-
+        
         <!-- Providers -->
-        <h3 class="m-0 subtitle mt-5">Providers</h3>
-        <div class="grid small-providers">
-          <div v-for="provider in providers" :key="provider.id" class="col-12 md:col-3">
+          <h3 class="m-0 subtitle mt-5">Providers</h3>
+          <div class="grid grid-reset small-providers">
+           <div v-for="provider in providers" :key="provider.id" class="col-12 md:col-3 col-fix">
             <router-link :to="`/provider/${provider.id}`" class="no-underline">
               <pv-card class="provider-card">
                 <template #title>{{ provider.name }}</template>
@@ -91,28 +86,37 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import axios from "axios";
+import { ref, onMounted, computed } from "vue";
+import { useRentalStore } from "@/Rental/application/rental-store";
+
+const rental = useRentalStore();
 
 const combos = ref([]);
-const providers = ref([]);
-const properties = ref([]);
+const providers = rental.list("providers");
+const properties = rental.list("properties");
 
 const dialogVisible = ref(false);
 const addressDialog = ref(false);
-
 const selectedCombo = ref(null);
 const selectedAddress = ref(null);
 
 onMounted(async () => {
-  const resCombos = await axios.get("http://localhost:3000/combos");
-  combos.value = resCombos.data;
+  await Promise.all([
+    rental.fetchAll("providers"),
+    rental.fetchAll("properties"),
+  ]);
 
-  const resProviders = await axios.get("http://localhost:3000/providers");
-  providers.value = resProviders.data;
-
-  const resProperties = await axios.get("http://localhost:3000/properties");
-  properties.value = resProperties.data;
+  // Genera combos sintéticos por proveedor (no hay colección 'combos' en tu backend)
+  const ps = providers.value || [];
+  combos.value = ps.map((p) => ({
+    id: `c-${p.id}-basic`,
+    name: `Basic combo by ${p.name}`,
+    description: "Basic sensors + installation.",
+    price: 199,
+    installDays: 3,
+    providerId: p.id,
+    image: `https://picsum.photos/seed/combo-${p.id}/640/360`,
+  }));
 });
 
 function selectCombo(combo) {
@@ -126,73 +130,81 @@ function selectAddress(property) {
 }
 
 async function buyCombo() {
-  if (!selectedAddress.value) {
-    alert("Please select an address first.");
-    return;
-  }
+  if (!selectedAddress.value || !selectedCombo.value) return;
 
-  const updatedProperty = {
-    ...selectedAddress.value,
-    combos: [...(selectedAddress.value.combos || []), selectedCombo.value]
+  const target = { ...selectedAddress.value };
+  const prev = Array.isArray(target.combos) ? target.combos : [];
+  const toAdd = {
+    id: selectedCombo.value.id,
+    name: selectedCombo.value.name,
+    providerId: selectedCombo.value.providerId,
+    price: selectedCombo.value.price,
+    installDays: selectedCombo.value.installDays,
   };
+  target.combos = [...prev, toAdd];
 
-  await axios.patch(`http://localhost:3000/properties/${selectedAddress.value.id}`, updatedProperty);
-
-  alert("Combo purchased and assigned to property!");
+  await rental.update("properties", target); 
   dialogVisible.value = false;
 }
 
-function getProviderName(providerId) {
-  const provider = providers.value.find(p => p.id === providerId);
-  return provider ? provider.name : "Unknown";
+const providerNameById = computed(() =>
+  Object.fromEntries((providers.value || []).map((p) => [String(p.id), p.name]))
+);
+function getProviderName(id) {
+  return providerNameById.value[String(id)] || "Unknown";
 }
 </script>
 
+
 <style scoped>
-.new-project-wrapper {
-  padding: 2rem;
-  display: flex;
-  justify-content: center;
-  background-color: #f9fafb;
-  min-height: 100vh;
+:root { --sbw: 238px; }
+
+
+.new-project-wrapper{
+  margin-left: var(--sbw);
+  width: calc(100% - var(--sbw));
+  padding: 24px;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  background: #f9fafb;
+  overflow-x: hidden;        
 }
-.new-project-card {
+
+
+.new-project-card{
   width: 100%;
   max-width: 1000px;
+  margin: 0 auto;
   background: #fff;
   border-radius: 16px;
 }
-.subtitle {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-  color: #555;
+
+
+.grid-reset{ margin-left: 0 !important; margin-right: 0 !important; }
+.grid-reset > [class*="col-"]{ padding-left: .75rem; padding-right: .75rem; }
+.col-fix{ min-width: 0; }
+
+
+.subtitle{ font-size: 1.2rem; margin-bottom: 1.2rem; color:#555; }
+.combo-card{
+  display:flex; flex-direction:column; height:100%;
+  text-align:center; background:#f4f4f4; border:1px solid #eee;
+  border-radius:12px; padding:1rem; transition:transform .2s;
 }
-.combo-card {
-  transition: transform 0.2s;
-  text-align: center;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  background: #eeeeee;
-  padding: 1rem;
+.combo-card:hover{ transform: translateY(-2px); border-color:#b22222; }
+.combo-img{ width:100%; aspect-ratio:16/9; object-fit:cover; border-radius:8px; }
+.combo-title{ margin-top:.5rem; font-weight:600; color:#111; }
+.small-providers .provider-card{ font-size:.9rem; padding:.75rem; height:100%; }
+.text-black{ color:#000; }
+
+
+@media (max-width: 1280px){
+  .new-project-wrapper{ margin-left: 0; width: 100%; }
 }
-.combo-card:hover {
-  transform: scale(1.02);
-  border-color: #b22222;
+@media (max-width: 1024px){
+  .new-project-card{ border-radius:12px; }
+  .grid-reset > [class*="col-"]{ padding-left:.6rem; padding-right:.6rem; }
 }
-.combo-img {
-  width: 100%;
-  border-radius: 8px;
-}
-.combo-title {
-  margin-top: 0.5rem;
-  font-weight: 600;
-  color: #111111;
-}
-.small-providers .provider-card {
-  font-size: 0.85rem;
-  padding: 0.5rem;
-}
-.text-black {
-  color: #000;
-}
+
+
 </style>

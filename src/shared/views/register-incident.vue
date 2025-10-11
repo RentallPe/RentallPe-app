@@ -45,44 +45,39 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useRentalStore } from "@/Rental/application/rental-store";
 
 const router = useRouter();
+const rental = useRentalStore();
 
-const incident = ref({
-  description: ""
-});
+const incident = ref({ description: "" });
 
 async function submitIncident() {
-  if (!incident.value.description.trim()) {
+  if (!incident.value.description?.trim()) {
     alert("Please describe the incident before submitting.");
     return;
   }
 
   const newIncident = {
-    // json-server asignará id automáticamente si no lo mandas,
-    // pero puedes usar Date.now() si quieres controlarlo
     id: Date.now(),
-    projectId: 1, // o el proyecto actual si lo tienes en contexto
-    description: incident.value.description,
+    projectId: 1,
+    description: incident.value.description.trim(),
     status: "pending",
     createdAt: new Date().toISOString(),
     updatedAt: null
   };
 
   try {
-    await fetch("http://localhost:3000/incidents", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newIncident)
-    });
-
+    await rental.create("incidents", newIncident);
     incident.value.description = "";
     router.push("/support");
   } catch (err) {
     console.error("Error saving incident:", err);
+    alert("Could not save the incident. Please try again.");
   }
 }
 </script>
+
 <style scoped>
 .incident-wrapper {
   padding: 2rem;

@@ -53,24 +53,55 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import axios from "axios";
+import { useRentalStore } from "@/Rental/application/rental-store";
 
-const route = useRoute();
-const router = useRouter();
+const route   = useRoute();
+const router  = useRouter();
+const rental  = useRentalStore();
+
 const property = ref(null);
+const loading  = ref(true);
+const error    = ref("");
+
+
+const rawId = route.params.id;
+const propId = Number.isNaN(Number(rawId)) ? rawId : Number(rawId);
 
 onMounted(async () => {
-  const res = await axios.get(`http://localhost:3000/properties/${route.params.id}`);
-  property.value = res.data;
+  try {
+
+    let p = await rental.fetchById("properties", propId);
+
+    if (!p) {
+      await rental.fetchAll("properties", { force: true });
+      p = rental.getLocalById("properties", propId)
+        ?? rental.getLocalById("properties", String(propId)); 
+    }
+
+    if (!p) throw new Error("Property not found");
+    property.value = p;
+  } catch (e) {
+    console.error(e);
+    error.value = e?.message || "Could not load property";
+  } finally {
+    loading.value = false;
+  }
 });
 
 async function deleteProperty() {
-  if (confirm("Are you sure you want to delete this property?")) {
-    await axios.delete(`http://localhost:3000/properties/${route.params.id}`);
+  if (!property.value) return;
+  if (!confirm("Are you sure you want to delete this property?")) return;
+
+  try {
+    await rental.remove("properties", property.value.id);
     router.push("/my-properties");
+  } catch (e) {
+    console.error(e);
+    alert("Failed to delete the property.");
   }
 }
 </script>
+
 
 
 <style scoped>

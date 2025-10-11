@@ -46,10 +46,12 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import axios from "axios";
+import { useRentalStore } from "@/Rental/application/rental-store";
 
 const router = useRouter();
+const rental = useRentalStore();
 
+const loading = ref(false);
 const form = ref({
   fullName: "",
   email: "",
@@ -67,26 +69,44 @@ async function registerUser() {
     return;
   }
 
-  const newUser = {
-    fullName: form.value.fullName,
-    email: form.value.email,
-    password: form.value.password,
-    phone: "",
-    createdAt: new Date().toISOString(),
-    photo: "",
-    paymentMethods: []
-  };
-
+  loading.value = true;
   try {
-    await axios.post("http://localhost:3000/users", newUser);
+    
+    await rental.fetchAll("users");
+    const users = rental.list("users").value ?? [];
+    const emailTaken = users.some(
+      u => String(u.email).toLowerCase() === String(form.value.email).toLowerCase()
+    );
+    if (emailTaken) {
+      alert("Este correo ya está registrado.");
+      return;
+    }
+
+    const newUser = {
+      id: Date.now(),                 
+      fullName: form.value.fullName,
+      email: form.value.email,
+      password: form.value.password,  
+      phone: "",
+      createdAt: new Date().toISOString(),
+      photo: "",
+      paymentMethods: [],
+      properties: []
+    };
+
+    await rental.create("users", newUser);
+
     alert("Usuario registrado con éxito");
     router.push("/login");
   } catch (err) {
-    console.error("Error registrando usuario:", err);
-    alert("No se pudo registrar el usuario");
+    console.error("[register] error:", err);
+    alert("No se pudo registrar el usuario. Intenta nuevamente.");
+  } finally {
+    loading.value = false;
   }
 }
 </script>
+
 
 <style scoped>
 .register-wrapper {

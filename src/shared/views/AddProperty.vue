@@ -53,42 +53,38 @@
 </template>
 
 <script setup>
-import { Property } from "@/Rental/domain/model/property.entity.js";
-import { addProperty } from "@/Rental/infrastructure/property.service.js";
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { Property } from "@/Rental/domain/model/property.entity";
+import { useRentalStore } from "@/Rental/application/rental-store";
+
 const { t } = useI18n();
 const router = useRouter();
+const rental = useRentalStore();
 
 const newProperty = ref(new Property({
-  id: null,
-  ownerId: 1, // o dinámico según el usuario
+  country: "",
+  department: "",
   address: "",
-  ubigeo: "",
-  province: "",
-  region: "",
-  areaM2: 0,
-  yearsOld: 0,
-  status: "available",
-  createdAt: new Date().toISOString(),
+  number: "",
   image: "https://picsum.photos/300/200?random=99",
   name: "New Property",
   handoverDate: null,
-  progress: 0,
-  alerts: [],
-  locks: []
+  progress: 0
 }));
 
+const saving = ref(false);
+
 async function saveProperty() {
-  await addProperty(newProperty.value);
-  router.push("/my-properties");
-}
-
-
-
-function selectImage() {
-  alert("Image upload not implemented yet.");
+  if (saving.value) return;
+  saving.value = true;
+  try {
+    await rental.create('properties', newProperty.value);
+    router.push('/my-properties');
+  } finally {
+    saving.value = false;
+  }
 }
 </script>
 
