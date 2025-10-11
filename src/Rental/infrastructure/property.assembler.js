@@ -5,11 +5,12 @@ export class PropertyAssembler {
     static toEntityFromResource(resource) {
         return new Property({
             ...resource,
-            // defaults para UI si no vienen del backend
             image: resource.image || `https://picsum.photos/300/200?random=${resource.id}`,
             name: resource.name || `Property ${resource.id}`,
             handoverDate: resource.handoverDate || null,
-            progress: resource.progress || 0
+            progress: resource.progress || 0,
+            alerts: resource.alerts || [],
+            locks: resource.locks || []
         });
     }
 

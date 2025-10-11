@@ -1,4 +1,3 @@
-
 <template>
   <div class="alerts-wrapper">
     <pv-card class="alerts-card">
@@ -10,47 +9,83 @@
       </template>
 
       <template #content>
-        <div v-for="property in user.properties" :key="property.id" class="property-alert">
-          <h3 class="property-title">{{ property.name }}</h3>
+        <div v-if="loading" class="empty-text">Cargando alertas...</div>
+        <div v-else-if="error" class="empty-text">Error: {{ error }}</div>
+        <div v-else-if="!properties.length" class="empty-text">
+          No hay propiedades para este usuario.
+        </div>
+
+        <div
+            v-for="property in properties"
+            :key="property.id"
+            class="property-alert"
+        >
+          <h3 class="property-title">{{ property.name || ('Property ' + property.id) }}</h3>
           <p class="property-address">{{ property.address }}</p>
 
-          <!-- Sección de alertas -->
           <h4 class="section-title">{{ t('alerts.latest') }}</h4>
-          <ul class="alert-list">
+          <ul class="alert-list" v-if="property.alerts && property.alerts.length">
             <li v-for="alert in property.alerts" :key="alert.id">
               <span class="alert-time">{{ formatDate(alert.time) }}</span>
               <span class="alert-message">{{ alert.message }}</span>
             </li>
           </ul>
+          <p v-else class="empty-text">{{ t('alerts.noAlerts') }}</p>
 
-          <!-- Sección de lock -->
           <h4 class="section-title">{{ t('alerts.lock') }}</h4>
-          <ul class="lock-list">
+          <ul class="lock-list" v-if="property.locks && property.locks.length">
             <li v-for="lock in property.locks" :key="lock.id">
               <span class="lock-time">{{ formatDate(lock.time) }}</span>
               <span class="lock-action">{{ lock.action }}</span>
             </li>
           </ul>
+          <p v-else class="empty-text">{{ t('alerts.noLocks') }}</p>
         </div>
       </template>
     </pv-card>
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted } from "vue";
+import axios from "axios";
 import { useI18n } from "vue-i18n";
+import { PropertyAssembler } from "@/Rental/infrastructure/property.assembler.js";
 
 const { t } = useI18n();
-const user = ref({ properties: [] });
+
+const properties = ref([]);
+const loading = ref(true);
+const error = ref("");
 
 onMounted(async () => {
-  const res = await fetch("http://localhost:3000/user");
-  user.value = await res.json();
+  try {
+    const res = await axios.get("http://localhost:3000/properties");
+    let list = PropertyAssembler.toEntitiesFromResponse(res);
+
+    // Log para verificar contenido
+    console.log("Properties raw:", res.data);
+    console.log("Properties entities:", list);
+
+    // Filtrar por usuario (si aplica)
+    list = list.filter(p => p.ownerId === 1);
+
+    // Garantizar arrays
+    properties.value = list.map(p => ({
+      ...p,
+      alerts: Array.isArray(p.alerts) ? p.alerts : [],
+      locks: Array.isArray(p.locks) ? p.locks : []
+    }));
+  } catch (e) {
+    console.error("Error cargando propiedades:", e);
+    error.value = e?.message || "No se pudieron cargar las propiedades";
+  } finally {
+    loading.value = false;
+  }
 });
 
 function formatDate(dateStr) {
+  if (!dateStr) return "—";
   const d = new Date(dateStr);
   return d.toLocaleString("es-PE", {
     day: "2-digit",
@@ -61,7 +96,6 @@ function formatDate(dateStr) {
   });
 }
 </script>
-
 
 <style scoped>
 .alerts-wrapper {
@@ -97,23 +131,35 @@ function formatDate(dateStr) {
   margin: 0.5rem 0;
   color: #b22222;
 }
-.alert-list, .lock-list {
+.alert-list,
+.lock-list {
   list-style: none;
   padding: 0;
   margin: 0 0 1rem 0;
 }
-.alert-list li, .lock-list li {
+.alert-list li,
+.lock-list li {
   display: flex;
   gap: 1rem;
   padding: 0.4rem 0;
   border-bottom: 1px solid #f0f0f0;
 }
-.alert-time, .lock-time {
+.alert-time,
+.lock-time {
   font-size: 0.85rem;
   color: #666;
   min-width: 150px;
 }
-.alert-message, .lock-action {
+.alert-message,
+.lock-action {
   color: #000;
+}
+.empty-text {
+  font-size: 0.9rem;
+  color: #888;
+  margin-bottom: 1rem;
+}
+.p-card{
+  color: #111111;
 }
 </style>

@@ -1,54 +1,146 @@
 {
-  "sidebar": {
+  "menu": {
     "dashboard": "Panel",
-    "properties": "Propiedades",
-    "combos": "Combos",
+    "profile": "Perfil",
+    "newProject": "Nuevo proyecto +",
+    "myProperties": "Mis propiedades",
+    "support": "Soporte",
     "alerts": "Alertas",
-    "billing": "Facturación",
-    "settings": "Configuración",
-    "logout": "Cerrar sesión"
+    "consumption": "Consumo",
+    "billing": "Facturación"
   },
-  "header": {
-    "welcome": "Bienvenido, {{name}}",
-    "language": "Idioma",
-    "notifications": "Notificaciones"
-  },
-  "property": {
-    "title": "Tus Propiedades",
+  "addProperty": {
+    "title": "Añadir una propiedad",
+    "uploadPhoto": "Subir foto",
+    "propertyDirection": "Dirección de la propiedad",
+    "country": "País",
+    "department": "Departamento",
     "address": "Dirección",
-    "comboAssigned": "Combos Asignados",
-    "noCombos": "No hay combos asignados"
+    "number": "Número de propiedad",
+    "done": "Hecho"
   },
-  "combo": {
-    "title": "Combos Disponibles",
+  "alerts": {
+    "title": "Alertas",
+    "latest": "Últimas alertas",
+    "lock": "Cerradura"
+  },
+  "billing": {
+    "title": "Mis pagos pendientes",
+    "address": "Dirección",
+    "installment": "Cuota",
+    "amount": "Monto",
+    "dueDate": "Vencimiento"
+  },
+  "comboDetail": {
     "description": "Descripción",
-    "installDays": "Tiempo de instalación",
+    "installationTime": "Tiempo de instalación",
+    "days": "días",
+    "sendTo": "Enviar a",
+    "selectAddress": "Seleccionar dirección",
     "price": "Precio",
-    "assign": "Asignar a propiedad"
+    "buy": "Comprar",
+    "dialogTitle": "Seleccionar la dirección",
+    "alertSelectAddress": "Por favor selecciona una dirección primero.",
+    "alertPurchased": "¡Combo comprado y asignado a la propiedad!"
+  },
+  "dashboard": {
+    "welcome": "¡Bienvenido de nuevo!",
+    "myProperties": "Mis propiedades",
+    "viewAll": "Ver todas",
+    "latestAlerts": "Últimas alertas",
+    "seeAlerts": "Ver alertas",
+    "pendingPayments": "Pagos pendientes",
+    "goToBilling": "Ir a facturación",
+    "incidents": "Incidentes",
+    "manageIncidents": "Gestionar incidentes",
+    "amount": "Monto",
+    "due": "Vencimiento",
+    "status": "Estado"
+  },
+  "editProfile": {
+    "title": "Editar mi perfil",
+    "changePhoto": "Cambiar foto de perfil",
+    "information": "Información",
+    "name": "Nombre",
+    "country": "País",
+    "department": "Departamento",
+    "paymentMethods": "Métodos de pago",
+    "save": "Guardar",
+    "cancel": "Cancelar"
+  },
+  "properties": {
+    "title": "Mis propiedades",
+    "handoverDate": "Fecha de entrega",
+    "notDefined": "No definida",
+    "completed": "completado",
+    "addProperty": "Añadir propiedad"
+  },
+  "newProject": {
+    "title": "Nuevo proyecto",
+    "ourCombos": "Nuestros combos",
+    "comboDetail": "Detalle del combo",
+    "installationTime": "Tiempo de instalación",
+    "days": "días",
+    "sendTo": "Enviar a",
+    "selectAddress": "Seleccionar dirección",
+    "buy": "Comprar",
+    "buyWithPrice": "Comprar - ${price}",
+    "alertSelectAddress": "Por favor selecciona una dirección primero.",
+    "alertPurchased": "¡Combo comprado y asignado a la propiedad!"
+  },
+  "profile": {
+    "title": "Mi perfil",
+    "information": "Información",
+    "name": "Nombre",
+    "country": "País",
+    "department": "Departamento",
+    "paymentMethods": "Métodos de pago",
+    "addAnotherPayment": "Añadir otro método de pago",
+    "myProperties": "Mis propiedades",
+    "addPaymentOption": "Añadir método de pago",
+    "type": "Tipo",
+    "number": "Número",
+    "expiry": "Fecha de expiración",
+    "cvv": "Código de seguridad",
+    "cancel": "Cancelar",
+    "accept": "Aceptar"
+  },
+  "propertyDetail": {
+    "address": "Dirección",
+    "handoverDate": "Fecha de entrega",
+    "notDefined": "No definida",
+    "progress": "Progreso"
   },
   "incident": {
-    "title": "Incidentes Reportados",
+    "title": "Registrar incidente",
+    "back": "Regresar",
+    "subtitle": "Cuéntanos tu problema",
+    "placeholder": "Describe el problema que estás experimentando...",
+    "send": "Enviar",
+    "alertEmpty": "Por favor describe el incidente antes de enviarlo.",
+    "statusPending": "Pendiente"
+  },
+  "support": {
+    "title": "Soporte",
+    "phoneContacts": "Nuestros teléfonos de contacto",
+    "department": "Departamento",
+    "number": "Número",
+    "incidents": "Incidentes",
+    "incNumber": "Número INC",
     "status": "Estado",
-    "pending": "Pendiente",
-    "resolved": "Resuelto",
+    "registerIncident": "Registrar incidente",
+    "incidentDetail": "Detalle del incidente",
     "date": "Fecha",
     "description": "Descripción"
   },
-  "billing": {
-    "title": "Resumen de Facturación",
-    "method": "Método de pago",
-    "expiry": "Vencimiento",
-    "cvv": "CVV"
-  },
-  "buttons": {
-    "save": "Guardar",
-    "cancel": "Cancelar",
-    "edit": "Editar",
-    "delete": "Eliminar",
-    "confirm": "Confirmar"
-  },
-  "toast": {
-    "success": "Acción completada con éxito",
-    "error": "Algo salió mal"
+  "alerts": {
+    "title": "Alertas",
+    "latest": "Últimas alertas",
+    "lock": "Eventos de cerradura"
   }
+
+
+
+
+
 }

@@ -58,38 +58,31 @@ async function submitIncident() {
     return;
   }
 
-
-  const res = await fetch("http://localhost:3000/user");
-  const user = await res.json();
-
-
   const newIncident = {
+    // json-server asignará id automáticamente si no lo mandas,
+    // pero puedes usar Date.now() si quieres controlarlo
     id: Date.now(),
-    incNumber: "INC" + Math.floor(100000 + Math.random() * 900000), // INC412516
+    projectId: 1, // o el proyecto actual si lo tienes en contexto
     description: incident.value.description,
-    date: new Date().toISOString(),
-    status: "Pending"
+    status: "pending",
+    createdAt: new Date().toISOString(),
+    updatedAt: null
   };
 
-  const updatedIncidents = [...(user.incidents || []), newIncident];
+  try {
+    await fetch("http://localhost:3000/incidents", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newIncident)
+    });
 
-  await fetch("http://localhost:3000/user", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ incidents: updatedIncidents })
-  });
-
-
-
-  incident.value.description = "";
-
-
-  router.push("/support");
-
-
+    incident.value.description = "";
+    router.push("/support");
+  } catch (err) {
+    console.error("Error saving incident:", err);
+  }
 }
 </script>
-
 <style scoped>
 .incident-wrapper {
   padding: 2rem;

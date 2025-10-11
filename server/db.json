@@ -2,7 +2,7 @@
   "users": [
     {
       "id": 1,
-      "fullName": "Mario Vargasss",
+      "fullName": "Mario Vargassss",
       "email": "mario@example.com",
       "password": "1234",
       "phone": "999999999",
@@ -45,6 +45,22 @@
       "description": "Water leak in bathroom",
       "status": "pending",
       "createdAt": "2025-10-01T09:30:00Z",
+      "updatedAt": null
+    },
+    {
+      "id": 1760157993708,
+      "projectId": 1,
+      "description": "2",
+      "status": "pending",
+      "createdAt": "2025-10-11T04:46:33.708Z",
+      "updatedAt": null
+    },
+    {
+      "id": 1760158242581,
+      "projectId": 1,
+      "description": "asd",
+      "status": "pending",
+      "createdAt": "2025-10-11T04:50:42.581Z",
       "updatedAt": null
     }
   ],
@@ -99,7 +115,31 @@
       "areaM2": 120.5,
       "yearsOld": 10,
       "status": "occupied",
-      "createdAt": "2025-10-01T10:00:00Z"
+      "createdAt": "2025-10-01T10:00:00Z",
+      "alerts": [
+        {
+          "id": 1,
+          "time": "2025-10-10T12:00:00Z",
+          "message": "Smoke detected in kitchen"
+        },
+        {
+          "id": 2,
+          "time": "2025-10-11T09:30:00Z",
+          "message": "Water leak in bathroom"
+        }
+      ],
+      "locks": [
+        {
+          "id": 1,
+          "time": "2025-10-10T08:00:00Z",
+          "action": "Front door locked"
+        },
+        {
+          "id": 2,
+          "time": "2025-10-10T18:00:00Z",
+          "action": "Front door unlocked"
+        }
+      ]
     }
   ],
   "owners": [

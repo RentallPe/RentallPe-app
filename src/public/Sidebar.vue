@@ -1,3 +1,4 @@
+
 <template>
   <aside class="sidebar">
     <div class="sidebar-logo">
