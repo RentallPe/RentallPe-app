@@ -1,64 +1,54 @@
 {
-  "option": {
-    "home": "Home",
-    "about": "About",
-    "categories": "Categories",
-    "tutorials": "Tutorials"
+  "sidebar": {
+    "dashboard": "Dashboard",
+    "properties": "Properties",
+    "combos": "Combos",
+    "alerts": "Alerts",
+    "billing": "Billing",
+    "settings": "Settings",
+    "logout": "Logout"
   },
-  "authoring-phrase": {
-    "intro": "Made with",
-    "use": "using",
-    "author": "by {brand} Development Team"
+  "header": {
+    "welcome": "Welcome, {{name}}",
+    "language": "Language",
+    "notifications": "Notifications"
   },
-  "about": {
-    "title": "About Us",
-    "content": "ACME Learning Center is an Education Business Platform, part of ACME Corporation."
+  "property": {
+    "title": "Your Properties",
+    "address": "Address",
+    "comboAssigned": "Assigned Combos",
+    "noCombos": "No combos assigned"
   },
-  "home": {
-    "title": "Welcome",
-    "content": "Welcome to ACME Learning Center, your gateway to quality education."
+  "combo": {
+    "title": "Available Combos",
+    "description": "Description",
+    "installDays": "Installation Time",
+    "price": "Price",
+    "assign": "Assign to Property"
   },
-  "page-not-found": {
-    "title": "Page Not Found",
-    "content": "The path {unavailable-route} does not exist.",
-    "go-home": "Go Home"
+  "incident": {
+    "title": "Reported Incidents",
+    "status": "Status",
+    "pending": "Pending",
+    "resolved": "Resolved",
+    "date": "Date",
+    "description": "Description"
   },
-  "categories": {
-    "title": "Categories",
-    "id": "ID",
-    "name": "Name",
-    "actions": "Actions",
-    "new": "New Category",
-    "confirm-delete": "Are you sure you want to delete {name}?",
-    "delete-header": "Confirm Deletion"
+  "billing": {
+    "title": "Billing Summary",
+    "method": "Payment Method",
+    "expiry": "Expiry",
+    "cvv": "CVV"
   },
-  "category": {
-    "new-title": "Create New Category",
-    "edit-title": "Edit Category",
-    "name": "Name",
+  "buttons": {
     "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm"
   },
-  "tutorials": {
-    "title": "Tutorials",
-    "id": "ID",
-    "summary": "Summary",
-    "category-id": "Category ID",
-    "actions": "Actions",
-    "new": "New Tutorial",
-    "confirm-delete": "Are you sure you want to delete {name}?",
-    "delete-header": "Confirm Deletion"
-  },
-  "tutorial": {
-    "new-title": "Create New Tutorial",
-    "edit-title": "Edit Tutorial",
-    "title": "Title",
-    "summary": "Summary",
-    "category": "Category",
-    "save": "Save",
-    "cancel": "Cancel"
-  },
-  "errors": {
-    "occurred": "Errors occurred"
+  "toast": {
+    "success": "Action completed successfully",
+    "error": "Something went wrong"
   }
 }
