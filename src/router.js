@@ -11,7 +11,7 @@ import MyProperties from "@/shared/views/MyProperties.vue";
 import AddProperty from "@/shared/views/AddProperty.vue";
 import Billing from "@/shared/views/Billing.vue";
 import Alerts from "@/shared/views/alerts.vue";
-import Dashboard from "@/shared/views/Dashboard.vue";
+import Dashboard from "@/shared/views/dashboard.vue";
 import pageNotFound from "@/shared/views/page-not-found.vue";
 
 const routes = [

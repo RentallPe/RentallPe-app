@@ -1,26 +1,14 @@
+
 export class BaseEndpoint {
-    constructor(baseApi, endpointPath) {
-        this.http = baseApi.http;
-        this.endpointPath = endpointPath;
-    }
-
-    getAll() {
-        return this.http.get(this.endpointPath);
-    }
-
-    getById(id) {
-        return this.http.get(`${this.endpointPath}/${id}`);
-    }
-
-    create(resource) {
-        return this.http.post(this.endpointPath, resource);
-    }
-
-    update(id, resource) {
-        return this.http.put(`${this.endpointPath}/${id}`, resource);
-    }
-
-    delete(id) {
-        return this.http.delete(`${this.endpointPath}/${id}`);
-    }
+  constructor(api, path) {
+    
+    if (!path) throw new Error('[BaseEndpoint] path indefinido');
+    this.http = api.http;
+    this.path = path.startsWith('/') ? path : `/${path}`;
+  }
+  getAll()           { return this.http.get(this.path).then(r => r.data); }
+  getById(id)        { return this.http.get(`${this.path}/${id}`).then(r => r.data); }
+  create(resource)   { return this.http.post(this.path, resource).then(r => r.data); }
+  update(id, data)   { return this.http.put(`${this.path}/${id}`, data).then(r => r.data); }
+  delete(id)         { return this.http.delete(`${this.path}/${id}`).then(r => r.data); }
 }

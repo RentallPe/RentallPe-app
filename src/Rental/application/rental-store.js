@@ -39,13 +39,13 @@ const assemblers = {
 
 export const useRentalStore = defineStore('rental', () => {
 
-    const lists    = shallowRef({});      // { [name]: Entity[] }
-    const loaded   = ref({});             // { [name]: boolean }
-    const indexes  = shallowRef({});      // { [name]: Map<id, index> }
-    const errors   = shallowRef([]);      // Error[]
+    const lists    = shallowRef({});      
+    const loaded   = ref({});             
+    const indexes  = shallowRef({});     
+    const errors   = shallowRef([]);     
 
 
-    const inflight = new Map();           // name -> Promise<void>
+    const inflight = new Map();           
 
     function ensureBuckets(name) {
         if (!lists.value[name])   lists.value[name] = [];
