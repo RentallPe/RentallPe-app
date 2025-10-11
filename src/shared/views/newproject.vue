@@ -195,4 +195,19 @@ function getProviderName(providerId) {
 .text-black {
   color: #000;
 }
+
+.combo-card,
+.combo-card h3,
+.combo-card p {
+  color: #111111 !important;
+}
+
+
+.provider-card,
+.provider-card h3,
+.provider-card p {
+  color: #ffffff !important;
+  background-color: #373737;
+}
+
 </style>

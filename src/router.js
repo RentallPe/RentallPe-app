@@ -15,6 +15,7 @@ import Dashboard from "@/shared/views/Dashboard.vue";
 import Register from "@/shared/views/register.vue";
 import pageNotFound from "@/shared/views/page-not-found.vue";
 import ProviderDetail from "@/shared/views/ProviderDetail.vue";
+import LoginComponent from "@/shared/views/login-component.vue";
 
 const routes = [
     { path: '/', component: generalLoginComponent },
@@ -32,7 +33,9 @@ const routes = [
     {path: '/alerts' , component: Alerts},
     {path:'/dashboard', component: Dashboard},
     {path: '/:pathMatch(.*)*', name:'NorFound', component: pageNotFound},
-    {path: '/register', component: Register},
+    {path:'/login',component: LoginComponent,meta:{ hideSidebar: true}},
+    {path: '/register', component: Register,meta: { hideSidebar: true }
+    },
     {path: "/provider/:id",name: "ProviderDetail",component: ProviderDetail,props: true},
 
 

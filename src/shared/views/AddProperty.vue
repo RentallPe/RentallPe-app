@@ -54,16 +54,18 @@
 
 <script setup>
 import { Property } from "@/Rental/domain/model/property.entity.js";
-import { addProperty } from "@/Rental/infrastructure/property.service.js";
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import {useRentalStore} from "@/Rental/application/rental-store.js";
+
 const { t } = useI18n();
 const router = useRouter();
+const store = useRentalStore();
 
 const newProperty = ref(new Property({
   id: null,
-  ownerId: 1, // o dinámico según el usuario
+  ownerId: 1, // dinámico según el usuario logueado
   address: "",
   ubigeo: "",
   province: "",
@@ -81,16 +83,15 @@ const newProperty = ref(new Property({
 }));
 
 async function saveProperty() {
-  await addProperty(newProperty.value);
+  await store.create("properties", newProperty.value);
   router.push("/my-properties");
 }
-
-
 
 function selectImage() {
   alert("Image upload not implemented yet.");
 }
 </script>
+
 
 
 <style scoped>

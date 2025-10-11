@@ -4,15 +4,13 @@
       <img src="/src/public/logo-rentalpe.png" alt="RentalPe Logo" class="logo" />
       <h2 class="brand">RENTALPE</h2>
 
-      <input v-model="fullName" placeholder="Nombre" class="form-control" />
-      <input v-model="email" type="email" placeholder="Correo Electrónico" class="form-control" />
-      <input v-model="password" type="password" placeholder="Contraseña" class="form-control" />
-      <input v-model="repeatPassword" type="password" placeholder="Repetir contraseña" class="form-control" />
+      <input v-model="email" type="email" placeholder="correo electrónico" class="form-control" />
+      <input v-model="password" type="password" placeholder="contraseña" class="form-control" />
 
-      <button class="btn btn-register" @click="registerUser">Registrar</button>
+      <button class="btn btn-login" @click="loginUser">Ingresar</button>
 
       <p class="text-muted mt-3">
-        <a @click="$router.push('/login')" class="link">Log In</a> |
+        <a @click="$router.push('/register')" class="link">Registrarse</a> |
         <a href="#" class="link">¿olvidó su contraseña?</a>
       </p>
     </div>
@@ -20,43 +18,27 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
-import {useRentalStore} from "@/Rental/application/rental-store.js";
-import { useRouter } from "vue-router";
-const router = useRouter();
+import { ref } from 'vue'
+import { useRentalStore} from "@/Rental/application/rental-store.js";
 
-
-const fullName = ref('')
 const email = ref('')
 const password = ref('')
-const repeatPassword = ref('')
 const rentalStore = useRentalStore()
 
-async function registerUser() {
-  if (password.value !== repeatPassword.value) {
-    alert("Las contraseñas no coinciden");
-    return;
-  }
+async function loginUser() {
+  await rentalStore.fetchAll('users')
+  const users = rentalStore.list('users').value
 
-  const newUser = {
-    id: Date.now(),
-    fullName: fullName.value,
-    email: email.value,
-    password: password.value,
-    phone: "",
-    createdAt: new Date().toISOString()
-  };
-
-  try {
-    const user = await rentalStore.create("users", newUser);
+  const user = users.find(u => u.email === email.value && u.password === password.value)
+  if (user) {
+    alert(`Bienvenido ${user.fullName}`);
     localStorage.setItem("currentUser", JSON.stringify(user));
-    alert("Registro exitoso, bienvenido " + user.fullName);
     router.push("/dashboard"); // 👈 redirige al dashboard
-  } catch (error) {
-    alert("Error al registrar el usuario");
+  } else {
+    alert("Correo o contraseña incorrectos");
   }
-}
 
+}
 </script>
 
 <style scoped>
@@ -74,7 +56,7 @@ async function registerUser() {
   padding: 2rem;
   width: 350px;
   text-align: center;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
 .logo {
@@ -97,7 +79,7 @@ async function registerUser() {
   text-align: center;
 }
 
-.btn-register {
+.btn-login {
   background: #ff7070;
   color: white;
   border: none;
@@ -116,7 +98,7 @@ async function registerUser() {
 .link:hover {
   text-decoration: underline;
 }
-.auth-container[data-v-a58de6a7] {
+.auth-container {
   background-color: #ffffff;
 }
 </style>

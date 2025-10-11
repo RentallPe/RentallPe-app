@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import {BaseEndpoint} from "@/shared/infrastructure/base-endpoint.js";
 import { ref, computed, shallowRef } from 'vue';
 import { RentalApi } from '@/Rental/infrastructure/rental-api.js';
 import { UserAssembler } from '@/Rental/infrastructure/user.assembler.js';
@@ -227,4 +228,5 @@ export const useRentalStore = defineStore('rental', () => {
 
         create, update, remove
     };
+
 });
