@@ -2,11 +2,13 @@
   "users": [
     {
       "id": 1,
-      "fullName": "Mario Vargas",
+      "fullName": "Mario Vargasss",
       "email": "mario@example.com",
       "password": "1234",
       "phone": "999999999",
-      "createdAt": "2025-10-01T06:00:00Z"
+      "createdAt": "2025-10-01T06:00:00Z",
+      "photo": "https://randomuser.me/api/portraits/men/75.jpg",
+      "paymentMethods": []
     }
   ],
   "iotDevices": [
@@ -81,7 +83,7 @@
       "id": 1,
       "projectId": 1,
       "providerId": 1,
-      "amount": 10000.0,
+      "amount": 10000,
       "estimatedDays": 30,
       "createdAt": "2025-10-01T13:00:00Z"
     }
@@ -150,9 +152,3 @@
     }
   ]
 }
-
-
-
-
-
-

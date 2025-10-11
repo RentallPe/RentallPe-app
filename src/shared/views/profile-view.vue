@@ -1,50 +1,50 @@
 <template>
   <div class="profile-wrapper">
     <pv-card class="profile-card">
-      <!-- Título -->
+
       <template #title>
         <div class="flex align-items-center gap-2">
           <i class="pi pi-user text-primary text-2xl"></i>
           <h2 class="m-0 text-black">My Profile</h2>
-          <!-- Botón que lleva a la página de edición -->
-          <router-link to="/edit-profile">
-            <pv-button
-                icon="pi pi-pencil"
-                size="small"
-            />
-          </router-link>
 
+          <router-link to="/edit-profile">
+            <pv-button icon="pi pi-pencil" size="small" />
+          </router-link>
         </div>
       </template>
 
       <template #content>
         <div class="profile-info grid">
-          <!-- Avatar -->
+
           <div class="col-12 md:col-4 flex justify-content-center">
             <pv-avatar
-                :image="user.photo"
+                :image="user.photo || 'https://randomuser.me/api/portraits/men/75.jpg'"
                 shape="circle"
                 size="xlarge"
                 class="shadow-2 border-circle"
             />
           </div>
 
-          <!-- Información -->
+
           <div class="col-12 md:col-8">
             <h3 class="text-black mb-3">Information</h3>
 
             <div class="info-grid">
               <div class="info-item">
                 <span class="info-label">Name</span>
-                <span class="info-value">{{ user.name }}</span>
+                <span class="info-value">{{ user.fullName }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">Country</span>
-                <span class="info-value">{{ user.country }}</span>
+                <span class="info-label">Email</span>
+                <span class="info-value">{{ user.email }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">Department</span>
-                <span class="info-value">{{ user.department }}</span>
+                <span class="info-label">Phone</span>
+                <span class="info-value">{{ user.phone }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Created At</span>
+                <span class="info-value">{{ user.createdAt }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">Payment Methods</span>
@@ -65,7 +65,6 @@
           </div>
         </div>
 
-        <!-- Propiedades -->
         <div class="mt-5">
           <h3 class="text-black mb-3">My Properties</h3>
 
@@ -76,14 +75,17 @@
                 class="col-12 md:col-6 lg:col-4"
             >
               <pv-card class="property-card">
-
                 <template #header>
                   <router-link :to="`/property/${property.id}`">
-                  <img :src="property.image" alt="Property image" class="property-image" />
+                    <img
+                        :src="property.image || 'https://picsum.photos/300/200?random=' + property.id"
+                        alt="Property image"
+                        class="property-image"
+                    />
                   </router-link>
                 </template>
                 <template #content>
-                  <h4 class="m-0">{{ property.name }}</h4>
+                  <h4 class="m-0">{{ property.name || 'Property ' + property.id }}</h4>
                   <p class="text-600 text-sm">{{ property.address }}</p>
                 </template>
               </pv-card>
@@ -93,7 +95,6 @@
       </template>
     </pv-card>
 
-    <!-- Diálogo para añadir método de pago -->
     <pv-dialog v-model:visible="showDialog" modal header="Add Payment Option" :style="{ width: '400px' }">
       <div class="p-fluid">
         <div class="field">
@@ -141,12 +142,13 @@
         <pv-button label="Accept" severity="success" @click="savePayment" />
       </template>
     </pv-dialog>
-
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
+import axios from "axios";
+import { UserAssembler } from "@/Rental/infrastructure/user.assembler.js";
 
 const user = ref({});
 const showDialog = ref(false);
@@ -158,15 +160,16 @@ const newPayment = ref({
   cvv: ""
 });
 const cardTypes = [
-  { label: "Visa", value: "Visa" },
-  { label: "MasterCard", value: "MasterCard" },
+  {label: "Visa", value: "Visa"},
+  {label: "MasterCard", value: "MasterCard"},
 ];
 
-
 onMounted(async () => {
-  const res = await fetch("http://localhost:3000/user");
-  const data = await res.json();
-  user.value = data;
+  const response = await axios.get("http://localhost:3000/users/1");
+  user.value = UserAssembler.toEntityFromResource(response.data);
+
+  user.value.paymentMethods = response.data.paymentMethods || [];
+  user.value.properties = response.data.properties || [];
 });
 
 async function savePayment() {
@@ -175,21 +178,14 @@ async function savePayment() {
     ...newPayment.value
   };
 
-  // PATCH al backend (json-server)
-  await fetch("http://localhost:3000/user", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      paymentMethods: [...user.value.paymentMethods, newMethod]
-    })
+  await axios.patch("http://localhost:3000/users/1", {
+    paymentMethods: [...user.value.paymentMethods, newMethod]
   });
 
-  // Actualizar en memoria
   user.value.paymentMethods.push(newMethod);
 
-  // Resetear y cerrar
   showDialog.value = false;
-  newPayment.value = { type: "", number: "", expiry: "", cvv: "" };
+  newPayment.value = {type: "", number: "", expiry: "", cvv: ""};
 }
 </script>
 
@@ -221,7 +217,6 @@ async function savePayment() {
   color: #000;
 }
 
-/* Info */
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -1,15 +1,27 @@
+<script setup>
+import { ref, onMounted } from "vue";
+import axios from "axios";
+import { PropertyAssembler } from "@/Rental/infrastructure/property.assembler.js";
+
+const properties = ref([]);
+
+onMounted(async () => {
+  const response = await axios.get("http://localhost:3000/properties");
+  properties.value = PropertyAssembler.toEntitiesFromResponse(response);
+});
+</script>
+
 <template>
   <div class="properties-wrapper">
     <pv-card class="new-project-card">
       <template #title>
-        <div>
         <h2 class="page-title">My Properties</h2>
-        </div>
       </template>
+
       <template #content>
         <div class="grid property-grid">
           <div
-              v-for="property in user.properties"
+              v-for="property in properties"
               :key="property.id"
               class="col-12 md:col-6"
           >
@@ -20,6 +32,9 @@
                 </router-link>
                 <h3 class="property-title">{{ property.name }}</h3>
                 <p class="property-address">{{ property.address }}</p>
+                <p><strong>Province:</strong> {{ property.province }}</p>
+                <p><strong>Region:</strong> {{ property.region }}</p>
+                <p><strong>Status:</strong> {{ property.status }}</p>
                 <p><strong>Handover date:</strong> {{ property.handoverDate || 'Not defined' }}</p>
                 <div class="progress-bar">
                   <div class="progress-fill" :style="{ width: property.progress + '%' }"></div>
@@ -31,24 +46,14 @@
         </div>
 
         <div class="flex justify-content-end mt-4">
-          <pv-button label="Add property" icon="pi pi-plus" severity="primary" />
+          <router-link to="/add-property">
+            <pv-button label="Add property" icon="pi pi-plus" severity="primary" />
+          </router-link>
         </div>
       </template>
-
     </pv-card>
   </div>
 </template>
-
-<script setup>
-import { ref, onMounted } from "vue";
-
-const user = ref({ properties: [] });
-
-onMounted(async () => {
-  const res = await fetch("http://localhost:3000/user");
-  user.value = await res.json();
-});
-</script>
 
 <style scoped>
 .properties-wrapper {

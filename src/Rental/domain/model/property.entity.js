@@ -1,34 +1,25 @@
-/*
-*  {
-      "id": 1,
-      "ownerId": 1,
-      "address": "742 Evergreen Terrace",
-      "ubigeo": "150101",
-      "province": "Lima",
-      "region": "Lima",
-      "areaM2": 120.5,
-      "yearsOld": 10,
-      "status": "occupied",
-      "createdAt": "2025-10-01T10:00:00Z"
-    }*/
-
+// Rental/domain/model/property.entity.js
 import { Owner } from "./owner.entity";
 
 export class Property {
   constructor({
-    id,
-    ownerId,
-    address,
-    ubigeo,
-    province,
-    region,
-    areaM2,
-    yearsOld,
-    status,
-    createdAt,
-  }) {
+                id,
+                ownerId,
+                address,
+                ubigeo,
+                province,
+                region,
+                areaM2,
+                yearsOld,
+                status,
+                createdAt,
+                image = "",
+                name = "",
+                handoverDate = null,
+                progress = 0
+              }) {
     this.id = id;
-    this.ownerId = new Owner();
+    this.ownerId = ownerId; // mantener como número
     this.address = address;
     this.ubigeo = ubigeo;
     this.province = province;
@@ -37,6 +28,14 @@ export class Property {
     this.yearsOld = yearsOld;
     this.status = status;
     this.createdAt = createdAt;
+
+
+    this.image = image;
+    this.name = name;
+    this.handoverDate = handoverDate;
+    this.progress = progress;
+
+    this.owner = null;
   }
 
   setOwner(owner) {
@@ -46,6 +45,7 @@ export class Property {
       throw new Error("Invalid Owner");
     }
   }
+
   getOwner() {
     return this.owner;
   }

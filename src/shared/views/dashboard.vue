@@ -82,7 +82,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
-import { getUser } from "@/services/api";
+
 
 const { t } = useI18n();
 const user = ref({ properties: [], incidents: [] });

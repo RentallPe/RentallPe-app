@@ -27,16 +27,16 @@
 
             <div class="info-grid">
               <div class="info-item">
-                <label class="info-label" for="name">Name</label>
-                <pv-input-text id="name" v-model="editUser.name" class="info-input" />
+                <label class="info-label" for="fullName">Name</label>
+                <pv-input-text id="fullName" v-model="editUser.fullName" class="info-input" />
               </div>
               <div class="info-item">
-                <label class="info-label" for="country">Country</label>
-                <pv-input-text id="country" v-model="editUser.country" class="info-input" />
+                <label class="info-label" for="email">Email</label>
+                <pv-input-text id="email" v-model="editUser.email" class="info-input" />
               </div>
               <div class="info-item">
-                <label class="info-label" for="department">Department</label>
-                <pv-input-text id="department" v-model="editUser.department" class="info-input" />
+                <label class="info-label" for="phone">Phone</label>
+                <pv-input-text id="phone" v-model="editUser.phone" class="info-input" />
               </div>
 
               <!-- Métodos de pago -->
@@ -82,22 +82,22 @@ const user = ref({});
 const editUser = ref({});
 
 onMounted(async () => {
-  const res = await fetch("http://localhost:3000/user");
+  const res = await fetch("http://localhost:3000/users/1");
   const data = await res.json();
   user.value = data;
   editUser.value = {
-    name: data.name,
-    country: data.country,
-    department: data.department,
-    photo: data.photo,
+    fullName: data.fullName,
+    email: data.email,
+    phone: data.phone,
+    photo: data.photo || "https://randomuser.me/api/portraits/men/75.jpg",
     paymentMethods: data.paymentMethods || []
   };
 });
 
 async function saveUser() {
-  await fetch("http://localhost:3000/user", {
+  await fetch("http://localhost:3000/users/1", {
     method: "PATCH",
-    headers: { "Content-Type": "application/json" },
+    headers: {"Content-Type": "application/json"},
     body: JSON.stringify(editUser.value)
   });
   window.location.href = "/profile";
@@ -129,14 +129,13 @@ function deletePayment(id) {
   height: 140px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .text-black {
   color: #000;
 }
 
-/* Igual que en Profile */
 .info-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
