@@ -13,7 +13,7 @@
 
       <p class="text-muted mt-3">
         <a @click="$router.push('/login')" class="link">Log In</a> |
-        <a href="#" class="link">¿Olvidó su contraseña?</a>
+        <a href="#" class="link">¿Olvido su contraseña?</a>
       </p>
     </div>
   </div>
