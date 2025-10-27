@@ -19,27 +19,53 @@
 
 <script setup>
 import { ref } from 'vue'
-import { useRentalStore} from "@/Rental/application/rental-store.js";
+import { useRentalStore } from "@/Rental/application/rental-store.js"
+import { useUserStore } from "@/stores/user"
+import { useRouter } from 'vue-router'
+import { nextTick } from 'vue'
 
 const email = ref('')
 const password = ref('')
 const rentalStore = useRentalStore()
+const userStore = useUserStore()
+const router = useRouter()
 
 async function loginUser() {
   await rentalStore.fetchAll('users')
-  const users = rentalStore.list('users').value
+  await nextTick()
+  const users = rentalStore.list('users').value ?? []
 
-  const user = users.find(u => u.email === email.value && u.password === password.value)
+
+  console.log("Usuarios cargados en login:", users)
+
+  const user = users.find(
+      u => u.email.trim().toLowerCase() === email.value.trim().toLowerCase() &&
+          u.password.trim() === password.value.trim()
+  )
+
+
   if (user) {
-    alert(`Bienvenido ${user.fullName}`);
-    localStorage.setItem("currentUser", JSON.stringify(user));
-    router.push("/dashboard"); // 👈 redirige al dashboard
-  } else {
-    alert("Correo o contraseña incorrectos");
-  }
+    alert(`Bienvenido ${user.fullName}`)
 
+    // Guardar en localStorage
+    localStorage.setItem("currentUser", JSON.stringify(user))
+
+    // Guardar en Pinia
+    userStore.setUser(user)
+
+    // Redirigir según rol
+    if (user.role === 'provider') {
+      router.push("/dashboard") // o la ruta inicial de proveedor
+    } else {
+      router.push("/dashboard") // o la ruta inicial de cliente
+    }
+  } else {
+    alert("Correo o contraseña incorrectos")
+  }
 }
+
 </script>
+
 
 <style scoped>
 .auth-container {

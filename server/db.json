@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "id": 1,
+      "id": "1",
       "fullName": "Mario Vargasssss",
       "email": "mario@example.com",
       "password": "1234",
@@ -17,6 +17,48 @@
           "cvv": "123"
         }
       ]
+    },
+    {
+      "id": 1761604976429,
+      "fullName": "Humberto ",
+      "email": "asmdasmop@amdiasm.com",
+      "password": "1234",
+      "phone": "",
+      "createdAt": "2025-10-27T22:42:56.429Z"
+    },
+    {
+      "id": 1761605483856,
+      "fullName": "Testeo",
+      "email": "testeo.com",
+      "password": "1234r",
+      "phone": "",
+      "createdAt": "2025-10-27T22:51:23.856Z"
+    },
+    {
+      "id": 1761605876307,
+      "fullName": "Testeo3",
+      "email": "testeo3@gmail.com",
+      "password": "1234c",
+      "phone": "",
+      "createdAt": "2025-10-27T22:57:56.307Z"
+    },
+    {
+      "id": 1761606683967,
+      "fullName": "Juan",
+      "email": "juan@lop",
+      "password": "1234",
+      "phone": "",
+      "createdAt": "2025-10-27T23:11:23.967Z",
+      "role": "provider"
+    },
+    {
+      "id": 1761607140418,
+      "fullName": "Test3",
+      "email": "asdq1@1234",
+      "password": "1234",
+      "phone": "",
+      "createdAt": "2025-10-27T23:19:00.418Z",
+      "role": "customer"
     }
   ],
   "iotDevices": [],
@@ -24,7 +66,7 @@
   "invoices": [],
   "incidents": [
     {
-      "id": 1760166122111,
+      "id": "1760166122111",
       "projectId": 1,
       "description": "as",
       "status": "pending",
@@ -38,7 +80,7 @@
   "budgets": [],
   "properties": [
     {
-      "id": 1760165416141,
+      "id": "1760165416141",
       "ownerId": 1,
       "address": "dasdasd",
       "ubigeo": "asdasd",
@@ -52,12 +94,32 @@
       "progress": 0,
       "alerts": [],
       "locks": [],
-      "owner": null
+      "owner": null,
+      "combos": [
+        {
+          "id": 2,
+          "providerId": 1,
+          "name": "Security Essentials",
+          "description": "Smart locks, motion sensors, and cameras.",
+          "price": 950,
+          "installDays": 3,
+          "image": "https://picsum.photos/400/250?random=2"
+        },
+        {
+          "id": 1,
+          "providerId": 1,
+          "name": "Smart Kitchen Pack",
+          "description": "Includes smart oven, water filter, and lighting.",
+          "price": 1200,
+          "installDays": 5,
+          "image": "https://picsum.photos/400/250?random=1"
+        }
+      ]
     }
   ],
   "owners": [
     {
-      "id": 1,
+      "id": "1",
       "ownerTypeId": "T1",
       "businessName": "Juan Pérez SAC",
       "documentType": "RUC",
@@ -70,12 +132,12 @@
   ],
   "providers": [
     {
-      "id": 1,
+      "id": "1",
       "name": "Construcciones S.A.",
       "contact": "contact@construcciones.com"
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "SmartHome Perú",
       "contact": "ventas@smarthome.pe"
     }
@@ -91,7 +153,7 @@
   ],
   "combos": [
     {
-      "id": 1,
+      "id": "1",
       "providerId": 1,
       "name": "Smart Kitchen Pack",
       "description": "Includes smart oven, water filter, and lighting.",
@@ -100,7 +162,7 @@
       "image": "https://picsum.photos/400/250?random=1"
     },
     {
-      "id": 2,
+      "id": "2",
       "providerId": 1,
       "name": "Security Essentials",
       "description": "Smart locks, motion sensors, and cameras.",
@@ -109,7 +171,7 @@
       "image": "https://picsum.photos/400/250?random=2"
     },
     {
-      "id": 3,
+      "id": "3",
       "providerId": 2,
       "name": "Eco Living Combo",
       "description": "Solar panels, smart thermostat, water-saving faucets.",

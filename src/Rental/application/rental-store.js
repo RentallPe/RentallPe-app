@@ -80,7 +80,9 @@ export const useRentalStore = defineStore('rental', () => {
 
         const p = ep.getAll()
             .then((resp) => {
+                console.log("Respuesta cruda de API:", resp)
                 const entities = A.toEntitiesFromResponse(resp);
+                console.log("Después de assembler:", entities)
                 lists.value[name] = entities;
                 loaded.value[name] = true;
 

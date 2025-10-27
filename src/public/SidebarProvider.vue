@@ -1,4 +1,3 @@
-
 <template>
   <aside class="sidebar">
     <div class="sidebar-logo">
@@ -11,19 +10,9 @@
         <span>{{ t('menu.dashboard') }}</span>
       </router-link>
 
-      <router-link to="/profile" class="nav-item" active-class="active">
-        <i class="pi pi-user"></i>
-        <span>{{ t('menu.profile') }}</span>
-      </router-link>
-
-      <router-link to="/new-project" class="nav-item" active-class="active">
-        <i class="pi pi-plus-circle"></i>
-        <span>{{ t('menu.newProject') }}</span>
-      </router-link>
-
-      <router-link to="/my-properties" class="nav-item" active-class="active">
-        <i class="pi pi-building"></i>
-        <span>{{ t('menu.myProperties') }}</span>
+      <router-link to="/my-combos" class="nav-item" active-class="active">
+        <i class="pi pi-box"></i>
+        <span>{{ t('menu.myCombos') }}</span>
       </router-link>
 
       <router-link to="/support" class="nav-item" active-class="active">
@@ -36,26 +25,30 @@
         <span>{{ t('menu.alerts') }}</span>
       </router-link>
 
-      <router-link to="/consumption" class="nav-item" active-class="active">
-        <i class="pi pi-chart-line"></i>
-        <span>{{ t('menu.consumption') }}</span>
+      <router-link to="/my-clients" class="nav-item" active-class="active">
+        <i class="pi pi-users"></i>
+        <span>{{ t('menu.myClients') }}</span>
       </router-link>
 
-      <router-link to="/billing" class="nav-item" active-class="active">
+      <router-link to="/payment" class="nav-item" active-class="active">
         <i class="pi pi-credit-card"></i>
-        <span>{{ t('menu.billing') }}</span>
+        <span>{{ t('menu.payment') }}</span>
       </router-link>
+
+      <router-link to="/profile" class="nav-item" active-class="active">
+        <i class="pi pi-user"></i>
+        <span>{{ t('menu.profile') }}</span>
+      </router-link>
+
+      <div class="sidebar-footer">
+        <pv-select-button v-model="locale" :options="availableLocales" />
+        <button class="logout-btn" @click="logout">
+          <i class="pi pi-sign-out"></i>
+          <span>Logout</span>
+        </button>
+
+      </div>
     </nav>
-
-    <!-- Footer con selector de idioma -->
-    <div class="sidebar-footer">
-      <pv-select-button v-model="locale" :options="availableLocales" />
-      <button class="logout-btn" @click="logout">
-        <i class="pi pi-sign-out"></i>
-        <span>Logout</span>
-      </button>
-
-    </div>
   </aside>
 </template>
 
@@ -69,7 +62,6 @@ const router = useRouter();
 const userStore = useUserStore();
 
 function logout() {
-
   localStorage.removeItem("currentUser");
   userStore.logout?.();
   router.push("/login");
@@ -79,15 +71,18 @@ function logout() {
 
 <style scoped>
 .sidebar {
-  width: 230px;
+  wwidth: 230px;
   background-color: #f76c6c;
   color: #000;
   height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   padding: 1.5rem 0;
   position: fixed;
+  align-content: flex-start;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-evenly;
 }
 
 .sidebar-logo {

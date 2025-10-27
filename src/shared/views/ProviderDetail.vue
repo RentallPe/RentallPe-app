@@ -94,45 +94,24 @@ const selectedAddress = ref(null);
 
 const providerId = computed(() => String(route.params.id || ""));
 
-
 const providers = rental.list("providers");
 const properties = rental.list("properties");
-
+const allCombos = rental.list("combos");
 
 const provider = computed(
-  () => (providers.value || []).find(p => String(p.id) === providerId.value) || null
+    () => (providers.value || []).find(p => String(p.id) === providerId.value) || null
 );
 
 
 const combos = computed(() => {
-  const p = provider.value;
-  if (!p?.id) return [];
-  return [
-    {
-      id: `c-${p.id}-basic`,
-      name: `Basic combo by ${p.name}`,
-      description: "Basic sensors + installation.",
-      price: 199,
-      installDays: 3,
-      providerId: p.id,
-      image: `https://picsum.photos/seed/combo-${p.id}-1/640/360`,
-    },
-    {
-      id: `c-${p.id}-pro`,
-      name: `Pro combo by ${p.name}`,
-      description: "Extended sensors + monitoring.",
-      price: 349,
-      installDays: 5,
-      providerId: p.id,
-      image: `https://picsum.photos/seed/combo-${p.id}-2/640/360`,
-    },
-  ];
+  return (allCombos.value || []).filter(c => String(c.providerId) === providerId.value);
 });
 
 onMounted(async () => {
   await Promise.all([
     rental.fetchAll("providers"),
     rental.fetchAll("properties"),
+    rental.fetchAll("combos"),
   ]);
   selectedAddress.value = (properties.value || [])[0] || null;
 });
@@ -156,20 +135,15 @@ async function buyCombo() {
     ...target,
     combos: [
       ...(Array.isArray(target.combos) ? target.combos : []),
-      {
-        id: combo.id,
-        name: combo.name,
-        providerId: combo.providerId,
-        price: combo.price,
-        installDays: combo.installDays,
-      },
+      combo
     ],
   };
 
-  await rental.update("properties", next); 
+  await rental.update("properties", next);
   dialogVisible.value = false;
 }
 </script>
+
 
 
 <style scoped>

@@ -9,12 +9,13 @@
     }*/
 
 export class User{
-    constructor({id, fullName, email, password, phone, createdAt}){
+    constructor({id, fullName, email, password, phone, createdAt,role}){
         this.id = id;
         this.fullName = fullName;
         this.email = email;
         this.password = password;
         this.phone = phone;
         this.createdAt = createdAt;
+        this.role = role || "customer";
     }
 }

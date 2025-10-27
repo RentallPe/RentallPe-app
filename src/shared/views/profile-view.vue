@@ -4,7 +4,7 @@
       <template #title>
         <div class="flex align-items-center gap-2">
           <i class="pi pi-user text-2xl"></i>
-          <h2 class="m-0 title">My Profile</h2>
+          <h2 class="m-0 title">{{ t('profile.title') }}</h2>
           <router-link to="/edit-profile">
             <pv-button icon="pi pi-pencil" size="small" />
           </router-link>
@@ -18,11 +18,11 @@
           </div>
 
           <div class="col-12 md:col-8 col-fix">
-            <h3 class="section">Information</h3>
+            <h3 class="section">{{ t('profile.information') }}</h3>
 
             <div class="info-grid">
               <div class="info-item">
-                <span class="info-label">Name</span>
+                <span class="info-label">{{ t('profile.name') }}</span>
                 <span class="info-value">{{ user.fullName || '—' }}</span>
               </div>
               <div class="info-item">
@@ -30,22 +30,27 @@
                 <span class="info-value">{{ user.email || '—' }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">Phone</span>
-                <span class="info-value">{{ user.phone || '—' }}</span>
+                <span class="info-label">{{ t('profile.country') }}</span>
+                <span class="info-value">{{ user.country || '—' }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">Created At</span>
-                <span class="info-value">{{ createdAtText }}</span>
+                <span class="info-label">{{ t('profile.department') }}</span>
+                <span class="info-value">{{ user.department || '—' }}</span>
               </div>
-
               <div class="info-item">
-                <span class="info-label">Payment Methods</span>
+                <span class="info-label">{{ t('profile.paymentMethods') }}</span>
                 <div v-for="method in payments" :key="method.id" class="payment-item">
                   <span class="info-value">
                     {{ method.type }} **** {{ String(method.number||'').slice(-4) }} (exp: {{ method.expiry }})
                   </span>
                 </div>
-                <a href="#" class="add-payment" @click.prevent="showDialog = true">+ Add another payment method</a>
+                <a href="#" class="add-payment" @click.prevent="showDialog = true">
+                  + {{ t('profile.addAnotherPayment') }}
+                </a>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Created At</span>
+                <span class="info-value">{{ createdAtText }}</span>
               </div>
             </div>
           </div>
@@ -54,7 +59,7 @@
         <div v-else class="loading">Loading…</div>
 
         <div class="mt-5" v-if="!loading">
-          <h3 class="section">My Properties</h3>
+          <h3 class="section">{{ t('profile.myProperties') }}</h3>
 
           <div class="grid grid-reset">
             <div v-for="property in userProps" :key="property.id" class="col-12 md:col-6 lg:col-4 col-fix">
@@ -62,9 +67,9 @@
                 <template #header>
                   <router-link :to="`/property/${property.id}`">
                     <img
-                      :src="property.image || ('https://picsum.photos/300/200?random=' + property.id)"
-                      alt="Property image"
-                      class="property-image"
+                        :src="property.image || ('https://picsum.photos/300/200?random=' + property.id)"
+                        alt="Property image"
+                        class="property-image"
                     />
                   </router-link>
                 </template>
@@ -79,42 +84,49 @@
       </template>
     </pv-card>
 
-    <pv-dialog v-model:visible="showDialog" modal header="Add Payment Option" :style="{ width: '400px' }">
+    <!-- Dialog para agregar método de pago -->
+    <pv-dialog v-model:visible="showDialog" modal :header="t('profile.addPaymentOption')" :style="{ width: '400px' }">
       <div class="p-fluid">
         <div class="field">
-          <label for="cardType">Type</label>
-          <pv-dropdown id="cardType" v-model="newPayment.type" :options="cardTypes" optionLabel="label" optionValue="value" placeholder="Select card type" />
+          <label for="cardType">{{ t('profile.type') }}</label>
+          <pv-dropdown id="cardType" v-model="newPayment.type" :options="cardTypes" optionLabel="label" optionValue="value" :placeholder="t('profile.type')" />
         </div>
         <div class="field">
-          <label for="cardNumber">Number</label>
+          <label for="cardNumber">{{ t('profile.number') }}</label>
           <pv-input-mask id="cardNumber" v-model="newPayment.number" mask="9999 9999 9999 9999" placeholder="1234 5678 9012 3456" />
         </div>
         <div class="field">
-          <label for="expiry">Expiration Date</label>
+          <label for="expiry">{{ t('profile.expiry') }}</label>
           <pv-input-mask id="expiry" v-model="newPayment.expiry" mask="99/99" placeholder="MM/YY" />
         </div>
         <div class="field">
-          <label for="cvv">Security Code</label>
+          <label for="cvv">{{ t('profile.cvv') }}</label>
           <pv-input-mask id="cvv" v-model="newPayment.cvv" mask="999" placeholder="123" />
         </div>
       </div>
 
       <template #footer>
-        <pv-button label="Cancel" severity="danger" @click="showDialog = false" />
-        <pv-button label="Accept" severity="success" @click="savePayment" />
+        <pv-button :label="t('profile.cancel')" severity="danger" @click="showDialog = false" />
+        <pv-button :label="t('profile.accept')" severity="success" @click="savePayment" />
       </template>
     </pv-dialog>
   </div>
 </template>
 
-
-
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRentalStore } from "@/Rental/application/rental-store";
+import { useI18n } from "vue-i18n";
+import { useRouter } from "vue-router";
+const router = useRouter();
 
-const rental   = useRentalStore();
-const USER_ID  = 1;
+
+const { t } = useI18n();
+const rental = useRentalStore();
+
+// Usuario dinámico desde localStorage
+const saved = localStorage.getItem("currentUser");
+const USER_ID = saved ? JSON.parse(saved).id : 1;
 
 const user       = ref(null);
 const loading    = ref(true);
@@ -136,7 +148,6 @@ onMounted(async () => {
   loading.value = false;
 });
 
-
 const avatarUrl   = computed(() => user.value?.photo || "https://randomuser.me/api/portraits/men/75.jpg");
 const payments    = computed(() => user.value?.paymentMethods ?? []);
 const userProps   = computed(() => {
@@ -152,7 +163,6 @@ const createdAtText = computed(() => {
   });
 });
 
-
 async function savePayment() {
   if (!user.value) return;
   const method = { id: Date.now(), ...newPayment.value };
@@ -160,12 +170,13 @@ async function savePayment() {
     ...user.value,
     paymentMethods: [...(user.value.paymentMethods ?? []), method],
   };
-  await rental.update("users", next);   
-  user.value = next;                    
+  await rental.update("users", next);
+  user.value = next;
   showDialog.value = false;
   newPayment.value = { type: "", number: "", expiry: "", cvv: "" };
 }
 </script>
+
 
 <style scoped>
 

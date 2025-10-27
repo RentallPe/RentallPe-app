@@ -9,6 +9,13 @@
       <input v-model="password" type="password" placeholder="Contraseña" class="form-control" />
       <input v-model="repeatPassword" type="password" placeholder="Repetir contraseña" class="form-control" />
 
+      <!-- Selector de rol -->
+      <select v-model="role" class="form-control">
+        <option disabled value="">Selecciona tu rol</option>
+        <option value="customer">Cliente</option>
+        <option value="provider">Proveedor</option>
+      </select>
+
       <button class="btn btn-register" @click="registerUser">Registrar</button>
 
       <p class="text-muted mt-3">
@@ -20,22 +27,28 @@
 </template>
 
 <script setup>
-import {ref} from 'vue'
-import {useRentalStore} from "@/Rental/application/rental-store.js";
-import { useRouter } from "vue-router";
-const router = useRouter();
+import { ref } from 'vue'
+import { useRentalStore } from "@/Rental/application/rental-store.js"
+import { useRouter } from "vue-router"
 
+const router = useRouter()
+const rentalStore = useRentalStore()
 
 const fullName = ref('')
 const email = ref('')
 const password = ref('')
 const repeatPassword = ref('')
-const rentalStore = useRentalStore()
+const role = ref('')
 
 async function registerUser() {
   if (password.value !== repeatPassword.value) {
-    alert("Las contraseñas no coinciden");
-    return;
+    alert("Las contraseñas no coinciden")
+    return
+  }
+
+  if (!role.value) {
+    alert("Debes seleccionar si eres Cliente o Proveedor")
+    return
   }
 
   const newUser = {
@@ -44,19 +57,25 @@ async function registerUser() {
     email: email.value,
     password: password.value,
     phone: "",
-    createdAt: new Date().toISOString()
-  };
+    createdAt: new Date().toISOString(),
+    role: role.value
+  }
 
   try {
-    const user = await rentalStore.create("users", newUser);
-    localStorage.setItem("currentUser", JSON.stringify(user));
-    alert("Registro exitoso, bienvenido " + user.fullName);
-    router.push("/dashboard"); // 👈 redirige al dashboard
+    const user = await rentalStore.create("users", newUser)
+    localStorage.setItem("currentUser", JSON.stringify(user))
+    alert("Registro exitoso, bienvenido " + user.fullName)
+
+    // Redirigir según rol
+    if (user.role === "provider") {
+      router.push("/dashboard")
+    } else {
+      router.push("/dashboard")
+    }
   } catch (error) {
-    alert("Error al registrar el usuario");
+    alert("Error al registrar el usuario")
   }
 }
-
 </script>
 
 <style scoped>
@@ -74,7 +93,7 @@ async function registerUser() {
   padding: 2rem;
   width: 350px;
   text-align: center;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
 }
 
 .logo {
@@ -116,7 +135,10 @@ async function registerUser() {
 .link:hover {
   text-decoration: underline;
 }
+
+
 .auth-container[data-v-a58de6a7] {
   background-color: #ffffff;
 }
 </style>
+
