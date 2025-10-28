@@ -18,8 +18,7 @@ import ProviderDetail from "@/shared/views/ProviderDetail.vue";
 import LoginComponent from "@/shared/views/login-component.vue";
 
 const routes = [
-    { path: '/', component: generalLoginComponent },
-    { path: '/login-customer', component: generalLoginComponent },
+    { path: '/', redirect: '/login' },
     {path: '/profile', component: profileView },
     {path: '/edit-profile', component: EditProfile },
     {path: '/support',component: Support},

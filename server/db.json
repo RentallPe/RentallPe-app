@@ -59,7 +59,18 @@
       "phone": "",
       "createdAt": "2025-10-27T23:19:00.418Z",
       "role": "customer"
+    },
+    {
+      "id": 1761608000000,
+      "fullName": "Construcciones S.A.",
+      "email": "construcciones@rentalpe.com",
+      "password": "1234",
+      "phone": "987654321",
+      "createdAt": "2025-10-28T15:30:00Z",
+      "role": "provider",
+      "providerId": 1
     }
+
   ],
   "iotDevices": [],
   "documents": [],
