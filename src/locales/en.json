@@ -29,7 +29,8 @@
     "address": "Address",
     "installment": "Installment",
     "amount": "Amount",
-    "dueDate": "Due date"
+    "dueDate": "Due date",
+    "noPending": "No pending payments."
   },
   "comboDetail": {
     "description": "Description",
@@ -55,7 +56,9 @@
     "manageIncidents": "Manage incidents",
     "amount": "Amount",
     "due": "Due",
-    "status": "Status"
+    "status": "Status",
+    "noAlerts": "No recent alerts",
+    "noIncidents": "No recent incidents"
   },
   "editProfile": {
     "title": "Editing my profile",
@@ -136,7 +139,16 @@
   "alerts": {
     "title": "Alerts",
     "latest": "Latest Alerts",
-    "lock": "Lock Events"
+    "lock": "Lock Events",
+    "noAlerts": "No alerts",
+    "noLocks": "No lock events"
+  },
+  "buttons":{
+    "goHome": "Back to top"
+  },
+  "notFound": {
+    "title": " Page not found",
+    "message": "The page you are looking for does not exist or has been moved."
   }
 
 

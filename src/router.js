@@ -16,6 +16,7 @@ import Register from "@/shared/views/register.vue";
 import pageNotFound from "@/shared/views/page-not-found.vue";
 import ProviderDetail from "@/shared/views/ProviderDetail.vue";
 import LoginComponent from "@/shared/views/login-component.vue";
+import BillingProperty from "@/shared/views/BillingProperty.vue";
 
 const routes = [
     { path: '/', redirect: '/login' },
@@ -29,6 +30,7 @@ const routes = [
     { path: '/property/:id', component: PropertyDetail, props: true },
     {path: '/add-property', component: AddProperty },
     {path: '/billing/', component: Billing},
+    {path: '/billing/:id', component: BillingProperty},
     {path: '/alerts' , component: Alerts},
     {path:'/dashboard', component: Dashboard},
     {path: '/:pathMatch(.*)*', name:'NorFound', component: pageNotFound},

@@ -22,14 +22,17 @@
   "alerts": {
     "title": "Alertas",
     "latest": "Últimas alertas",
-    "lock": "Cerradura"
+    "lock": "Cerradura",
+    "noAlerts": "Sin alertas registradas",
+    "noLocks": "Sin eventos de cerradura"
   },
   "billing": {
     "title": "Mis pagos pendientes",
     "address": "Dirección",
     "installment": "Cuota",
     "amount": "Monto",
-    "dueDate": "Vencimiento"
+    "dueDate": "Vencimiento",
+    "noPending": "No hay pagos pendientes."
   },
   "comboDetail": {
     "description": "Descripción",
@@ -55,7 +58,9 @@
     "manageIncidents": "Gestionar incidentes",
     "amount": "Monto",
     "due": "Vencimiento",
-    "status": "Estado"
+    "status": "Estado",
+    "noAlerts": "Sin alertas recientes.",
+    "noIncidents": "No hay incidentes."
   },
   "editProfile": {
     "title": "Editar mi perfil",
@@ -137,8 +142,14 @@
     "title": "Alertas",
     "latest": "Últimas alertas",
     "lock": "Eventos de cerradura"
+  },
+  "buttons":{
+    "goHome": "Volver al inicio"
+  },
+  "notFound": {
+    "title": " Página no encontrada",
+    "message": "La página que buscas no existe o fue movida."
   }
-
 
 
 

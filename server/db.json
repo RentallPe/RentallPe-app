@@ -8,6 +8,7 @@
       "phone": "999999999",
       "createdAt": "2025-10-01T06:00:00Z",
       "photo": "https://randomuser.me/api/portraits/men/75.jpg",
+      "role": "customer",
       "paymentMethods": [
         {
           "id": 1760168583929,
@@ -70,7 +71,6 @@
       "role": "provider",
       "providerId": 1
     }
-
   ],
   "iotDevices": [],
   "documents": [],
@@ -78,32 +78,80 @@
   "incidents": [
     {
       "id": "1760166122111",
-      "projectId": 1,
-      "description": "as",
+      "projectId": 1002,
+      "description": "Fuga de agua en cocina reportada por el inquilino.",
       "status": "pending",
       "createdAt": "2025-10-11T07:02:02.111Z",
       "updatedAt": null
     }
   ],
   "notifications": [],
-  "payments": [],
+  "payments": [
+    {
+      "id": 9001,
+      "projectId": 1001,
+      "installment": 3,
+      "amount": 2300,
+      "date": "2025-11-14T00:00:00Z",
+      "status": "pending",
+      "currencySymbol": "$"
+    },
+    {
+      "id": 9002,
+      "propertyId": "1760165416142",
+      "installment": 1,
+      "amount": 1300,
+      "maturityDate": "2025-12-20T00:00:00Z",
+      "status": "pending",
+      "currencySymbol": "$"
+    },
+    {
+      "id": 9003,
+      "propertyId": "1760165416142",
+      "installment": 2,
+      "amount": 1300,
+      "dueDate": "2026-01-20T00:00:00Z",
+      "status": "pending",
+      "currencySymbol": "$"
+    },
+    {
+      "id": 9004,
+      "projectId": 1001,
+      "installment": 2,
+      "amount": 1200,
+      "date": "2025-10-10T00:00:00Z",
+      "status": "paid",
+      "currencySymbol": "$"
+    }
+  ],
   "remodelPlans": [],
   "budgets": [],
   "properties": [
     {
       "id": "1760165416141",
       "ownerId": 1,
-      "address": "dasdasd",
-      "ubigeo": "asdasd",
-      "areaM2": 0,
-      "yearsOld": 0,
+      "address": "Fifth Avenue 14032, Surco, Lima",
+      "ubigeo": "150140",
+      "areaM2": 140,
+      "yearsOld": 3,
       "status": "available",
       "createdAt": "2025-10-11T06:50:16.141Z",
       "image": "https://picsum.photos/300/200?random=99",
-      "name": "New Property",
+      "name": "Urban Cottage",
       "handoverDate": null,
-      "progress": 0,
-      "alerts": [],
+      "progress": 45,
+      "alerts": [
+        {
+          "id": "A-100",
+          "message": "Consumo eléctrico por encima de lo usual.",
+          "createdAt": "2025-10-28T12:00:00Z"
+        },
+        {
+          "id": "A-101",
+          "message": "Detección de puerta principal abierta por 10 minutos.",
+          "createdAt": "2025-10-29T09:30:00Z"
+        }
+      ],
       "locks": [],
       "owner": null,
       "combos": [
@@ -126,6 +174,30 @@
           "image": "https://picsum.photos/400/250?random=1"
         }
       ]
+    },
+    {
+      "id": "1760165416142",
+      "ownerId": 1,
+      "address": "Palm Avenue 14012, Miraflores, Lima",
+      "ubigeo": "150122",
+      "areaM2": 110,
+      "yearsOld": 5,
+      "status": "available",
+      "createdAt": "2025-10-15T10:10:00Z",
+      "image": "https://picsum.photos/300/200?random=98",
+      "name": "Hillside Home",
+      "handoverDate": null,
+      "progress": 30,
+      "alerts": [
+        {
+          "id": "A-200",
+          "message": "Se detectó humedad en el baño principal.",
+          "createdAt": "2025-10-30T08:10:00Z"
+        }
+      ],
+      "locks": [],
+      "owner": null,
+      "combos": []
     }
   ],
   "owners": [
@@ -153,7 +225,28 @@
       "contact": "ventas@smarthome.pe"
     }
   ],
-  "projects": [],
+  "projects": [
+    {
+      "id": 1001,
+      "propertyId": "1760165416141",
+      "userId": "1",
+      "name": "Urban Cottage Remodel",
+      "status": "active",
+      "startDate": "2025-10-01T00:00:00Z",
+      "endDate": null,
+      "createdAt": "2025-10-01T00:00:00Z"
+    },
+    {
+      "id": 1002,
+      "propertyId": "1760165416142",
+      "userId": "1",
+      "name": "Hillside IoT Install",
+      "status": "active",
+      "startDate": "2025-10-05T00:00:00Z",
+      "endDate": null,
+      "createdAt": "2025-10-05T00:00:00Z"
+    }
+  ],
   "tasks": [],
   "ownerTypes": [
     {

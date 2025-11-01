@@ -1,16 +1,26 @@
 import {Project} from "@/Rental/domain/model/project.entity.js";
 
 export class ProjectAssembler {
-    static toEntityFromResource(resource) {
-        return new Project({...resource});
+    static toEntityFromResource(r) {
+        const src = r?.data ?? r;
+        if (!src) return null;
+
+        return {
+            id: src.id,
+            propertyId: src.propertyId ?? null,
+            userId: src.userId ?? null,
+            name: src.name ?? '',
+            status: src.status ?? 'pending',
+            startDate: src.startDate ?? null,
+            endDate: src.endDate ?? null,
+            createdAt: src.createdAt ?? null,
+        };
     }
 
-    static toEntitiesFromResponse(response) {
-        if(response.status !== 200) {
-            console.error(`${response.status}: ${response.statusText}`);
-            return [];
-        }
-        let resources = response.data instanceof Array ? response.data : response.data['projects'];
-        return resources.map(resource => this.toEntityFromResource(resource));
+    static toEntitiesFromResponse(resp) {
+        const arr = Array.isArray(resp) ? resp : (resp?.data ?? resp) ?? [];
+        return arr
+            .map((x) => ProjectAssembler.toEntityFromResource(x))
+            .filter(Boolean);
     }
 }

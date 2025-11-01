@@ -5,7 +5,7 @@ import { useRentalStore } from "@/Rental/application/rental-store";
 const rental   = useRentalStore();
 const USER_ID  = 1;
 
-// Lista reactiva, filtrada por usuario y con fallbacks seguros
+
 const properties = computed(() => {
   const all = rental.list("properties").value ?? [];
   return all

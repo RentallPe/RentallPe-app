@@ -124,7 +124,7 @@ const router = useRouter();
 const { t } = useI18n();
 const rental = useRentalStore();
 
-// Usuario dinámico desde localStorage
+
 const saved = localStorage.getItem("currentUser");
 const USER_ID = saved ? JSON.parse(saved).id : 1;
 

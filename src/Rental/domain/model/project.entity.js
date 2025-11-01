@@ -12,36 +12,20 @@ import {Property} from "@/Rental/domain/model/property.entity.js";
 import {User} from "@/Rental/domain/model/user.entity.js";
 
 export class Project {
-  constructor({id, propertyId, userId, name, status, startDate, endDate, createdAt}){
-    this.id = id;
-    this.propertyId = new Property();
-    this.userId = new User();
-    this.name = name;
-    this.status = status;
-    this.startDate = startDate;
-    this.endDate = endDate;
-    this.createdAt = createdAt;
-  }
-
-  setPropertie(propertie){
-    if(propertie instanceof Propertie){
-      this.propertie = propertie;
-    }else{
-      throw new Error("Invalid Propertie");
+    constructor({ id, propertyId, userId, name, status, startDate, endDate, createdAt }) {
+        this.id = id;
+        this.propertyId = propertyId ?? null;
+        this.userId = userId ?? null;
+        this.name = name ?? '';
+        this.status = status ?? 'pending';
+        this.startDate = startDate ?? null;
+        this.endDate = endDate ?? null;
+        this.createdAt = createdAt ?? null;
     }
-  }
-  getPropertie(){
-    return this.propertie;
-  }
 
-  setUser(user){
-    if(user instanceof User){
-      this.user = user;
-    }else{
-      throw new Error("Invalid User");
-    }
-  }
-  getUser(){
-    return this.user;
-  }
+
+    setProperty(property) { this.property = property; }
+    getProperty() { return this.property; }
+    setUser(user) { this.user = user; }
+    getUser() { return this.user; }
 }

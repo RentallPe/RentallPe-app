@@ -4,7 +4,7 @@
       <template #title>
         <div class="flex align-items-center justify-content-center gap-2 mb-2">
           <i class="pi pi-exclamation-triangle text-primary text-3xl"></i>
-          <h2 class="m-0 text-black">404 - {{ t('notFound.title') }}</h2>
+          <h2 class="m-0 text-gray-600">Error 404 - {{ t('notFound.title') }}</h2>
         </div>
       </template>
 
