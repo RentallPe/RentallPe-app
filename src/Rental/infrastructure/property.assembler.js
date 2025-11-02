@@ -1,4 +1,3 @@
-// Rental/infrastructure/property.assembler.js
 import { Property } from "@/Rental/domain/model/property.entity.js";
 
 export class PropertyAssembler {
@@ -19,6 +18,7 @@ export class PropertyAssembler {
       alerts: Array.isArray(src.alerts) ? src.alerts : [],
       locks: Array.isArray(src.locks) ? src.locks : [],
       combos: Array.isArray(src.combos) ? src.combos : [],
+      consumptions: Array.isArray(src.consumptions) ? src.consumptions : [],
       areaM2: Number.isFinite(+src.areaM2) ? +src.areaM2 : 0,
       yearsOld: Number.isFinite(+src.yearsOld) ? +src.yearsOld : 0,
       createdAt: src.createdAt ?? null,

@@ -17,7 +17,9 @@ import pageNotFound from "@/shared/views/page-not-found.vue";
 import ProviderDetail from "@/shared/views/ProviderDetail.vue";
 import LoginComponent from "@/shared/views/login-component.vue";
 import BillingProperty from "@/shared/views/BillingProperty.vue";
-
+import Consumption from "@/shared/views/Consumption.vue";
+import addbudget from "@/shared/views/addbudget.vue";
+import managebudget from "@/shared/views/managebudget.vue";
 const routes = [
     { path: '/', redirect: '/login' },
     {path: '/profile', component: profileView },
@@ -35,11 +37,11 @@ const routes = [
     {path:'/dashboard', component: Dashboard},
     {path: '/:pathMatch(.*)*', name:'NorFound', component: pageNotFound},
     {path:'/login',component: LoginComponent,meta:{ hideSidebar: true}},
-    {path: '/register', component: Register,meta: { hideSidebar: true }
-    },
+    {path: '/register', component: Register,meta: { hideSidebar: true }},
     {path: "/provider/:id",name: "ProviderDetail",component: ProviderDetail,props: true},
-
-
+    {path: "/consumption",name: "Consumption",component: Consumption},
+    {path: "/consumption/addbudget",name: "ConsumptionDetailAddBudget",component: addbudget,props: true},
+    {path: "/consumption/managebudget",name: "ConsumptionDetailManageBudget",component: managebudget,props: true},
 
 
 

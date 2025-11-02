@@ -49,7 +49,7 @@ export class RentalApi extends BaseApi {
     const autoKind = /jsonbin\.io\/v\d+\/b\//.test(base) ? 'jsonbin' : 'rest';
     const kind = (import.meta.env.VITE_BACKEND_KIND || autoKind).toLowerCase();
 
-    // Guardia: nunca permitas REST con base JSONBin
+
     if (kind === 'rest' && /jsonbin\.io/.test(base)) {
       throw new Error('Config inválida: base JSONBin con modo REST. Usa VITE_BACKEND_KIND=jsonbin.');
     }
