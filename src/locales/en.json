@@ -137,7 +137,73 @@
     "title": "Alerts",
     "latest": "Latest Alerts",
     "lock": "Lock Events"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "myCombos": "My Combos",
+    "store": "Store",
+    "support": "Support",
+    "alerts": "Alerts",
+    "payment": "Payments",
+    "profile": "Profile"
+  },
+  "addCombo": {
+    "title": "Add Combo",
+    "uploadImage": "Upload Image",
+    "infoTitle": "Combo Information",
+    "name": "Name",
+    "description": "Description",
+    "price": "Price",
+    "installDays": "Install Days",
+    "imageUrl": "Image URL",
+    "save": "Save",
+    "alerts": {
+      "fillFields": "Please fill all required fields",
+      "created": "Combo created successfully!",
+      "uploadNotImplemented": "Image upload not implemented yet."
+    }
+  },
+  "editCombo": {
+    "title": "Edit Combo",
+    "name": "Combo name",
+    "description": "Description",
+    "price": "Price",
+    "installDays": "Install days",
+    "imageUrl": "Image URL",
+    "update": "Update",
+    "cancel": "Cancel",
+    "alerts": {
+      "fillFields": "Please fill all required fields",
+      "updated": "Combo updated successfully!"
+    }
+  },
+  "myCombos": {
+    "title": "My Combos",
+    "unnamed": "Unnamed Combo",
+    "noDescription": "No description",
+    "price": "Price",
+    "installTime": "Install time",
+    "days": "days",
+    "add": "Add combo"
+  },
+  "payments": {
+    "title": "Payments",
+    "combo": "Combo",
+    "customer": "Customer",
+    "date": "Date",
+    "noPayments": "No payments yet.",
+    "status": {
+      "pending": "Pending",
+      "completed": "Completed"
+    }
   }
+
+
+
+
+
+
+
 
 
 

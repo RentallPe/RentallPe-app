@@ -8,8 +8,8 @@
       "createdAt": "2025-10-01T06:00:00Z"
     }*/
 
-export class User{
-    constructor({id, fullName, email, password, phone, createdAt,role}){
+export class User {
+    constructor({ id, fullName, email, password, phone, createdAt, role, providerId }) {
         this.id = id;
         this.fullName = fullName;
         this.email = email;
@@ -17,5 +17,6 @@ export class User{
         this.phone = phone;
         this.createdAt = createdAt;
         this.role = role || "customer";
+        this.providerId = providerId ?? null;
     }
 }

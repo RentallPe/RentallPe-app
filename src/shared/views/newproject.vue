@@ -131,16 +131,38 @@ async function buyCombo() {
     return;
   }
 
+  // 1. Actualizar la propiedad con el combo comprado
+  const propertyId = String(selectedAddress.value.id);
   const updatedProperty = {
     ...selectedAddress.value,
     combos: [...(selectedAddress.value.combos || []), selectedCombo.value]
   };
 
-  await axios.patch(`http://localhost:3000/properties/${selectedAddress.value.id}`, updatedProperty);
+  await axios.patch(`http://localhost:3000/properties/${propertyId}`, updatedProperty);
 
-  alert("Combo purchased and assigned to property!");
+  // 2. Crear un registro de pago con info extra
+  const savedUser = localStorage.getItem("currentUser");
+  const currentUser = savedUser ? JSON.parse(savedUser) : null;
+
+  const newPayment = {
+    id: Date.now(),
+    comboId: Number(selectedCombo.value.id),
+    providerId: Number(selectedCombo.value.providerId),
+    customerId: Number(currentUser?.id),
+    customerName: currentUser?.fullName || "Unknown",
+    propertyId: Number(selectedAddress.value.id),
+    propertyName: selectedAddress.value.name,
+    amount: Number(selectedCombo.value.price),
+    date: new Date().toISOString(),
+    status: "pending"
+  };
+
+  await axios.post("http://localhost:3000/payments", newPayment);
+
+  alert("Combo purchased and payment registered!");
   dialogVisible.value = false;
 }
+
 
 function getProviderName(providerId) {
   const provider = providers.value.find(p => p.id === providerId);

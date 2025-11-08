@@ -137,7 +137,72 @@
     "title": "Alertas",
     "latest": "Últimas alertas",
     "lock": "Eventos de cerradura"
+  },
+  "menu": {
+    "dashboard": "Panel",
+    "myCombos": "Mis Combos",
+    "store": "Tienda",
+    "support": "Soporte",
+    "alerts": "Alertas",
+    "payment": "Pagos",
+    "profile": "Perfil"
+  },
+  "addCombo": {
+    "title": "Añadir Combo",
+    "uploadImage": "Subir Imagen",
+    "infoTitle": "Información del Combo",
+    "name": "Nombre",
+    "description": "Descripción",
+    "price": "Precio",
+    "installDays": "Días de instalación",
+    "imageUrl": "URL de la imagen",
+    "save": "Guardar",
+    "alerts": {
+      "fillFields": "Por favor, completa todos los campos requeridos",
+      "created": "¡Combo creado exitosamente!",
+      "uploadNotImplemented": "La subida de imágenes aún no está implementada."
+    }
+  },
+  "editCombo": {
+    "title": "Editar Combo",
+    "name": "Nombre del combo",
+    "description": "Descripción",
+    "price": "Precio",
+    "installDays": "Días de instalación",
+    "imageUrl": "URL de la imagen",
+    "update": "Actualizar",
+    "cancel": "Cancelar",
+    "alerts": {
+      "fillFields": "Por favor, completa todos los campos requeridos",
+      "updated": "¡Combo actualizado exitosamente!"
+    }
+  },
+  "myCombos": {
+    "title": "Mis Combos",
+    "unnamed": "Combo sin nombre",
+    "noDescription": "Sin descripción",
+    "price": "Precio",
+    "installTime": "Tiempo de instalación",
+    "days": "días",
+    "add": "Añadir combo"
+  },
+  "payments": {
+    "title": "Pagos",
+    "combo": "Combo",
+    "customer": "Cliente",
+    "date": "Fecha",
+    "noPayments": "No hay pagos aún.",
+    "status": {
+      "pending": "Pendiente",
+      "completed": "Completado"
+    }
   }
+
+
+
+
+
+
 
 
 

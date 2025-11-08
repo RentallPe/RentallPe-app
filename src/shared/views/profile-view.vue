@@ -12,6 +12,7 @@
       </template>
 
       <template #content>
+        <!-- Datos generales -->
         <div v-if="!loading && user" class="profile-info grid grid-reset">
           <div class="col-12 md:col-4 flex justify-content-center col-fix">
             <pv-avatar :image="avatarUrl" shape="circle" size="xlarge" class="shadow-2 border-circle" />
@@ -30,23 +31,12 @@
                 <span class="info-value">{{ user.email || '—' }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">{{ t('profile.country') }}</span>
-                <span class="info-value">{{ user.country || '—' }}</span>
+                <span class="info-label">{{ t('profile.phone') }}</span>
+                <span class="info-value">{{ user.phone || '—' }}</span>
               </div>
               <div class="info-item">
-                <span class="info-label">{{ t('profile.department') }}</span>
-                <span class="info-value">{{ user.department || '—' }}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">{{ t('profile.paymentMethods') }}</span>
-                <div v-for="method in payments" :key="method.id" class="payment-item">
-                  <span class="info-value">
-                    {{ method.type }} **** {{ String(method.number||'').slice(-4) }} (exp: {{ method.expiry }})
-                  </span>
-                </div>
-                <a href="#" class="add-payment" @click.prevent="showDialog = true">
-                  + {{ t('profile.addAnotherPayment') }}
-                </a>
+                <span class="info-label">Role</span>
+                <span class="info-value">{{ user.role || '—' }}</span>
               </div>
               <div class="info-item">
                 <span class="info-label">Created At</span>
@@ -58,10 +48,24 @@
 
         <div v-else class="loading">Loading…</div>
 
-        <div class="mt-5" v-if="!loading">
-          <h3 class="section">{{ t('profile.myProperties') }}</h3>
+        <!-- Vista para CUSTOMER -->
+        <div class="mt-5" v-if="!loading && user?.role === 'customer'">
+          <h3 class="section">{{ t('profile.paymentMethods') }}</h3>
+          <div class="info-item">
+            <div v-if="payments.length === 0" class="info-value">—</div>
+            <div v-for="method in payments" :key="method.id" class="payment-item">
+              <span class="info-value">
+                {{ method.type }} **** {{ String(method.number||'').slice(-4) }} (exp: {{ method.expiry }})
+              </span>
+            </div>
+            <a href="#" class="add-payment" @click.prevent="showDialog = true">
+              + {{ t('profile.addAnotherPayment') }}
+            </a>
+          </div>
 
+          <h3 class="section mt-5">{{ t('profile.myProperties') }}</h3>
           <div class="grid grid-reset">
+            <div v-if="userProps.length === 0" class="info-value">No properties yet.</div>
             <div v-for="property in userProps" :key="property.id" class="col-12 md:col-6 lg:col-4 col-fix">
               <pv-card class="property-card">
                 <template #header>
@@ -80,11 +84,50 @@
               </pv-card>
             </div>
           </div>
+
+          <div class="flex justify-content-end mt-4">
+            <router-link to="/add-property">
+              <pv-button :label="t('profile.addProperty')" icon="pi pi-plus" severity="success" />
+            </router-link>
+          </div>
+        </div>
+
+        <!-- Vista para PROVIDER -->
+        <div class="mt-5" v-if="!loading && user?.role === 'provider'">
+          <h3 class="section">My Combos</h3>
+          <div class="grid grid-reset">
+            <div v-if="providerCombos.length === 0" class="info-value">No combos yet.</div>
+            <div v-for="combo in providerCombos" :key="combo.id" class="col-12 md:col-6 lg:col-4 col-fix">
+              <pv-card class="combo-card">
+                <template #header>
+                  <router-link :to="`/combo/${combo.id}`">
+                    <img
+                        :src="combo.image || ('https://picsum.photos/400/250?random=' + combo.id)"
+                        alt="Combo image"
+                        class="combo-image"
+                    />
+
+                  </router-link>
+                </template>
+                <template #content>
+                  <h4 class="combo-title">{{ combo.name }}</h4>
+                  <p class="combo-description">{{ combo.description }}</p>
+                  <p class="combo-price"><strong>Price:</strong> ${{ combo.price }}</p>
+                </template>
+              </pv-card>
+            </div>
+          </div>
+
+          <div class="flex justify-content-end mt-4">
+            <router-link to="/add-combo">
+              <pv-button label="Add Combo" icon="pi pi-plus" severity="success" />
+            </router-link>
+          </div>
         </div>
       </template>
     </pv-card>
 
-    <!-- Dialog para agregar método de pago -->
+    <!-- Dialog para agregar método de pago (solo customer) -->
     <pv-dialog v-model:visible="showDialog" modal :header="t('profile.addPaymentOption')" :style="{ width: '400px' }">
       <div class="p-fluid">
         <div class="field">
@@ -117,9 +160,6 @@
 import { ref, onMounted, computed } from "vue";
 import { useRentalStore } from "@/Rental/application/rental-store";
 import { useI18n } from "vue-i18n";
-import { useRouter } from "vue-router";
-const router = useRouter();
-
 
 const { t } = useI18n();
 const rental = useRentalStore();
@@ -142,6 +182,7 @@ onMounted(async () => {
   await Promise.all([
     rental.fetchAll("users"),
     rental.fetchAll("properties"),
+    rental.fetchAll("combos"),
   ]);
 
   user.value = rental.getLocalById("users", USER_ID) || null;
@@ -153,6 +194,12 @@ const payments    = computed(() => user.value?.paymentMethods ?? []);
 const userProps   = computed(() => {
   const all = rental.list("properties").value ?? [];
   return all.filter(p => String(p.ownerId ?? p.userId) === String(USER_ID));
+});
+const providerCombos = computed(() => {
+  const all = rental.list("combos").value ?? [];
+  const pid = user.value?.providerId;
+  if (pid == null) return [];
+  return all.filter(c => String(c.providerId) === String(pid));
 });
 const createdAtText = computed(() => {
   const s = user.value?.createdAt;
@@ -177,12 +224,9 @@ async function savePayment() {
 }
 </script>
 
-
 <style scoped>
-
 :global(html), :global(body), :global(#app) { background: #f9fafb; color: #111827; }
 :root { color-scheme: light; }
-
 
 .profile-wrapper{
   --sbw:260px;
@@ -195,17 +239,14 @@ async function savePayment() {
   overflow-x:clip;
 }
 
-
 .profile-card{ width:100%; max-width:1000px; margin:0 auto; border-radius:16px; overflow:hidden; }
 .profile-card, .p-card { background:#ffffff !important; color:#111827 !important; }
 .title{ color:#111827; }
 .section{ color:#111827; margin-bottom:1rem; }
 
-
 .grid-reset{ margin-left:0 !important; margin-right:0 !important; }
 .grid-reset > [class*="col-"]{ padding-left:0 !important; padding-right:0 !important; }
 .col-fix{ min-width:0; }
-
 
 .info-grid{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:1.2rem; }
 .info-item{ display:flex; flex-direction:column; padding:.5rem 0; border-bottom:1px solid #e5e7eb; }
@@ -214,12 +255,16 @@ async function savePayment() {
 .add-payment{ font-size:.85rem; color:#d32f2f; margin-top:.3rem; text-decoration:none; cursor:pointer; }
 .loading{ padding:1rem 0; color:#111827; }
 
-
 .property-card{ border-radius:12px; overflow:hidden; }
 .property-image{ width:100%; height:180px; object-fit:cover; }
 .property-title{ margin:.5rem 0 0; font-weight:600; color:#111827; }
 .property-address{ margin:0; color:#6b7280; }
 
+.combo-card{ border-radius:12px; overflow:hidden; }
+.combo-image{ width:100%; height:180px; object-fit:cover; }
+.combo-title{ margin:.5rem 0 0; font-weight:600; color:#111827; }
+.combo-description{ margin:.2rem 0; color:#6b7280; }
+.combo-price{ margin:0; color:#111827; }
 
 @media (max-width:1280px){
   .info-grid{ grid-template-columns:1fr; gap:1rem; }
@@ -228,4 +273,3 @@ async function savePayment() {
   .profile-wrapper{ margin-left:0; width:100%; padding:1rem; }
 }
 </style>
-

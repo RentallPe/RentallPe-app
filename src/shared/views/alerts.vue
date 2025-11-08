@@ -23,6 +23,12 @@
           <h3 class="property-title">{{ property.name || ('Property ' + property.id) }}</h3>
           <p class="property-address">{{ property.address }}</p>
 
+          <!-- Mostrar cliente y combo si es provider -->
+          <div v-if="currentUser.role === 'provider'" class="extra-info">
+            <p><strong>Cliente:</strong> {{ property.customerName }}</p>
+            <p><strong>Combo instalado:</strong> {{ property.comboName }}</p>
+          </div>
+
           <h4 class="section-title">{{ t('alerts.latest') }}</h4>
           <ul class="alert-list" v-if="property.alerts && property.alerts.length">
             <li v-for="alert in property.alerts" :key="alert.id">
@@ -47,20 +53,27 @@
 </template>
 
 <script setup>
-import { onMounted, computed, ref } from "vue";
-import { useI18n } from "vue-i18n";
-import { useRentalStore } from "@/Rental/application/rental-store";
+import {onMounted, computed, ref} from "vue";
+import {useI18n} from "vue-i18n";
+import {useRentalStore} from "@/Rental/application/rental-store";
 
-const { t } = useI18n();
+const {t} = useI18n();
 const rental = useRentalStore();
 
 const loading = ref(true);
 const error = ref("");
 
+const savedUser = localStorage.getItem("currentUser");
+const currentUser = savedUser ? JSON.parse(savedUser) : null;
 
 onMounted(async () => {
   try {
-    await rental.fetchAll("properties");     
+    await Promise.all([
+      rental.fetchAll("properties"),
+      rental.fetchAll("payments"),
+      rental.fetchAll("combos"),
+      rental.fetchAll("users")
+    ]);
   } catch (e) {
     console.error(e);
     error.value = e?.message || "No se pudieron cargar las propiedades";
@@ -69,19 +82,42 @@ onMounted(async () => {
   }
 });
 
+const properties = computed(() => {
+  const allProperties = rental.list("properties").value || [];
+  const allPayments = rental.list("payments").value || [];
+  const combos = rental.list("combos").value || [];
+  const users = rental.list("users").value || [];
 
-const list = rental.list("properties");
+  if (currentUser?.role === "provider") {
+    // propiedades donde el proveedor vendió combos
+    const providerPayments = allPayments.filter(
+        p => String(p.providerId) === String(currentUser.providerId)
+    );
 
+    return providerPayments.map(p => {
+      const property = allProperties.find(pr => String(pr.id) === String(p.propertyId));
+      const combo = combos.find(c => String(c.id) === String(p.comboId));
+      const customer = users.find(u => String(u.id) === String(p.customerId));
 
-const properties = computed(() =>
-  (list.value || [])
-    .filter(p => p.ownerId === 1)
-    .map(p => ({
-      ...p,
-      alerts: Array.isArray(p.alerts) ? p.alerts : [],
-      locks: Array.isArray(p.locks) ? p.locks : [],
-    }))
-);
+      return {
+        ...property,
+        alerts: Array.isArray(property?.alerts) ? property.alerts : [],
+        locks: Array.isArray(property?.locks) ? property.locks : [],
+        customerName: customer?.fullName || "Unknown Customer",
+        comboName: combo?.name || "Unknown Combo"
+      };
+    });
+  }
+
+  // caso customer (dueño de propiedades)
+  return allProperties
+      .filter(p => String(p.ownerId) === String(currentUser?.id))
+      .map(p => ({
+        ...p,
+        alerts: Array.isArray(p.alerts) ? p.alerts : [],
+        locks: Array.isArray(p.locks) ? p.locks : []
+      }));
+});
 
 function formatDate(dateStr) {
   if (!dateStr) return "—";
@@ -91,7 +127,7 @@ function formatDate(dateStr) {
     month: "2-digit",
     year: "numeric",
     hour: "2-digit",
-    minute: "2-digit",
+    minute: "2-digit"
   });
 }
 </script>
@@ -104,38 +140,45 @@ function formatDate(dateStr) {
   display: flex;
   justify-content: center;
 }
+
 .alerts-card {
   width: 100%;
   max-width: 900px;
   background: #fff;
   border-radius: 16px;
 }
+
 .property-alert {
   margin-bottom: 2rem;
   border-bottom: 1px solid #eee;
   padding-bottom: 1rem;
 }
+
 .property-title {
   font-size: 1.2rem;
   font-weight: 600;
   color: #000;
 }
+
 .property-address {
   color: #555;
   margin-bottom: 1rem;
 }
+
 .section-title {
   font-size: 1rem;
   font-weight: 600;
   margin: 0.5rem 0;
   color: #b22222;
 }
+
 .alert-list,
 .lock-list {
   list-style: none;
   padding: 0;
   margin: 0 0 1rem 0;
 }
+
 .alert-list li,
 .lock-list li {
   display: flex;
@@ -143,22 +186,28 @@ function formatDate(dateStr) {
   padding: 0.4rem 0;
   border-bottom: 1px solid #f0f0f0;
 }
+
 .alert-time,
 .lock-time {
   font-size: 0.85rem;
   color: #666;
   min-width: 150px;
 }
+
 .alert-message,
 .lock-action {
   color: #000;
 }
+
 .empty-text {
   font-size: 0.9rem;
   color: #888;
   margin-bottom: 1rem;
 }
-.p-card{
-  color: #111111;
+
+.extra-info {
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #333;
 }
 </style>

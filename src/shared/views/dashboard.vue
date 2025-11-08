@@ -96,6 +96,7 @@ function formatDate(dateStr) {
     minute: "2-digit"
   });
 }
+
 </script>
 
 <style scoped>

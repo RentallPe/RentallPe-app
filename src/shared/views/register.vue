@@ -50,6 +50,25 @@ async function registerUser() {
     alert("Debes seleccionar si eres Cliente o Proveedor")
     return
   }
+  let providerId = null
+
+  if (role.value === "provider") {
+    // Crear nuevo provider
+    const newProvider = {
+      id: Date.now(), // o usa uuid si prefieres
+      name: fullName.value,
+      contact: email.value
+    }
+
+    try {
+      const createdProvider = await rentalStore.create("providers", newProvider)
+      providerId = createdProvider.id
+    } catch (error) {
+      alert("Error al crear el proveedor")
+      return
+    }
+  }
+
 
   const newUser = {
     id: Date.now(),
@@ -58,15 +77,16 @@ async function registerUser() {
     password: password.value,
     phone: "",
     createdAt: new Date().toISOString(),
-    role: role.value
+    role: role.value,
+    providerId // 👈 solo si es provider
   }
+
 
   try {
     const user = await rentalStore.create("users", newUser)
     localStorage.setItem("currentUser", JSON.stringify(user))
     alert("Registro exitoso, bienvenido " + user.fullName)
 
-    // Redirigir según rol
     if (user.role === "provider") {
       router.push("/dashboard")
     } else {
@@ -76,6 +96,7 @@ async function registerUser() {
     alert("Error al registrar el usuario")
   }
 }
+
 </script>
 
 <style scoped>

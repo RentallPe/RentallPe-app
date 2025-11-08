@@ -16,6 +16,10 @@ import Register from "@/shared/views/register.vue";
 import pageNotFound from "@/shared/views/page-not-found.vue";
 import ProviderDetail from "@/shared/views/ProviderDetail.vue";
 import LoginComponent from "@/shared/views/login-component.vue";
+import MyCombos from "@/shared/views/MyCombos.vue";
+import AddCombo from "@/shared/views/AddCombo.vue";
+import EditCombo from "@/shared/views/EditCombo.vue";
+import PaymentProvider from "@/shared/views/PaymentProvider.vue";
 
 const routes = [
     { path: '/', redirect: '/login' },
@@ -35,7 +39,13 @@ const routes = [
     {path:'/login',component: LoginComponent,meta:{ hideSidebar: true}},
     {path: '/register', component: Register,meta: { hideSidebar: true }
     },
+    { path: '/my-combos', component: MyCombos },
     {path: "/provider/:id",name: "ProviderDetail",component: ProviderDetail,props: true},
+    { path: "/add-combo", component: AddCombo },
+    { path: "/edit-combo/:id", component: EditCombo, props: true },
+    { path: "/payment", component: PaymentProvider },
+
+
 
 
 

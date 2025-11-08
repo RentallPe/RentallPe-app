@@ -13,8 +13,10 @@ export class UserAssembler {
             createdAt: src.createdAt ?? null,
             photo: src.photo ?? "",
             paymentMethods: Array.isArray(src.paymentMethods) ? src.paymentMethods : [],
-            role: src.role ?? "customer"
+            role: src.role ?? "customer",
+            providerId: src.providerId ?? null
         };
+
     }
 
     static toEntitiesFromResponse(resp) {

@@ -15,6 +15,12 @@
         <span>{{ t('menu.myCombos') }}</span>
       </router-link>
 
+      <!-- 👇 Nuevo menú para ver la tienda -->
+      <router-link to="/new-project" class="nav-item" active-class="active">
+        <i class="pi pi-shopping-bag"></i>
+        <span>{{ t('menu.store') }}</span>
+      </router-link>
+
       <router-link to="/support" class="nav-item" active-class="active">
         <i class="pi pi-question-circle"></i>
         <span>{{ t('menu.support') }}</span>
@@ -23,11 +29,6 @@
       <router-link to="/alerts" class="nav-item" active-class="active">
         <i class="pi pi-bell"></i>
         <span>{{ t('menu.alerts') }}</span>
-      </router-link>
-
-      <router-link to="/my-clients" class="nav-item" active-class="active">
-        <i class="pi pi-users"></i>
-        <span>{{ t('menu.myClients') }}</span>
       </router-link>
 
       <router-link to="/payment" class="nav-item" active-class="active">
@@ -46,11 +47,11 @@
           <i class="pi pi-sign-out"></i>
           <span>Logout</span>
         </button>
-
       </div>
     </nav>
   </aside>
 </template>
+
 
 <script setup>
 import { useI18n } from "vue-i18n";

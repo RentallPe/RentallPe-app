@@ -3,10 +3,9 @@
     <pv-card class="combo-detail-card">
       <template #title>
         <div class="flex align-items-center justify-content-between">
-          <!-- Título -->
           <h2 class="m-0 text-black">{{ combo?.name }}</h2>
 
-          <router-link to="/new-project">
+          <router-link to="/my-combos">
             <pv-button
                 icon="pi pi-arrow-left"
                 severity="secondary"
@@ -16,124 +15,77 @@
         </div>
       </template>
 
-
       <template #content>
         <div class="grid">
-
+          <!-- Imagen -->
           <div class="col-12 md:col-4 flex justify-content-center">
             <img :src="combo?.image" alt="" class="combo-img" />
           </div>
 
-
+          <!-- Descripción -->
           <div class="col-12 md:col-4">
             <h3>Description</h3>
-
             <p>{{ combo?.description }}</p>
             <p><strong>Installation time:</strong> {{ combo?.installDays }} days</p>
-
           </div>
 
-
-
-
+          <!-- Acciones del proveedor -->
           <div class="col-12 md:col-4 flex flex-column justify-content-between">
-
             <div>
-              <h3>Send to</h3>
-              <pv-button
-                  :label="selectedAddress?.address || 'Select address'"
-                  icon="pi pi-map-marker"
-                  class="mb-3"
-                  @click="addressDialog = true"
-              />
-            </div>
-            <div class="address-divider"></div>
-            <div class="mt-auto">
               <h3>Price</h3>
               <p class="price-text">$ {{ combo?.price }}</p>
+            </div>
+
+            <div class="mt-auto flex gap-2">
               <pv-button
-                  label="Buy"
-                  severity="danger"
-                  icon="pi pi-shopping-cart"
+                  label="Edit"
+                  icon="pi pi-pencil"
+                  severity="info"
                   class="w-full"
-                  @click="buyCombo"
+                  @click="editCombo"
+              />
+              <pv-button
+                  label="Delete"
+                  icon="pi pi-trash"
+                  severity="danger"
+                  class="w-full"
+                  @click="deleteCombo"
               />
             </div>
           </div>
         </div>
       </template>
     </pv-card>
-
-    <!-- Dialog selección de dirección -->
-    <pv-dialog v-model:visible="addressDialog" header="Select the direction" modal :style="{ width: '30vw' }">
-      <div class="address-dropdown">
-
-        <div class="address-divider"></div>
-
-        <ul class="address-list">
-          <li
-              v-for="property in user.properties"
-              :key="property.id"
-              class="address-item"
-              @click="selectAddress(property)"
-          >
-            {{ property.address }}
-          </li>
-        </ul>
-      </div>
-    </pv-dialog>
-
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
-import {useRentalStore} from "@/Rental/application/rental-store.js";
+import { useRoute, useRouter } from "vue-router";
+import { useRentalStore } from "@/Rental/application/rental-store.js";
 
 const route = useRoute();
+const router = useRouter();
 const store = useRentalStore();
 
 const combo = ref(null);
-const properties = store.list("properties"); // lista reactiva
-const selectedAddress = ref(null);
-const addressDialog = ref(false);
 
 onMounted(async () => {
-  // Traer combo por id
   combo.value = await store.fetchById("combos", route.params.id);
-
-  // Traer propiedades
-  await store.fetchAll("properties");
-
-  // Seleccionar la primera propiedad por defecto
-  if (properties.value.length > 0) {
-    selectedAddress.value = properties.value[0];
-  }
 });
 
-function selectAddress(property) {
-  selectedAddress.value = property;
-  addressDialog.value = false;
+function editCombo() {
+  router.push(`/edit-combo/${combo.value.id}`);
 }
 
-async function buyCombo() {
-  if (!selectedAddress.value) {
-    alert("Please select an address first.");
-    return;
+async function deleteCombo() {
+  if (confirm("Are you sure you want to delete this combo?")) {
+    await store.remove("combos", combo.value.id);
+    alert("Combo deleted successfully");
+    router.push("/my-combos");
   }
-
-  const updatedProperty = {
-    ...selectedAddress.value,
-    combos: [...(selectedAddress.value.combos || []), combo.value]
-  };
-
-  await store.update("properties", updatedProperty);
-
-  alert("Combo purchased and assigned to property!");
 }
 </script>
-
 
 <style scoped>
 .combo-detail-wrapper {
@@ -148,65 +100,23 @@ async function buyCombo() {
   max-width: 800px;
   background: #fff;
   border-radius: 16px;
+  color: #252525;
 }
 .combo-img {
   width: 100%;
   border-radius: 8px;
 }
-.combo-detail-card {
-  color: #252525;
-}
 .square-btn {
   width: 40px;
   height: 40px;
   padding: 0;
-  border: #d50a0a;
   border-radius: 8px;
   background: #f76c6c;
   justify-content: center;
 }
-.address-title {
+.price-text {
   font-size: 1.2rem;
-  font-weight: 600;
-  color: #fafafa; /* negro */
-  margin-bottom: 0.5rem;
-}
-
-.address-divider {
-  height: 3px;
-  background-color: #b22222;
-  margin-bottom: 1rem;
-  border-radius: 2px;
-}
-
-.address-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.address-item {
-  background: #fff;
-  border: 2px solid #b22222;
-  color: #000;
-  padding: 0.8rem 1rem;
-  margin-bottom: 0.8rem;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.address-item:hover {
-  background: #fff;
-  border-color: #8b1a1a;
+  font-weight: bold;
   color: #b22222;
-  font-weight: 600;
-}
-.address-divider-vertical {
-  width: 3px;                  /* grosor de la línea */
-  height: 100%;                /* ocupa todo el alto del contenedor */
-  background-color: #b22222;   /* rojo ladrillo */
-  margin: 0 1rem;              /* espacio a los lados */
-  border-radius: 2px;
 }
 </style>
