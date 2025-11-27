@@ -146,16 +146,14 @@
     {
       "id": "1760165416141",
       "ownerId": 1,
-      "address": "Fifth Avenue 14032, Surco, Lima",
-      "ubigeo": "150140",
-      "areaM2": 140,
-      "yearsOld": 3,
-      "status": "available",
-      "createdAt": "2025-10-11T06:50:16.141Z",
-      "image": "https://picsum.photos/300/200?random=99",
       "name": "Urban Cottage",
+      "address": "Fifth Avenue 14032, Surco, Lima",
+      "province": "",
+      "region": "",
+      "status": "available",
       "handoverDate": null,
       "progress": 45,
+      "image": "https://picsum.photos/300/200?random=99",
       "alerts": [
         {
           "id": "A-100",
@@ -169,7 +167,6 @@
         }
       ],
       "locks": [],
-      "owner": null,
       "combos": [
         {
           "id": 2,
@@ -204,8 +201,47 @@
             "used": 50,
             "budget": 300
           }
+        },
+        {
+          "id": 1762816430887,
+          "projectId": 1001,
+          "date": "2025-11-10T23:13:50.888Z",
+          "currencySymbol": "$",
+          "water": {
+            "used": 500,
+            "budget": 323424
+          },
+          "electricity": {
+            "used": 50,
+            "budget": 23432424
+          }
+        },
+        {
+          "id": 1762816453565,
+          "projectId": 1001,
+          "date": "2025-11-10T23:14:13.565Z",
+          "currencySymbol": "$",
+          "water": {
+            "used": 500,
+            "budget": 3234234
+          },
+          "electricity": {
+            "used": 50,
+            "budget": 2342424
+          }
         }
-      ]
+      ],
+      "areaM2": 140,
+      "yearsOld": 3,
+      "createdAt": "2025-10-11T06:50:16.141Z",
+      "budget": {
+        "water": 3234234,
+        "electricity": 2342424
+      },
+      "budgetAlert": {
+        "enabled": true,
+        "pct": 75
+      }
     },
     {
       "id": "1760165416142",
@@ -229,7 +265,17 @@
       ],
       "locks": [],
       "owner": null,
-      "combos": [],
+      "combos": [
+        {
+          "id": "2",
+          "providerId": 1,
+          "name": "Security Essentials",
+          "description": "Smart locks, motion sensors, and cameras.",
+          "price": 950,
+          "installDays": 3,
+          "image": "https://picsum.photos/400/250?random=2"
+        }
+      ],
       "consumptions": [
         {
           "id": 1760165416142,

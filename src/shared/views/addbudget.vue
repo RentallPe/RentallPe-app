@@ -25,6 +25,7 @@
           :placeholder="placeholderText"
       />
 
+      <!-- Preview -->
       <div v-if="selected" class="preview">
         <img :src="selected.image" class="thumb" alt="" />
         <div class="meta">
@@ -33,6 +34,7 @@
         </div>
       </div>
 
+      <!-- Form -->
       <div class="form">
         <h3 class="h3">Budget:</h3>
 
@@ -94,13 +96,12 @@
 
       <!-- Actions -->
       <div class="actions">
-        <button class="cta" :disabled="!canAccept" @click="openConfirm">
-          Accept
-        </button>
+        <button class="cta" :disabled="!canAccept" @click="openConfirm">Accept</button>
         <button class="cta ghost" @click="goBack">Cancel</button>
       </div>
     </div>
 
+    <!-- Confirm overlay (estilo Figma) -->
     <div
         v-if="showConfirm"
         class="confirm-overlay"
@@ -158,21 +159,23 @@ onMounted(async () => {
 const properties = rental.list('properties')
 
 const selectedId = ref(null)
+const symbol = '$'
+const water = ref(null)
+const electricity = ref(null)
+const alertEnabled = ref(false)
+const thresholdPct = ref(75)
+const showConfirm = ref(false)
+
 const propertyOptions = computed(() =>
     (properties.value || []).map(p => ({
       label: `${p.name}, ${p.address}`,
       value: p.id
     }))
 )
+
 const selected = computed(() =>
     (properties.value || []).find(p => String(p.id) === String(selectedId.value))
 )
-
-const symbol = '$'
-const water = ref(null)
-const electricity = ref(null)
-const alertEnabled = ref(false)
-const thresholdPct = ref(75)
 
 const canAccept = computed(() => {
   if (!selected.value) return false
@@ -182,7 +185,40 @@ const canAccept = computed(() => {
   return okWater && okElec && okAlert
 })
 
-const showConfirm = ref(false)
+const isES = computed(() => String(locale.value || '').startsWith('es'))
+const money = (n) =>
+    `${symbol}${Number(n ?? 0).toLocaleString(isES.value ? 'es-PE' : 'en-US', { maximumFractionDigits: 0 })}`
+
+function lastConsumption(prop) {
+  const arr = Array.isArray(prop?.consumptions) ? [...prop.consumptions] : []
+  if (!arr.length) return null
+  arr.sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)))
+  return arr[0]
+}
+
+function buildNewConsumption(prop) {
+  const last = lastConsumption(prop)
+  const currencySymbol = last?.currencySymbol ?? '$'
+  const projectId = last?.projectId ?? null
+  const waterUsed = Number(last?.water?.used ?? 0)
+  const elecUsed  = Number(last?.electricity?.used ?? 0)
+
+  return {
+    id: Date.now(),
+    projectId,
+    date: new Date().toISOString(),
+    currencySymbol,
+    water: {
+      used: waterUsed,
+      budget: Number(water.value ?? 0)
+    },
+    electricity: {
+      used: elecUsed,
+      budget: Number(electricity.value ?? 0)
+    }
+  }
+}
+
 function openConfirm () {
   if (!canAccept.value) return
   showConfirm.value = true
@@ -194,29 +230,26 @@ function closeConfirm () {
 }
 onUnmounted(() => { document.body.style.overflow = '' })
 
-const isES = computed(() => String(locale.value || '').startsWith('es'))
-const money = (n) =>
-    `${symbol}${Number(n ?? 0).toLocaleString(isES.value ? 'es-PE' : 'en-US', { maximumFractionDigits: 0 })}`
-
 async function confirmAndSave () {
-  await save()
-}
-
-async function save() {
   if (!selected.value) return
   try {
+    const snap = buildNewConsumption(selected.value)
+
     const updated = {
       ...selected.value,
       budget: {
         water: Number(water.value ?? 0),
-        electricity: Number(electricity.value ?? 0),
+        electricity: Number(electricity.value ?? 0)
       },
       budgetAlert: {
         enabled: !!alertEnabled.value,
         pct: Number(thresholdPct.value ?? 0)
-      }
+      },
+      consumptions: [...(selected.value.consumptions || []), snap]
     }
+
     await rental.update('properties', updated)
+
     closeConfirm()
     router.push('/consumption')
   } catch (e) {
@@ -234,15 +267,8 @@ const placeholderText = 'Select...'
 </script>
 
 <style scoped>
-.wrap{
-  --sbw:260px;
-  padding:1rem;
-  min-height:100dvh;
-  background:#fff;
-}
-@media (min-width: 993px){
-  .wrap{ margin-left:var(--sbw); width:calc(100% - var(--sbw)); padding:2rem; }
-}
+.wrap{ --sbw:260px; padding:1rem; min-height:100dvh; background:#fff; }
+@media (min-width: 993px){ .wrap{ margin-left:var(--sbw); width:calc(100% - var(--sbw)); padding:2rem; } }
 .content{ width:min(100%,1100px); margin:0 auto; }
 
 .topbar{ display:flex; align-items:center; justify-content:space-between; width:min(100%,1100px); margin:0 auto 1.25rem; }
@@ -264,87 +290,40 @@ const placeholderText = 'Select...'
 .small{ display:block; color:#555; margin-bottom:.25rem; }
 .money{ position:relative; display:inline-flex; align-items:center; }
 .sign{ position:absolute; left:.6rem; color:#666; user-select:none; pointer-events:none; }
-
 .inp{
-  padding:.55rem .8rem .55rem 1.4rem;
-  border:1px solid #e5e7eb;
-  border-radius:10px;
-  min-width:180px;
-  outline:none;
-  background:#fff;
-  color:#111;
-  -webkit-text-fill-color:#111;
+  padding:.55rem .8rem .55rem 1.4rem; border:1px solid #e5e7eb; border-radius:10px;
+  min-width:180px; outline:none; background:#fff; color:#111; -webkit-text-fill-color:#111;
 }
 .inp::placeholder{ color:#9ca3af; }
-.inp::-webkit-outer-spin-button,
-.inp::-webkit-inner-spin-button{
-  -webkit-appearance: inner-spin-button;
-  opacity:1;
-  height:auto;
-}
+.inp::-webkit-outer-spin-button, .inp::-webkit-inner-spin-button{ -webkit-appearance: inner-spin-button; opacity:1; height:auto; }
 .inp{ appearance:auto; -moz-appearance:auto; }
 .inp:disabled{ background:#f5f5f5; color:#9ca3af; }
 
 .alert-row{ display:flex; align-items:center; gap:1rem; flex-wrap:wrap; margin-top:.4rem; }
 .chk{ display:inline-flex; align-items:center; gap:.5rem; color:#111; }
 .thresh{ display:inline-flex; align-items:center; gap:.4rem; color:#555; }
-.thresh-inp{
-  width:64px; padding:.45rem .5rem; border:1px solid #e5e7eb; border-radius:10px;
-}
+.thresh-inp{ width:64px; padding:.45rem .5rem; border:1px solid #e5e7eb; border-radius:10px; }
 .thresh-inp:disabled{ background:#f5f5f5; color:#9ca3af; }
 
 .actions{ display:flex; gap:1rem; margin:1.4rem 0 0; }
-.cta{
-  padding:.9rem 1.3rem; border-radius:14px; border:none; cursor:pointer; font-weight:800;
-  background:#22c55e; color:#fff; box-shadow:0 2px 6px rgba(0,0,0,.1);
-}
+.cta{ padding:.9rem 1.3rem; border-radius:14px; border:none; cursor:pointer; font-weight:800; background:#22c55e; color:#fff; box-shadow:0 2px 6px rgba(0,0,0,.1); }
 .cta:disabled{ opacity:.45; cursor:not-allowed; }
 .cta.ghost{ background:#ff7a78; color:#fff; }
 
-.confirm-overlay{
-  position: fixed; inset: 0;
-  background: rgba(0,0,0,.35);
-  backdrop-filter: blur(2px);
-  display: grid; place-items: center;
-  z-index: 9999;
-}
-.confirm-card{
-  width: min(560px, 92vw);
-  background: #fff;
-  color: #111;
-  border-radius: 28px;
-  padding: 1.4rem 1.2rem 1.2rem;
-  box-shadow: 0 10px 50px rgba(0,0,0,.25);
-  position: relative;
-}
-.confirm-x{
-  position:absolute; top:10px; right:12px;
-  width:32px; height:32px; border:none; border-radius:10px;
-  background: #ffe4e4; color:#000; font-size:20px; line-height:1;
-  cursor:pointer;
-}
-.confirm-title{
-  font-size: 1.6rem; font-weight: 800; margin: .2rem 0 1rem;
-}
-.confirm-title .underline{
-  display:block; width:140px; height:4px; border-radius:999px;
-  background:#ff7a78; margin-top:.35rem;
-}
+.confirm-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.35); backdrop-filter:blur(2px); display:grid; place-items:center; z-index:9999; }
+.confirm-card{ width:min(560px,92vw); background:#fff; color:#111; border-radius:28px; padding:1.4rem 1.2rem 1.2rem; box-shadow:0 10px 50px rgba(0,0,0,.25); position:relative; }
+.confirm-x{ position:absolute; top:10px; right:12px; width:32px; height:32px; border:none; border-radius:10px; background:#ffe4e4; color:#000; font-size:20px; line-height:1; cursor:pointer; }
+.confirm-title{ font-size:1.6rem; font-weight:800; margin:.2rem 0 1rem; }
+.confirm-title .underline{ display:block; width:140px; height:4px; border-radius:999px; background:#ff7a78; margin-top:.35rem; }
 .confirm-prop{ display:flex; gap:1rem; align-items:center; margin-bottom:.6rem; }
 .confirm-thumb{ width:120px; height:120px; object-fit:cover; border-radius:16px; }
 .confirm-meta{ min-width:0; }
 .confirm-name{ font-weight:800; margin-bottom:.25rem; }
 .confirm-addr{ color:#6b7280; font-size:.95rem; }
-
 .confirm-list{ list-style:none; padding:0; margin:.5rem 0 1.1rem; }
 .confirm-list li{ padding:.2rem 0; }
-
 .confirm-actions{ display:flex; gap:1rem; justify-content:center; }
-.btn{
-  border:none; cursor:pointer; border-radius:14px;
-  font-weight:800; padding:.85rem 1.5rem; font-size:1rem;
-}
+.btn{ border:none; cursor:pointer; border-radius:14px; font-weight:800; padding:.85rem 1.5rem; font-size:1rem; }
 .btn-green{ background:#22c55e; color:#fff; }
 .btn-red{ background:#ff7a78; color:#fff; }
-
 </style>

@@ -162,7 +162,7 @@ export const useRentalStore = defineStore('rental', () => {
         const A  = getAssembler(name);
 
         try {
-            const resp = await ep.update(payload);
+            const resp = await ep.update(payload.id, payload);
             const resource = resp.data ?? resp;
             const ent = A.toEntityFromResource(resource);
 

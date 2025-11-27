@@ -20,6 +20,8 @@ import BillingProperty from "@/shared/views/BillingProperty.vue";
 import Consumption from "@/shared/views/Consumption.vue";
 import addbudget from "@/shared/views/addbudget.vue";
 import managebudget from "@/shared/views/managebudget.vue";
+import manageBudgetDetail from "@/shared/views/manageBudgetDetail.vue";
+
 const routes = [
     { path: '/', redirect: '/login' },
     {path: '/profile', component: profileView },
@@ -42,7 +44,7 @@ const routes = [
     {path: "/consumption",name: "Consumption",component: Consumption},
     {path: "/consumption/addbudget",name: "ConsumptionDetailAddBudget",component: addbudget,props: true},
     {path: "/consumption/managebudget",name: "ConsumptionDetailManageBudget",component: managebudget,props: true},
-
+    { path: '/consumption/managebudget/:id', name: 'ManageBudgetDetail', component: manageBudgetDetail, props: true },
 
 
 
