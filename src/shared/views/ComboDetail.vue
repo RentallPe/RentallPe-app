@@ -89,20 +89,27 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
+import {useRentalStore} from "@/Rental/application/rental-store.js";
 
 const route = useRoute();
+const store = useRentalStore();
+
 const combo = ref(null);
-const user = ref({ properties: [] });
+const properties = store.list("properties"); // lista reactiva
 const selectedAddress = ref(null);
 const addressDialog = ref(false);
 
 onMounted(async () => {
-  const resCombo = await fetch(`http://localhost:3000/combos/${route.params.id}`);
-  combo.value = await resCombo.json();
+  // Traer combo por id
+  combo.value = await store.fetchById("combos", route.params.id);
 
-  const resUser = await fetch("http://localhost:3000/user");
-  user.value = await resUser.json();
-  selectedAddress.value = user.value.properties[0];
+  // Traer propiedades
+  await store.fetchAll("properties");
+
+  // Seleccionar la primera propiedad por defecto
+  if (properties.value.length > 0) {
+    selectedAddress.value = properties.value[0];
+  }
 });
 
 function selectAddress(property) {
@@ -116,25 +123,17 @@ async function buyCombo() {
     return;
   }
 
-  const updatedProperties = user.value.properties.map(p => {
-    if (p.id === selectedAddress.value.id) {
-      return {
-        ...p,
-        combos: [...(p.combos || []), combo.value]
-      };
-    }
-    return p;
-  });
+  const updatedProperty = {
+    ...selectedAddress.value,
+    combos: [...(selectedAddress.value.combos || []), combo.value]
+  };
 
-  await fetch("http://localhost:3000/user", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ properties: updatedProperties })
-  });
+  await store.update("properties", updatedProperty);
 
   alert("Combo purchased and assigned to property!");
 }
 </script>
+
 
 <style scoped>
 .combo-detail-wrapper {

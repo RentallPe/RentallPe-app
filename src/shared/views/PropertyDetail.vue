@@ -4,10 +4,19 @@
       <template #title>
         <div class="flex align-items-center justify-content-between">
           <h2 class="m-0 text-black">{{ property?.name }}</h2>
-          <!-- Botón cuadrado para volver -->
-          <router-link to="/my-properties">
-            <pv-button icon="pi pi-arrow-left" severity="secondary" class="square-btn" />
-          </router-link>
+          <div class="flex gap-2">
+            <!-- Botón borrar -->
+            <pv-button
+                icon="pi pi-trash"
+                severity="danger"
+                class="square-btn"
+                @click="deleteProperty"
+            />
+            <!-- Botón volver -->
+            <router-link to="/my-properties">
+              <pv-button icon="pi pi-arrow-left" severity="secondary" class="square-btn" />
+            </router-link>
+          </div>
         </div>
       </template>
 
@@ -29,6 +38,13 @@
             </div>
           </div>
         </div>
+
+        <!-- Botón para ir a alertas -->
+        <div class="flex justify-content-end mt-4">
+          <router-link :to="`/alerts`">
+            <pv-button label="Ver Alertas" icon="pi pi-bell" severity="info" />
+          </router-link>
+        </div>
       </template>
     </pv-card>
   </div>
@@ -36,17 +52,57 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import { useRentalStore } from "@/Rental/application/rental-store";
 
-const route = useRoute();
+const route   = useRoute();
+const router  = useRouter();
+const rental  = useRentalStore();
+
 const property = ref(null);
+const loading  = ref(true);
+const error    = ref("");
+
+
+const rawId = route.params.id;
+const propId = Number.isNaN(Number(rawId)) ? rawId : Number(rawId);
 
 onMounted(async () => {
-  const res = await fetch(`http://localhost:3000/user`);
-  const user = await res.json();
-  property.value = user.properties.find(p => p.id === parseInt(route.params.id));
+  try {
+
+    let p = await rental.fetchById("properties", propId);
+
+    if (!p) {
+      await rental.fetchAll("properties", { force: true });
+      p = rental.getLocalById("properties", propId)
+        ?? rental.getLocalById("properties", String(propId)); 
+    }
+
+    if (!p) throw new Error("Property not found");
+    property.value = p;
+  } catch (e) {
+    console.error(e);
+    error.value = e?.message || "Could not load property";
+  } finally {
+    loading.value = false;
+  }
 });
+
+async function deleteProperty() {
+  if (!property.value) return;
+  if (!confirm("Are you sure you want to delete this property?")) return;
+
+  try {
+    await rental.remove("properties", property.value.id);
+    router.push("/my-properties");
+  } catch (e) {
+    console.error(e);
+    alert("Failed to delete the property.");
+  }
+}
 </script>
+
+
 
 <style scoped>
 .property-detail-wrapper {
@@ -71,7 +127,6 @@ onMounted(async () => {
   height: 40px;
   padding: 0;
   border-radius: 8px;
-  background-color: #f76c6c;
 }
 .progress-bar {
   background: #eee;
@@ -84,10 +139,7 @@ onMounted(async () => {
   height: 100%;
   border-radius: 8px;
 }
-p{
-  color: #111111;
-}
-.p-card {
+p {
   color: #111111;
 }
 </style>

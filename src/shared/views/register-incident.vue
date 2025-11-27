@@ -45,48 +45,36 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { useRentalStore } from "@/Rental/application/rental-store";
 
 const router = useRouter();
+const rental = useRentalStore();
 
-const incident = ref({
-  description: ""
-});
+const incident = ref({ description: "" });
 
 async function submitIncident() {
-  if (!incident.value.description.trim()) {
+  if (!incident.value.description?.trim()) {
     alert("Please describe the incident before submitting.");
     return;
   }
 
-
-  const res = await fetch("http://localhost:3000/user");
-  const user = await res.json();
-
-
   const newIncident = {
     id: Date.now(),
-    incNumber: "INC" + Math.floor(100000 + Math.random() * 900000), // INC412516
-    description: incident.value.description,
-    date: new Date().toISOString(),
-    status: "Pending"
+    projectId: 1,
+    description: incident.value.description.trim(),
+    status: "pending",
+    createdAt: new Date().toISOString(),
+    updatedAt: null
   };
 
-  const updatedIncidents = [...(user.incidents || []), newIncident];
-
-  await fetch("http://localhost:3000/user", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ incidents: updatedIncidents })
-  });
-
-
-
-  incident.value.description = "";
-
-
-  router.push("/support");
-
-
+  try {
+    await rental.create("incidents", newIncident);
+    incident.value.description = "";
+    router.push("/support");
+  } catch (err) {
+    console.error("Error saving incident:", err);
+    alert("Could not save the incident. Please try again.");
+  }
 }
 </script>
 

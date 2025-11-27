@@ -1,37 +1,58 @@
 <template>
   <div class="new-project-wrapper">
     <pv-card class="new-project-card">
-      <!-- Título del card -->
+      <!-- Título -->
       <template #title>
         <div class="flex align-items-center gap-2">
-          <i class="pi pi-user text-primary text-2xl"></i>
+          <i class="pi pi-home text-primary text-2xl"></i>
           <h2 class="m-0 text-black">New Project</h2>
         </div>
       </template>
 
-      <!-- Contenido del card -->
+      <!-- Contenido -->
       <template #content>
+        <!-- Combos -->
         <h3 class="m-0 subtitle">Our combos</h3>
-
         <div class="grid">
-          <div v-for="combo in combos" :key="combo.id" class="col-12 md:col-4">
-            <router-link :to="`/combo/${combo.id}`" class="no-underline">
+          <div
+              v-for="combo in combos"
+              :key="combo.id"
+              class="col-12 md:col-4"
+              @click="selectCombo(combo)"
+          >
+            <div class="combo-card cursor-pointer">
               <img :src="combo.image" alt="" class="combo-img" />
               <h3 class="combo-title">{{ combo.name }}</h3>
+              <p class="text-sm">Provider: {{ getProviderName(combo.providerId) }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Providers -->
+        <h3 class="m-0 subtitle mt-5">Providers</h3>
+        <div class="grid small-providers">
+          <div v-for="provider in providers" :key="provider.id" class="col-12 md:col-3">
+            <router-link :to="`/provider/${provider.id}`" class="no-underline">
+              <pv-card class="provider-card">
+                <template #title>{{ provider.name }}</template>
+                <template #content>
+                  <p class="text-sm">{{ provider.contact }}</p>
+                </template>
+              </pv-card>
             </router-link>
           </div>
         </div>
       </template>
-
     </pv-card>
 
-    <!-- Dialog detalle -->
+    <!-- Dialog detalle combo -->
     <pv-dialog v-model:visible="dialogVisible" header="Combo detail" modal :style="{ width: '40vw' }">
       <template v-if="selectedCombo">
         <img :src="selectedCombo.image" alt="" class="combo-img mb-3" />
         <h3>{{ selectedCombo.name }}</h3>
         <p>{{ selectedCombo.description }}</p>
         <p><strong>Installation time:</strong> {{ selectedCombo.installDays }} days</p>
+        <p><strong>Provider:</strong> {{ getProviderName(selectedCombo.providerId) }}</p>
 
         <div class="flex align-items-center gap-2 mt-3">
           <span><strong>Send to:</strong></span>
@@ -56,8 +77,12 @@
     <!-- Dialog selección de dirección -->
     <pv-dialog v-model:visible="addressDialog" header="Select address" modal :style="{ width: '30vw' }">
       <ul>
-        <li v-for="property in user.properties" :key="property.id" class="cursor-pointer mb-2"
-            @click="selectAddress(property)">
+        <li
+            v-for="property in properties"
+            :key="property.id"
+            class="cursor-pointer mb-2"
+            @click="selectAddress(property)"
+        >
           {{ property.name }} - {{ property.address }}
         </li>
       </ul>
@@ -67,9 +92,11 @@
 
 <script setup>
 import { ref, onMounted } from "vue";
+import axios from "axios";
 
 const combos = ref([]);
-const user = ref({ properties: [] });
+const providers = ref([]);
+const properties = ref([]);
 
 const dialogVisible = ref(false);
 const addressDialog = ref(false);
@@ -78,11 +105,14 @@ const selectedCombo = ref(null);
 const selectedAddress = ref(null);
 
 onMounted(async () => {
-  const resCombos = await fetch("http://localhost:3000/combos");
-  combos.value = await resCombos.json();
+  const resCombos = await axios.get("http://localhost:3000/combos");
+  combos.value = resCombos.data;
 
-  const resUser = await fetch("http://localhost:3000/user");
-  user.value = await resUser.json();
+  const resProviders = await axios.get("http://localhost:3000/providers");
+  providers.value = resProviders.data;
+
+  const resProperties = await axios.get("http://localhost:3000/properties");
+  properties.value = resProperties.data;
 });
 
 function selectCombo(combo) {
@@ -101,25 +131,20 @@ async function buyCombo() {
     return;
   }
 
-  // Agregar combo a la propiedad seleccionada
-  const updatedProperties = user.value.properties.map(p => {
-    if (p.id === selectedAddress.value.id) {
-      return {
-        ...p,
-        combos: [...(p.combos || []), selectedCombo.value]
-      };
-    }
-    return p;
-  });
+  const updatedProperty = {
+    ...selectedAddress.value,
+    combos: [...(selectedAddress.value.combos || []), selectedCombo.value]
+  };
 
-  await fetch("http://localhost:3000/user", {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ properties: updatedProperties })
-  });
+  await axios.patch(`http://localhost:3000/properties/${selectedAddress.value.id}`, updatedProperty);
 
   alert("Combo purchased and assigned to property!");
   dialogVisible.value = false;
+}
+
+function getProviderName(providerId) {
+  const provider = providers.value.find(p => p.id === providerId);
+  return provider ? provider.name : "Unknown";
 }
 </script>
 
@@ -131,20 +156,17 @@ async function buyCombo() {
   background-color: #f9fafb;
   min-height: 100vh;
 }
-
 .new-project-card {
   width: 100%;
   max-width: 1000px;
   background: #fff;
   border-radius: 16px;
 }
-
 .subtitle {
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
   color: #555;
 }
-
 .combo-card {
   transition: transform 0.2s;
   text-align: center;
@@ -166,9 +188,26 @@ async function buyCombo() {
   font-weight: 600;
   color: #111111;
 }
-
+.small-providers .provider-card {
+  font-size: 0.85rem;
+  padding: 0.5rem;
+}
 .text-black {
   color: #000;
+}
+
+.combo-card,
+.combo-card h3,
+.combo-card p {
+  color: #111111 !important;
+}
+
+
+.provider-card,
+.provider-card h3,
+.provider-card p {
+  color: #ffffff !important;
+  background-color: #373737;
 }
 
 </style>

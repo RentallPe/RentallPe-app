@@ -1,26 +1,60 @@
+<script setup>
+import { onMounted, computed } from "vue";
+import { useRentalStore } from "@/Rental/application/rental-store";
+
+const rental   = useRentalStore();
+const USER_ID  = 1;
+
+
+const properties = computed(() => {
+  const all = rental.list("properties").value ?? [];
+  return all
+    .filter(p => String(p.ownerId ?? p.userId) === String(USER_ID))
+    .map(p => ({
+      ...p,
+      image: p.image || `https://picsum.photos/800/600?random=${p.id ?? Math.random()}`,
+      name:  p.name  ?? "New Property",
+      address: p.address ?? "—",
+      province: p.province ?? "—",
+      region: p.region ?? "—",
+      status: p.status ?? "—",
+      handoverDate: p.handoverDate ?? "Not defined",
+      progress: Number.isFinite(p.progress) ? p.progress : 0
+    }));
+});
+
+onMounted(async () => {
+  await rental.fetchAll("properties");
+});
+</script>
+
 <template>
   <div class="properties-wrapper">
     <pv-card class="new-project-card">
       <template #title>
-        <div>
         <h2 class="page-title">My Properties</h2>
-        </div>
       </template>
+
       <template #content>
-        <div class="grid property-grid">
+        <div class="grid property-grid grid-reset">
           <div
-              v-for="property in user.properties"
-              :key="property.id"
-              class="col-12 md:col-6"
+            v-for="property in properties"
+            :key="property.id"
+            class="col-12 md:col-6 lg:col-4 col-fix"
           >
             <pv-card class="property-card">
-              <template #content>
+              <template #header>
                 <router-link :to="`/property/${property.id}`">
-                  <img :src="property.image" alt="" class="property-img" />
+                  <img :src="property.image" alt="Property image" class="property-img" />
                 </router-link>
+              </template>
+              <template #content>
                 <h3 class="property-title">{{ property.name }}</h3>
                 <p class="property-address">{{ property.address }}</p>
-                <p><strong>Handover date:</strong> {{ property.handoverDate || 'Not defined' }}</p>
+                <p><strong>Province:</strong> {{ property.province }}</p>
+                <p><strong>Region:</strong> {{ property.region }}</p>
+                <p><strong>Status:</strong> {{ property.status }}</p>
+                <p><strong>Handover date:</strong> {{ property.handoverDate }}</p>
                 <div class="progress-bar">
                   <div class="progress-fill" :style="{ width: property.progress + '%' }"></div>
                 </div>
@@ -30,88 +64,52 @@
           </div>
         </div>
 
-        <div class="flex justify-content-end mt-4">
-          <pv-button label="Add property" icon="pi pi-plus" severity="primary" />
+        <div class="actions">
+          <router-link to="/add-property">
+            <pv-button label="Add property" icon="pi pi-plus" severity="primary" />
+          </router-link>
         </div>
       </template>
-
     </pv-card>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from "vue";
-
-const user = ref({ properties: [] });
-
-onMounted(async () => {
-  const res = await fetch("http://localhost:3000/user");
-  user.value = await res.json();
-});
-</script>
-
 <style scoped>
-.properties-wrapper {
-  padding: 2rem;
-  display: flex;
-  justify-content: center;
-  background-color: #f9fafb;
-  min-height: 100vh;
-}
-.page-title {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  color: #000;
+
+.properties-wrapper{
+  --sbw:260px;
+  margin-left:var(--sbw);
+  width:calc(100% - var(--sbw));
+  padding:2rem;
+  background:#f9fafb;
+  min-height:100dvh;
+  box-sizing:border-box;
+  overflow-x:clip;
 }
 
-.property-card {
-  margin-bottom: 1.5rem;
-  border-radius: 12px;
-  overflow: hidden;
-}
+.new-project-card{ width:100%; max-width:1000px; margin:0 auto; border-radius:16px; overflow:hidden; background:#fff; }
+.page-title{ font-size:1.8rem; margin-bottom:1.5rem; color:#111; }
 
-.property-img {
-  width: 100%;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-.property-img:hover {
-  transform: scale(1.02);
-}
 
-.property-title {
-  margin-top: 0.5rem;
-  font-weight: 600;
-  color: #000;
-}
+.grid-reset{ margin-left:0 !important; margin-right:0 !important; }
+.grid-reset > [class*="col-"]{ padding-left:0 !important; padding-right:0 !important; }
+.col-fix{ min-width:0; }
 
-.property-address {
-  color: #959595;
-  margin-bottom: 0.5rem;
-}
 
-.progress-bar {
-  background: #eee;
-  border-radius: 8px;
-  height: 8px;
-  margin: 0.5rem 0;
-}
-.progress-fill {
-  background: #b22222; /* rojo ladrillo */
-  height: 100%;
-  border-radius: 8px;
-  color: #323232;
-}
-.property-grid {
-  width: 100%;
-  margin: 0;
-  box-sizing: border-box;
-}
-.p-card{
-  background: #ffffff;
-}
-p{
-  color: #111111;
+.property-card{ border-radius:12px; overflow:hidden; background:#fff; }
+.property-img{ width:100%; height:220px; object-fit:cover; display:block; }
+.property-title{ margin:.5rem 0 0; font-weight:600; color:#111; }
+.property-address{ color:#6b7280; margin:.25rem 0 .5rem; }
+
+
+.progress-bar{ background:#eee; border-radius:8px; height:8px; margin:.5rem 0; overflow:hidden; }
+.progress-fill{ height:100%; border-radius:8px; background:#b22222; }
+
+
+.actions{ display:flex; justify-content:end; margin-top:1rem; }
+
+
+@media (max-width:1024px){
+  .properties-wrapper{ margin-left:0; width:100%; padding:1rem; }
 }
 </style>

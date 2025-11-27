@@ -1,77 +1,381 @@
 {
-  "user": {
-    "id": 1,
-    "name": "Lucas dias morena",
-    "country": "Perú",
-    "incidents": [
-      {
-        "id": 1760026875359,
-        "incNumber": "INC169761",
-        "description": "asdasdas",
-        "date": "2025-10-09T16:21:15.359Z",
-        "status": "Pending"
-      }
-    ],
-    "department": "Lima",
-    "photo": "https://randomuser.me/api/portraits/men/75.jpg",
-    "properties": [
-      {
-        "id": 1,
-        "name": "Urban Cottage",
-        "address": "Fifth Avenue 14032, Surco, Lima",
-        "image": "https://picsum.photos/300/200?random=1"
-      },
-      {
-        "id": 2,
-        "name": "Hillside Home",
-        "address": "Palm Avenue 14032, Miraflores, Lima",
-        "image": "https://picsum.photos/300/200?random=2",
-        "combos": [
-          {
-            "id": 2,
-            "name": "8 cameras",
-            "image": "https://picsum.photos/300/200?random=11",
-            "description": "Paquete de 8 cámaras de seguridad con DVR avanzado.",
-            "installDays": 5,
-            "price": 2000
+  "users": [
+    {
+      "id": "1",
+      "fullName": "Mario Vargasssss",
+      "email": "mario@example.com",
+      "password": "1234",
+      "phone": "999999999",
+      "createdAt": "2025-10-01T06:00:00Z",
+      "photo": "https://randomuser.me/api/portraits/men/75.jpg",
+      "role": "customer",
+      "paymentMethods": [
+        {
+          "id": 1760168583929,
+          "type": "Visa",
+          "number": "1231 2312 3123 1231",
+          "expiry": "12/31",
+          "cvv": "123"
+        }
+      ]
+    },
+    {
+      "id": 1761604976429,
+      "fullName": "Humberto ",
+      "email": "asmdasmop@amdiasm.com",
+      "password": "1234",
+      "phone": "",
+      "createdAt": "2025-10-27T22:42:56.429Z"
+    },
+    {
+      "id": 1761605483856,
+      "fullName": "Testeo",
+      "email": "testeo.com",
+      "password": "1234r",
+      "phone": "",
+      "createdAt": "2025-10-27T22:51:23.856Z"
+    },
+    {
+      "id": 1761605876307,
+      "fullName": "Testeo3",
+      "email": "testeo3@gmail.com",
+      "password": "1234c",
+      "phone": "",
+      "createdAt": "2025-10-27T22:57:56.307Z"
+    },
+    {
+      "id": 1761606683967,
+      "fullName": "Juan",
+      "email": "juan@lop",
+      "password": "1234",
+      "phone": "",
+      "createdAt": "2025-10-27T23:11:23.967Z",
+      "role": "provider"
+    },
+    {
+      "id": 1761607140418,
+      "fullName": "Test3",
+      "email": "asdq1@1234",
+      "password": "1234",
+      "phone": "",
+      "createdAt": "2025-10-27T23:19:00.418Z",
+      "role": "customer"
+    },
+    {
+      "id": 1761608000000,
+      "fullName": "Construcciones S.A.",
+      "email": "construcciones@rentalpe.com",
+      "password": "1234",
+      "phone": "987654321",
+      "createdAt": "2025-10-28T15:30:00Z",
+      "role": "provider",
+      "providerId": 1
+    }
+  ],
+  "iotDevices": [],
+  "documents": [],
+  "invoices": [],
+  "incidents": [
+    {
+      "id": "1760166122111",
+      "projectId": 1002,
+      "description": "Fuga de agua en cocina reportada por el inquilino.",
+      "status": "pending",
+      "createdAt": "2025-10-11T07:02:02.111Z",
+      "updatedAt": null
+    },
+    {
+      "id": 1762036366697,
+      "projectId": 1,
+      "description": "asdadad",
+      "status": "pending",
+      "createdAt": "2025-11-01T22:32:46.697Z",
+      "updatedAt": null
+    },
+    {
+      "id": 1762036378534,
+      "projectId": 1,
+      "description": "hola",
+      "status": "pending",
+      "createdAt": "2025-11-01T22:32:58.534Z",
+      "updatedAt": null
+    }
+  ],
+  "notifications": [],
+  "payments": [
+    {
+      "id": 9001,
+      "projectId": 1001,
+      "installment": 3,
+      "amount": 2300,
+      "date": "2025-11-14T00:00:00Z",
+      "status": "pending",
+      "currencySymbol": "$"
+    },
+    {
+      "id": 9002,
+      "propertyId": "1760165416142",
+      "installment": 1,
+      "amount": 1300,
+      "maturityDate": "2025-12-20T00:00:00Z",
+      "status": "pending",
+      "currencySymbol": "$"
+    },
+    {
+      "id": 9003,
+      "propertyId": "1760165416142",
+      "installment": 2,
+      "amount": 1300,
+      "dueDate": "2026-01-20T00:00:00Z",
+      "status": "pending",
+      "currencySymbol": "$"
+    },
+    {
+      "id": 9004,
+      "projectId": 1001,
+      "installment": 2,
+      "amount": 1200,
+      "date": "2025-10-10T00:00:00Z",
+      "status": "paid",
+      "currencySymbol": "$"
+    }
+  ],
+  "remodelPlans": [],
+  "budgets": [],
+  "properties": [
+    {
+      "id": "1760165416141",
+      "ownerId": 1,
+      "name": "Urban Cottage",
+      "address": "Fifth Avenue 14032, Surco, Lima",
+      "province": "",
+      "region": "",
+      "status": "available",
+      "handoverDate": null,
+      "progress": 45,
+      "image": "https://picsum.photos/300/200?random=99",
+      "alerts": [
+        {
+          "id": "A-100",
+          "message": "Consumo eléctrico por encima de lo usual.",
+          "createdAt": "2025-10-28T12:00:00Z"
+        },
+        {
+          "id": "A-101",
+          "message": "Detección de puerta principal abierta por 10 minutos.",
+          "createdAt": "2025-10-29T09:30:00Z"
+        }
+      ],
+      "locks": [],
+      "combos": [
+        {
+          "id": 2,
+          "providerId": 1,
+          "name": "Security Essentials",
+          "description": "Smart locks, motion sensors, and cameras.",
+          "price": 950,
+          "installDays": 3,
+          "image": "https://picsum.photos/400/250?random=2"
+        },
+        {
+          "id": 1,
+          "providerId": 1,
+          "name": "Smart Kitchen Pack",
+          "description": "Includes smart oven, water filter, and lighting.",
+          "price": 1200,
+          "installDays": 5,
+          "image": "https://picsum.photos/400/250?random=1"
+        }
+      ],
+      "consumptions": [
+        {
+          "id": 1760165416141,
+          "projectId": 1001,
+          "date": "2025-10-10T00:00:00Z",
+          "currencySymbol": "$",
+          "water": {
+            "used": 500,
+            "budget": 2000
+          },
+          "electricity": {
+            "used": 50,
+            "budget": 300
           }
-        ]
+        },
+        {
+          "id": 1762816430887,
+          "projectId": 1001,
+          "date": "2025-11-10T23:13:50.888Z",
+          "currencySymbol": "$",
+          "water": {
+            "used": 500,
+            "budget": 323424
+          },
+          "electricity": {
+            "used": 50,
+            "budget": 23432424
+          }
+        },
+        {
+          "id": 1762816453565,
+          "projectId": 1001,
+          "date": "2025-11-10T23:14:13.565Z",
+          "currencySymbol": "$",
+          "water": {
+            "used": 500,
+            "budget": 3234234
+          },
+          "electricity": {
+            "used": 50,
+            "budget": 2342424
+          }
+        }
+      ],
+      "areaM2": 140,
+      "yearsOld": 3,
+      "createdAt": "2025-10-11T06:50:16.141Z",
+      "budget": {
+        "water": 3234234,
+        "electricity": 2342424
+      },
+      "budgetAlert": {
+        "enabled": true,
+        "pct": 75
       }
-    ],
-    "paymentMethods": [
-      {
-        "id": 1,
-        "type": "Visa",
-        "number": "1234697656723320",
-        "expiry": "12/27",
-        "cvv": "209"
-      }
-    ]
-  },
+    },
+    {
+      "id": "1760165416142",
+      "ownerId": 1,
+      "address": "Palm Avenue 14012, Miraflores, Lima",
+      "ubigeo": "150122",
+      "areaM2": 110,
+      "yearsOld": 5,
+      "status": "available",
+      "createdAt": "2025-10-15T10:10:00Z",
+      "image": "https://picsum.photos/300/200?random=98",
+      "name": "Hillside Home",
+      "handoverDate": null,
+      "progress": 30,
+      "alerts": [
+        {
+          "id": "A-200",
+          "message": "Se detectó humedad en el baño principal.",
+          "createdAt": "2025-10-30T08:10:00Z"
+        }
+      ],
+      "locks": [],
+      "owner": null,
+      "combos": [
+        {
+          "id": "2",
+          "providerId": 1,
+          "name": "Security Essentials",
+          "description": "Smart locks, motion sensors, and cameras.",
+          "price": 950,
+          "installDays": 3,
+          "image": "https://picsum.photos/400/250?random=2"
+        }
+      ],
+      "consumptions": [
+        {
+          "id": 1760165416142,
+          "projectId": 1002,
+          "date": "2025-10-15T00:00:00Z",
+          "water": {
+            "used": 150,
+            "budget": 200
+          },
+          "electricity": {
+            "used": 50,
+            "budget": 100
+          },
+          "currencySymbol": "$"
+        }
+      ]
+    }
+  ],
+  "owners": [
+    {
+      "id": "1",
+      "ownerTypeId": "T1",
+      "businessName": "Juan Pérez SAC",
+      "documentType": "RUC",
+      "documentNumber": "12345678901",
+      "phone": "987654321",
+      "email": "juanperez@example.com",
+      "address": "123 Fake Street",
+      "createdAt": "2025-10-01T09:00:00Z"
+    }
+  ],
+  "providers": [
+    {
+      "id": "1",
+      "name": "Construcciones S.A.",
+      "contact": "contact@construcciones.com"
+    },
+    {
+      "id": "2",
+      "name": "SmartHome Perú",
+      "contact": "ventas@smarthome.pe"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1001,
+      "propertyId": "1760165416141",
+      "userId": "1",
+      "name": "Urban Cottage Remodel",
+      "status": "active",
+      "startDate": "2025-10-01T00:00:00Z",
+      "endDate": null,
+      "createdAt": "2025-10-01T00:00:00Z"
+    },
+    {
+      "id": 1002,
+      "propertyId": "1760165416142",
+      "userId": "1",
+      "name": "Hillside IoT Install",
+      "status": "active",
+      "startDate": "2025-10-05T00:00:00Z",
+      "endDate": null,
+      "createdAt": "2025-10-05T00:00:00Z"
+    }
+  ],
+  "tasks": [],
+  "ownerTypes": [
+    {
+      "id": "T1",
+      "typeName": "Legal Entity",
+      "createdAt": "2025-10-01T07:00:00Z"
+    }
+  ],
   "combos": [
     {
-      "id": 1,
-      "name": "4 cameras",
-      "image": "https://picsum.photos/300/200?random=10",
-      "description": "Paquete de 4 cámaras de seguridad con DVR incluido.",
-      "installDays": 3,
-      "price": 1200
-    },
-    {
-      "id": 2,
-      "name": "8 cameras",
-      "image": "https://picsum.photos/300/200?random=11",
-      "description": "Paquete de 8 cámaras de seguridad con DVR avanzado.",
+      "id": "1",
+      "providerId": 1,
+      "name": "Smart Kitchen Pack",
+      "description": "Includes smart oven, water filter, and lighting.",
+      "price": 1200,
       "installDays": 5,
-      "price": 2000
+      "image": "https://picsum.photos/400/250?random=1"
     },
     {
-      "id": 3,
-      "name": "2 smart locks",
-      "image": "https://picsum.photos/300/200?random=12",
-      "description": "2 cerraduras inteligentes con control remoto y app.",
-      "installDays": 2,
-      "price": 800
+      "id": "2",
+      "providerId": 1,
+      "name": "Security Essentials",
+      "description": "Smart locks, motion sensors, and cameras.",
+      "price": 950,
+      "installDays": 3,
+      "image": "https://picsum.photos/400/250?random=2"
+    },
+    {
+      "id": "3",
+      "providerId": 2,
+      "name": "Eco Living Combo",
+      "description": "Solar panels, smart thermostat, water-saving faucets.",
+      "price": 2500,
+      "installDays": 10,
+      "image": "https://picsum.photos/400/250?random=3"
     }
   ]
 }
