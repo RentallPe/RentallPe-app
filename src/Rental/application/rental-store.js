@@ -18,6 +18,9 @@ import { PaymentAssembler } from '@/Rental/infrastructure/payment.assembler.js';
 import { RemodelPlanAssembler } from '@/Rental/infrastructure/remodelPlan.assembler.js';
 import { BudgetAssembler } from '@/Rental/infrastructure/budget.assembler.js';
 import { ComboAssembler } from '@/Rental/infrastructure/combo.assembler.js';
+import { SubscriptionAssembler } from '@/Rental/infrastructure/subscription.js';
+
+
 
 const api = new RentalApi();
 
@@ -37,7 +40,8 @@ const assemblers = {
     owner_types: OwnerTypeAssembler,
     remodel_plans: RemodelPlanAssembler,
     budgets: BudgetAssembler,
-    combos: ComboAssembler
+    combos: ComboAssembler,
+    subscriptions: SubscriptionAssembler
 };
 
 export const useRentalStore = defineStore('rental', () => {
@@ -45,7 +49,7 @@ export const useRentalStore = defineStore('rental', () => {
     const lists    = shallowRef({});      
     const loaded   = ref({});             
     const indexes  = shallowRef({});     
-    const errors   = shallowRef([]);     
+    const errors   = shallowRef([]);
 
 
     const inflight = new Map();           
@@ -223,6 +227,33 @@ export const useRentalStore = defineStore('rental', () => {
         const idx = indexes.value[name].get(id);
         return idx !== undefined ? lists.value[name][idx] : undefined;
     }
+    function availableCombosForUser(userId) {
+        ensureBuckets("combos");
+        ensureBuckets("subscriptions");
+
+        const combosList = lists.value["combos"] || [];
+        const subsList   = lists.value["subscriptions"] || [];
+
+        // Buscar la suscripción activa del usuario
+        const mySub = subsList.find(s => s.customerId === userId && s.status === "active");
+        if (!mySub) {
+            // Si no tiene suscripción, solo mostrar combos básicos
+            return combosList.filter(c => c.planType === "basic");
+        }
+
+        if (mySub.plan === "basic") {
+            return combosList.filter(c => c.planType === "basic");
+        }
+        if (mySub.plan === "premium") {
+            return combosList.filter(c => c.planType === "basic" || c.planType === "premium");
+        }
+        if (mySub.plan === "enterprise") {
+            return combosList; // ve todos
+        }
+
+        return [];
+    }
+
 
     return {
 
@@ -230,7 +261,9 @@ export const useRentalStore = defineStore('rental', () => {
 
         fetchAll, fetchById, list, isLoaded, count, getLocalById,
 
-        create, update, remove
+        create, update, remove,
+        availableCombosForUser
     };
+
 
 });

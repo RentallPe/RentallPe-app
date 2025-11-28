@@ -15,14 +15,17 @@
         <h3 class="m-0 subtitle">Our combos</h3>
         <div class="grid">
           <div
-              v-for="combo in combos"
+              v-for="combo in visibleCombos"
               :key="combo.id"
               class="col-12 md:col-4"
               @click="selectCombo(combo)"
           >
             <div class="combo-card cursor-pointer">
               <img :src="combo.image" alt="" class="combo-img" />
-              <h3 class="combo-title">{{ combo.name }}</h3>
+              <h3 class="combo-title">
+                {{ combo.name }}
+                <span v-if="combo.planType === 'premium'" class="badge-premium">Premium</span>
+              </h3>
               <p class="text-sm">Provider: {{ getProviderName(combo.providerId) }}</p>
             </div>
           </div>
@@ -91,12 +94,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import axios from "axios";
 
 const combos = ref([]);
 const providers = ref([]);
 const properties = ref([]);
+const subscription = ref(null);
 
 const dialogVisible = ref(false);
 const addressDialog = ref(false);
@@ -105,15 +109,47 @@ const selectedCombo = ref(null);
 const selectedAddress = ref(null);
 
 onMounted(async () => {
+  // Cargar combos
   const resCombos = await axios.get("http://localhost:3000/combos");
   combos.value = resCombos.data;
 
+  // Cargar proveedores
   const resProviders = await axios.get("http://localhost:3000/providers");
   providers.value = resProviders.data;
 
+  // Cargar propiedades
   const resProperties = await axios.get("http://localhost:3000/properties");
   properties.value = resProperties.data;
+
+  // Cargar suscripción del usuario actual
+  const savedUser = localStorage.getItem("currentUser");
+  const currentUser = savedUser ? JSON.parse(savedUser) : null;
+
+  if (currentUser) {
+    const resSub = await axios.get("http://localhost:3000/subscription");
+    subscription.value = resSub.data.find(s => s.customerId === currentUser.id);
+  }
 });
+
+// Combos visibles según plan
+const visibleCombos = computed(() => {
+  if (!subscription.value) {
+    // Si no tiene suscripción, solo combos básicos
+    return combos.value.filter(c => c.planType === "basic");
+  }
+
+  switch (subscription.value.plan) {
+    case "basic":
+      return combos.value.filter(c => c.planType === "basic");
+    case "premium":
+      return combos.value.filter(c => c.planType === "basic" || c.planType === "premium");
+    case "enterprise":
+      return combos.value; // ve todos los combos
+    default:
+      return [];
+  }
+});
+
 
 function selectCombo(combo) {
   selectedCombo.value = combo;
@@ -131,6 +167,12 @@ async function buyCombo() {
     return;
   }
 
+  // Validar plan
+  if (subscription.value?.plan !== "premium" && selectedCombo.value.planType === "premium") {
+    alert("Upgrade to Premium to buy this combo.");
+    return;
+  }
+
   // 1. Actualizar la propiedad con el combo comprado
   const propertyId = String(selectedAddress.value.id);
   const updatedProperty = {
@@ -140,7 +182,7 @@ async function buyCombo() {
 
   await axios.patch(`http://localhost:3000/properties/${propertyId}`, updatedProperty);
 
-  // 2. Crear un registro de pago con info extra
+  // 2. Crear un registro de pago
   const savedUser = localStorage.getItem("currentUser");
   const currentUser = savedUser ? JSON.parse(savedUser) : null;
 
@@ -162,7 +204,6 @@ async function buyCombo() {
   alert("Combo purchased and payment registered!");
   dialogVisible.value = false;
 }
-
 
 function getProviderName(providerId) {
   const provider = providers.value.find(p => p.id === providerId);
@@ -210,6 +251,14 @@ function getProviderName(providerId) {
   font-weight: 600;
   color: #111111;
 }
+.badge-premium {
+  background: gold;
+  color: #000;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
 .small-providers .provider-card {
   font-size: 0.85rem;
   padding: 0.5rem;
@@ -217,19 +266,15 @@ function getProviderName(providerId) {
 .text-black {
   color: #000;
 }
-
 .combo-card,
 .combo-card h3,
 .combo-card p {
   color: #111111 !important;
 }
-
-
 .provider-card,
 .provider-card h3,
 .provider-card p {
   color: #ffffff !important;
   background-color: #373737;
 }
-
 </style>

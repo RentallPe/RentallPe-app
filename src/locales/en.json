@@ -145,7 +145,8 @@
     "support": "Support",
     "alerts": "Alerts",
     "payment": "Payments",
-    "profile": "Profile"
+    "profile": "Profile",
+    "subscription": "Subscription"
   },
   "addCombo": {
     "title": "Add Combo",
@@ -194,6 +195,7 @@
     "noPayments": "No payments yet.",
     "status": {
       "pending": "Pending",
+      "paid": "Paid",
       "completed": "Completed"
     }
   }

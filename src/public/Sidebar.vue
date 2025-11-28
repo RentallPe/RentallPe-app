@@ -45,6 +45,12 @@
         <i class="pi pi-credit-card"></i>
         <span>{{ t('menu.billing') }}</span>
       </router-link>
+
+      <router-link to="/subscription" class="nav-item" active-class="active">
+        <i class="pi pi-star"></i>
+        <span>{{ t('menu.subscription') }}</span>
+      </router-link>
+
     </nav>
 
     <!-- Footer con selector de idioma -->

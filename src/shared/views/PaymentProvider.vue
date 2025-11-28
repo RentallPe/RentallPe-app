@@ -116,5 +116,10 @@ h2, p {
   text-transform: capitalize;
 }
 .status.pending { background: #fff3cd; color: #856404; }
+.status.paid {
+  background: #d4edda; /* verde claro */
+  color: #155724;      /* verde oscuro */
+}
+
 .status.completed { background: #d4edda; color: #155724; }
 </style>

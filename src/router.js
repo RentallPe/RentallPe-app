@@ -20,6 +20,8 @@ import MyCombos from "@/shared/views/MyCombos.vue";
 import AddCombo from "@/shared/views/AddCombo.vue";
 import EditCombo from "@/shared/views/EditCombo.vue";
 import PaymentProvider from "@/shared/views/PaymentProvider.vue";
+import Subscription from "./shared/views/Subscription.vue";
+
 
 const routes = [
     { path: '/', redirect: '/login' },
@@ -44,6 +46,8 @@ const routes = [
     { path: "/add-combo", component: AddCombo },
     { path: "/edit-combo/:id", component: EditCombo, props: true },
     { path: "/payment", component: PaymentProvider },
+    { path: '/subscription', component: Subscription },
+
 
 
 

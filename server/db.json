@@ -2,12 +2,13 @@
   "users": [
     {
       "id": "1",
-      "fullName": "Mario Vargasssss",
+      "fullName": "Mario Vargas",
       "email": "mario@example.com",
       "password": "1234",
       "phone": "999999999",
       "createdAt": "2025-10-01T06:00:00Z",
       "photo": "https://randomuser.me/api/portraits/men/75.jpg",
+      "role": "customer",
       "paymentMethods": [
         {
           "id": 1760168583929,
@@ -19,49 +20,16 @@
       ]
     },
     {
-      "id": 1761604976429,
-      "fullName": "Humberto ",
-      "email": "asmdasmop@amdiasm.com",
+      "id": "1761604976429",
+      "fullName": "Humberto",
+      "email": "humberto@example.com",
       "password": "1234",
-      "phone": "",
-      "createdAt": "2025-10-27T22:42:56.429Z"
-    },
-    {
-      "id": 1761605483856,
-      "fullName": "Testeo",
-      "email": "testeo.com",
-      "password": "1234r",
-      "phone": "",
-      "createdAt": "2025-10-27T22:51:23.856Z"
-    },
-    {
-      "id": 1761605876307,
-      "fullName": "Testeo3",
-      "email": "testeo3@gmail.com",
-      "password": "1234c",
-      "phone": "",
-      "createdAt": "2025-10-27T22:57:56.307Z"
-    },
-    {
-      "id": 1761606683967,
-      "fullName": "Juan",
-      "email": "juan@lop",
-      "password": "1234",
-      "phone": "",
-      "createdAt": "2025-10-27T23:11:23.967Z",
-      "role": "provider"
-    },
-    {
-      "id": 1761607140418,
-      "fullName": "Test3",
-      "email": "asdq1@1234",
-      "password": "1234",
-      "phone": "",
-      "createdAt": "2025-10-27T23:19:00.418Z",
+      "phone": "987654321",
+      "createdAt": "2025-10-27T22:42:56.429Z",
       "role": "customer"
     },
     {
-      "id": 1761608000000,
+      "id": "1761608000000",
       "fullName": "Construcciones S.A.",
       "email": "construcciones@rentalpe.com",
       "password": "1234",
@@ -71,99 +39,142 @@
       "providerId": 1
     }
   ],
-  "iotDevices": [],
-  "documents": [],
-  "invoices": [],
-  "incidents": [
+  "providers": [
     {
-      "id": "1760166122111",
-      "projectId": 1,
-      "description": "as",
-      "status": "pending",
-      "createdAt": "2025-10-11T07:02:02.111Z",
-      "updatedAt": null
+      "id": "1",
+      "name": "Construcciones S.A.",
+      "contact": "contact@construcciones.com"
     },
     {
-      "id": 1762029434707,
-      "projectId": 1,
-      "description": "a",
-      "status": "pending",
-      "createdAt": "2025-11-01T20:37:14.707Z",
-      "updatedAt": null
+      "id": "2",
+      "name": "SmartHome Perú",
+      "contact": "ventas@smarthome.pe"
     }
   ],
-  "notifications": [],
-  "payments": [
-    {
-      "id": 1762600000000,
-      "comboId": 2,
-      "providerId": 1,
-      "customerId": "1",
-      "amount": 950,
-      "date": "2025-11-07T21:10:00.000Z",
-      "status": "pending"
-    },
-    {
-      "id": 1762570618041,
-      "comboId": 5,
-      "providerId": 1,
-      "customerId": 1761604976429,
-      "customerName": "Humberto ",
-      "propertyId": 1760165416141,
-      "propertyName": "New Property",
-      "amount": 1100,
-      "date": "2025-11-08T02:56:58.041Z",
-      "status": "pending"
-    }
-  ],
-  "remodelPlans": [],
-  "budgets": [],
   "properties": [
     {
       "id": "1760165416141",
-      "ownerId": 1,
-      "address": "dasdasd",
-      "ubigeo": "asdasd",
-      "areaM2": 0,
-      "yearsOld": 0,
+      "ownerId": "1",
+      "name": "Casa Principal",
+      "address": "Av. Siempre Viva 123",
+      "ubigeo": "150101",
+      "region": "Lima",
+      "province": "Lima",
+      "areaM2": 120,
+      "yearsOld": 5,
       "status": "available",
       "createdAt": "2025-10-11T06:50:16.141Z",
       "image": "https://picsum.photos/300/200?random=99",
-      "name": "New Property",
-      "handoverDate": null,
       "progress": 0,
-      "alerts": [],
-      "locks": [],
-      "owner": null,
       "combos": [
         {
-          "id": 2,
-          "providerId": 1,
+          "id": "2",
+          "providerId": "1",
           "name": "Security Essentials",
           "description": "Smart locks, motion sensors, and cameras.",
           "price": 950,
           "installDays": 3,
           "image": "https://picsum.photos/400/250?random=2"
-        },
-        {
-          "id": 1,
-          "providerId": 1,
-          "name": "Smart Kitchen Pack",
-          "description": "Includes smart oven, water filter, and lighting.",
-          "price": 1200,
-          "installDays": 5,
-          "image": "https://picsum.photos/400/250?random=1"
-        },
-        {
-          "id": "5",
-          "providerId": 1,
-          "name": "Home Safety Pack",
-          "description": "Fire alarms, gas leak detectors, and emergency lighting.",
-          "price": 1100,
-          "installDays": 2,
-          "image": "https://picsum.photos/400/250?random=5"
         }
       ]
+    }
+  ],
+  "combos": [
+    {
+      "id": "1",
+      "providerId": "1",
+      "name": "Smart Kitchen Pack",
+      "description": "Includes smart oven, water filter, and lighting.",
+      "price": 1200,
+      "installDays": 5,
+      "image": "https://picsum.photos/400/250?random=1",
+      "planType": "premium"
+    },
+    {
+      "id": "2",
+      "providerId": "1",
+      "name": "Security Essentials",
+      "description": "Smart locks, motion sensors, and cameras.",
+      "price": 950,
+      "installDays": 3,
+      "image": "https://picsum.photos/400/250?random=2",
+      "planType": "premium"
+    },
+    {
+      "id": "3",
+      "providerId": "2",
+      "name": "Eco Living Combo",
+      "description": "Solar panels, smart thermostat, water-saving faucets.",
+      "price": 2500,
+      "installDays": 10,
+      "image": "https://picsum.photos/400/250?random=3",
+      "planType": "basic"
+    },
+    {
+      "id": "5",
+      "providerId": "1",
+      "name": "Home Safety Pack",
+      "description": "Fire alarms, gas leak detectors, and emergency lighting.",
+      "price": 1100,
+      "installDays": 2,
+      "image": "https://picsum.photos/400/250?random=5",
+      "planType": "basic"
+    },
+    {
+      "id": "6",
+      "providerId": "1",
+      "name": "Energy Saver Bundle",
+      "description": "Smart plugs, energy monitoring, and automated schedules.",
+      "price": 980,
+      "installDays": 3,
+      "image": "https://picsum.photos/400/250?random=6",
+      "planType": "basic"
+    }
+  ],
+  "payments": [
+    {
+      "id": "1762600000000",
+      "comboId": "2",
+      "providerId": "1",
+      "customerId": "1",
+      "customerName": "Mario Vargas",
+      "propertyId": "1760165416141",
+      "propertyName": "Casa Principal",
+      "amount": 950,
+      "date": "2025-11-07T21:10:00.000Z",
+      "status": "pending"
+    },
+    {
+      "id": "1762570618041",
+      "comboId": "5",
+      "providerId": "1",
+      "customerId": "1761604976429",
+      "customerName": "Humberto",
+      "propertyId": "1760165416141",
+      "propertyName": "Casa Principal",
+      "amount": 1100,
+      "date": "2025-11-08T02:56:58.041Z",
+      "status": "paid"
+    }
+  ],
+  "subscription": [
+    {
+      "id": "sub_001",
+      "customerId": "1",
+      "plan": "basic",
+      "price": 50,
+      "startDate": "2025-11-01T00:00:00Z",
+      "endDate": "2025-12-01T00:00:00Z",
+      "status": "active"
+    },
+    {
+      "id": "sub_002",
+      "customerId": "1761604976429",
+      "plan": "enterprise",
+      "price": 200,
+      "startDate": "2025-11-28T08:43:50.313Z",
+      "endDate": "2025-12-28T08:43:50.313Z",
+      "status": "canceled"
     }
   ],
   "owners": [
@@ -179,20 +190,6 @@
       "createdAt": "2025-10-01T09:00:00Z"
     }
   ],
-  "providers": [
-    {
-      "id": "1",
-      "name": "Construcciones S.A.",
-      "contact": "contact@construcciones.com"
-    },
-    {
-      "id": "2",
-      "name": "SmartHome Perú",
-      "contact": "ventas@smarthome.pe"
-    }
-  ],
-  "projects": [],
-  "tasks": [],
   "ownerTypes": [
     {
       "id": "T1",
@@ -200,60 +197,22 @@
       "createdAt": "2025-10-01T07:00:00Z"
     }
   ],
-  "combos": [
+  "incidents": [
     {
-      "id": "1",
-      "providerId": 1,
-      "name": "Smart Kitchen Pack",
-      "description": "Includes smart oven, water filter, and lighting.",
-      "price": 1200,
-      "installDays": 5,
-      "image": "https://picsum.photos/400/250?random=1"
-    },
-    {
-      "id": "2",
-      "providerId": 1,
-      "name": "Security Essentials",
-      "description": "Smart locks, motion sensors, and cameras.",
-      "price": 950,
-      "installDays": 3,
-      "image": "https://picsum.photos/400/250?random=2"
-    },
-    {
-      "id": "3",
-      "providerId": 2,
-      "name": "Eco Living Combo",
-      "description": "Solar panels, smart thermostat, water-saving faucets.",
-      "price": 2500,
-      "installDays": 10,
-      "image": "https://picsum.photos/400/250?random=3"
-    },
-    {
-      "id": "5",
-      "providerId": 1,
-      "name": "Home Safety Pack",
-      "description": "Fire alarms, gas leak detectors, and emergency lighting.",
-      "price": 1100,
-      "installDays": 2,
-      "image": "https://picsum.photos/400/250?random=5"
-    },
-    {
-      "id": "6",
-      "providerId": 1,
-      "name": "Energy Saver Bundle",
-      "description": "Smart plugs, energy monitoring, and automated schedules.",
-      "price": 980,
-      "installDays": 3,
-      "image": "https://picsum.photos/400/250?random=6"
-    },
-    {
-      "id": "4c4f",
-      "name": "fsdfsdf",
-      "description": "sdfsdfs",
-      "price": 23423,
-      "installDays": 1423432,
-      "image": "",
-      "providerId": 1
+      "id": "1760166122111",
+      "projectId": "1",
+      "description": "Sensor defectuoso",
+      "status": "pending",
+      "createdAt": "2025-10-11T07:02:02.111Z",
+      "updatedAt": null
     }
-  ]
+  ],
+  "notifications": [],
+  "iotDevices": [],
+  "documents": [],
+  "invoices": [],
+  "projects": [],
+  "tasks": [],
+  "remodelPlans": [],
+  "budgets": []
 }
