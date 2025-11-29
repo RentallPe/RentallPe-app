@@ -216,12 +216,97 @@
       "updatedAt": null
     }
   ],
-  "notifications": [],
-  "iotDevices": [],
   "documents": [],
   "invoices": [],
-  "projects": [],
   "tasks": [],
   "remodelPlans": [],
-  "budgets": []
+  "budgets": [],
+  "iotDevices": [
+    {
+      "id": 1,
+      "projectId": 1,
+      "type": "Temperature Sensor",
+      "status": "active",
+      "installedAt": "2025-10-01T08:00:00Z"
+    },
+    {
+      "id": 2,
+      "projectId": 1,
+      "type": "Smart Lock",
+      "status": "active",
+      "installedAt": "2025-10-05T09:00:00Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": 1,
+      "userId": 1,
+      "projectId": 1,
+      "message": "Nuevo combo instalado en tu propiedad",
+      "createdAt": "2025-10-01T07:00:00Z"
+    },
+    {
+      "id": 2,
+      "userId": 1,
+      "projectId": 1,
+      "message": "Incidente reportado: Sensor de humo activado",
+      "createdAt": "2025-11-20T10:05:00Z"
+    }
+  ],
+  "projects": [
+    {
+      "id": 1,
+      "propertyId": 1,
+      "userId": 1,
+      "name": "Proyecto Seguridad Hogar",
+      "description": "Instalación de dispositivos de seguridad",
+      "status": "active",
+      "startDate": "2025-10-01T00:00:00Z",
+      "endDate": "2025-12-01T00:00:00Z",
+      "createdAt": "2025-09-25T12:00:00Z"
+    }
+  ],
+  "readings": [
+    {
+      "id": 1,
+      "iotDeviceId": 1,
+      "projectId": 1,
+      "metricName": "Temperature",
+      "value": 32.5,
+      "unit": "C",
+      "timestamp": "2025-11-29T18:00:00Z"
+    },
+    {
+      "id": 2,
+      "iotDeviceId": 2,
+      "projectId": 1,
+      "metricName": "Lock Status",
+      "value": 1,
+      "unit": "boolean",
+      "timestamp": "2025-11-29T18:05:00Z"
+    }
+  ],
+  "workitems": [
+    {
+      "id": 1,
+      "projectId": 1,
+      "incidentId": 1,
+      "assignedToUserId": 2,
+      "description": "Revisar sensor de humo en cocina",
+      "status": "pending",
+      "createdAt": "2025-11-20T10:10:00Z",
+      "completedAt": null
+    },
+    {
+      "id": 2,
+      "projectId": 1,
+      "incidentId": 2,
+      "assignedToUserId": 3,
+      "description": "Verificar cerradura principal",
+      "status": "completed",
+      "createdAt": "2025-11-21T14:40:00Z",
+      "completedAt": "2025-11-21T16:00:00Z"
+    }
+  ]
+
 }
