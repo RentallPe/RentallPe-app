@@ -25,7 +25,7 @@
                   <div class="subscription-actions">
                     <pv-button :label="`Subscribe ${plan.name}`"
                                :icon="plan.icon"
-                               @click="createSubscription(plan.id)" />
+                               @click="createOrUpdateSubscription(plan.id)" />
                   </div>
                 </template>
               </pv-card>
@@ -47,7 +47,7 @@
                                :label="`Upgrade to ${plan.name}`"
                                :icon="plan.icon"
                                severity="success"
-                               @click="createSubscription(plan.id)" />
+                               @click="createOrUpdateSubscription(plan.id)" />
                     <span v-else class="status active">Plan actual</span>
                   </div>
                 </template>
@@ -82,7 +82,9 @@ const plans = [
 
 onMounted(async () => {
   const res = await axios.get("http://localhost:3000/subscription");
-  subscription.value = res.data.find(s => s.customerId === currentUser.id);
+  // Buscar la última suscripción activa del usuario
+  const subs = res.data.filter(s => s.customerId === currentUser.id && s.status === "active");
+  subscription.value = subs.sort((a, b) => new Date(b.startDate) - new Date(a.startDate))[0];
 });
 
 // Filtrar planes superiores al actual
@@ -92,21 +94,38 @@ const upgradePlans = computed(() => {
   return plans.slice(currentIndex); // muestra el actual y los superiores
 });
 
-async function createSubscription(planId) {
+// Crear o actualizar suscripción
+async function createOrUpdateSubscription(planId) {
   const plan = plans.find(p => p.id === planId);
-  const newSub = {
-    id: Date.now().toString(),
-    customerId: currentUser.id,
-    plan: plan.id,
-    price: plan.price,
-    startDate: new Date().toISOString(),
-    endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
-    status: "active"
-  };
-  await axios.post("http://localhost:3000/subscription", newSub);
-  subscription.value = newSub;
+
+  if (subscription.value) {
+    // Ya existe → actualizar con PATCH
+    await axios.patch(`http://localhost:3000/subscription/${subscription.value.id}`, {
+      plan: plan.id,
+      price: plan.price,
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      status: "active"
+    });
+    subscription.value.plan = plan.id;
+    subscription.value.price = plan.price;
+  } else {
+    // No existe → crear con POST
+    const newSub = {
+      id: Date.now().toString(),
+      customerId: currentUser.id,
+      plan: plan.id,
+      price: plan.price,
+      startDate: new Date().toISOString(),
+      endDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString(),
+      status: "active"
+    };
+    await axios.post("http://localhost:3000/subscription", newSub);
+    subscription.value = newSub;
+  }
 }
 
+// Cancelar suscripción
 async function cancelSubscription() {
   if (!subscription.value) return;
   await axios.patch(`http://localhost:3000/subscription/${subscription.value.id}`, {

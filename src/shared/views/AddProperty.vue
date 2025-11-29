@@ -57,7 +57,7 @@ import { Property } from "@/Rental/domain/model/property.entity.js";
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import {useRentalStore} from "@/Rental/application/rental-store.js";
+import { useRentalStore } from "@/Rental/application/rental-store.js";
 
 const { t } = useI18n();
 const router = useRouter();
@@ -65,7 +65,7 @@ const store = useRentalStore();
 
 const newProperty = ref(new Property({
   id: null,
-  ownerId: 1, // dinámico según el usuario logueado
+  ownerId: null, // dinámico según el usuario logueado
   address: "",
   ubigeo: "",
   province: "",
@@ -83,6 +83,37 @@ const newProperty = ref(new Property({
 }));
 
 async function saveProperty() {
+  // 1. Obtener usuario actual
+  const savedUser = localStorage.getItem("currentUser");
+  const currentUser = savedUser ? JSON.parse(savedUser) : null;
+  if (!currentUser) {
+    alert("No user logged in.");
+    return;
+  }
+  newProperty.value.ownerId = currentUser.id;
+
+  // 2. Obtener suscripción activa
+  await store.fetchAll("subscriptions");
+  const subsList = store.lists["subscriptions"] || [];
+  const mySub = subsList.find(s => s.customerId === currentUser.id && s.status === "active");
+
+  // 3. Contar propiedades actuales
+  await store.fetchAll("properties");
+  const propsList = store.lists["properties"] || [];
+  const userProps = propsList.filter(p => p.ownerId === currentUser.id);
+
+  // 4. Definir límite según plan
+  let maxProps = 2; // default Basic
+  if (mySub?.plan === "premium") maxProps = 5;
+  if (mySub?.plan === "enterprise") maxProps = Infinity;
+
+  // 5. Validar
+  if (userProps.length >= maxProps) {
+    alert(`Tu plan (${mySub?.plan || "sin suscripción"}) no permite más propiedades. Considera mejorar tu suscripción.`);
+    return;
+  }
+
+  // 6. Crear propiedad
   await store.create("properties", newProperty.value);
   router.push("/my-properties");
 }
@@ -91,6 +122,7 @@ function selectImage() {
   alert("Image upload not implemented yet.");
 }
 </script>
+
 
 
 
