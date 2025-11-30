@@ -8,16 +8,7 @@
       "phone": "999999999",
       "createdAt": "2025-10-01T06:00:00Z",
       "photo": "https://randomuser.me/api/portraits/men/75.jpg",
-      "role": "customer",
-      "paymentMethods": [
-        {
-          "id": 1760168583929,
-          "type": "Visa",
-          "number": "1231 2312 3123 1231",
-          "expiry": "12/31",
-          "cvv": "123"
-        }
-      ]
+      "role": "customer"
     },
     {
       "id": "1761604976429",
@@ -37,6 +28,15 @@
       "createdAt": "2025-10-28T15:30:00Z",
       "role": "provider",
       "providerId": 1
+    },
+    {
+      "id": "1761700000000",
+      "fullName": "Lucía Fernández",
+      "email": "lucia@example.com",
+      "password": "abcd",
+      "phone": "912345678",
+      "createdAt": "2025-11-01T10:00:00Z",
+      "role": "customer"
     }
   ],
   "providers": [
@@ -57,7 +57,6 @@
       "ownerId": "1",
       "name": "Casa Principal",
       "address": "Av. Siempre Viva 123",
-      "ubigeo": "150101",
       "region": "Lima",
       "province": "Lima",
       "areaM2": 120,
@@ -65,18 +64,27 @@
       "status": "available",
       "createdAt": "2025-10-11T06:50:16.141Z",
       "image": "https://picsum.photos/300/200?random=99",
-      "progress": 0,
       "combos": [
         {
           "id": "2",
-          "providerId": "1",
           "name": "Security Essentials",
-          "description": "Smart locks, motion sensors, and cameras.",
-          "price": 950,
-          "installDays": 3,
-          "image": "https://picsum.photos/400/250?random=2"
+          "price": 950
         }
       ]
+    },
+    {
+      "id": "1761705416141",
+      "ownerId": "1761700000000",
+      "name": "Departamento Miraflores",
+      "address": "Calle Las Flores 456",
+      "region": "Lima",
+      "province": "Lima",
+      "areaM2": 80,
+      "yearsOld": 2,
+      "status": "available",
+      "createdAt": "2025-11-15T09:00:00Z",
+      "image": "https://picsum.photos/300/200?random=101",
+      "combos": []
     }
   ],
   "combos": [
@@ -87,7 +95,6 @@
       "description": "Includes smart oven, water filter, and lighting.",
       "price": 1200,
       "installDays": 5,
-      "image": "https://picsum.photos/400/250?random=1",
       "planType": "premium"
     },
     {
@@ -97,7 +104,6 @@
       "description": "Smart locks, motion sensors, and cameras.",
       "price": 950,
       "installDays": 3,
-      "image": "https://picsum.photos/400/250?random=2",
       "planType": "premium"
     },
     {
@@ -107,39 +113,24 @@
       "description": "Solar panels, smart thermostat, water-saving faucets.",
       "price": 2500,
       "installDays": 10,
-      "image": "https://picsum.photos/400/250?random=3",
       "planType": "basic"
     },
     {
-      "id": "5",
-      "providerId": "1",
-      "name": "Home Safety Pack",
-      "description": "Fire alarms, gas leak detectors, and emergency lighting.",
-      "price": 1100,
-      "installDays": 2,
-      "image": "https://picsum.photos/400/250?random=5",
-      "planType": "basic"
-    },
-    {
-      "id": "6",
-      "providerId": "1",
-      "name": "Energy Saver Bundle",
-      "description": "Smart plugs, energy monitoring, and automated schedules.",
-      "price": 980,
-      "installDays": 3,
-      "image": "https://picsum.photos/400/250?random=6",
-      "planType": "basic"
+      "id": "7",
+      "providerId": "2",
+      "name": "Luxury Smart Pack",
+      "description": "Smart fridge, AI assistant, automated curtains.",
+      "price": 5000,
+      "installDays": 15,
+      "planType": "enterprise"
     }
   ],
   "payments": [
     {
       "id": "1762600000000",
       "comboId": "2",
-      "providerId": "1",
       "customerId": "1",
-      "customerName": "Mario Vargas",
       "propertyId": "1760165416141",
-      "propertyName": "Casa Principal",
       "amount": 950,
       "date": "2025-11-07T21:10:00.000Z",
       "status": "pending"
@@ -147,14 +138,20 @@
     {
       "id": "1762570618041",
       "comboId": "5",
-      "providerId": "1",
       "customerId": "1761604976429",
-      "customerName": "Humberto",
       "propertyId": "1760165416141",
-      "propertyName": "Casa Principal",
       "amount": 1100,
       "date": "2025-11-08T02:56:58.041Z",
       "status": "paid"
+    },
+    {
+      "id": "1762700000000",
+      "comboId": "7",
+      "customerId": "1761700000000",
+      "propertyId": "1761705416141",
+      "amount": 5000,
+      "date": "2025-11-20T12:00:00.000Z",
+      "status": "pending"
     }
   ],
   "subscription": [
@@ -177,13 +174,76 @@
       "status": "canceled"
     },
     {
-      "id": "1764425818829",
-      "customerId": "1",
+      "id": "sub_003",
+      "customerId": "1761700000000",
       "plan": "premium",
       "price": 100,
       "startDate": "2025-11-29T14:16:58.829Z",
       "endDate": "2025-12-29T14:16:58.829Z",
       "status": "canceled"
+    },
+    {
+      "id": "1764493303597",
+      "customerId": "1761700000000",
+      "plan": "basic",
+      "price": 50,
+      "status": "canceled",
+      "startDate": "2025-11-30T09:01:43.597Z",
+      "endDate": "2025-12-30T09:01:43.597Z"
+    },
+    {
+      "id": "1764493312772",
+      "customerId": "1761700000000",
+      "plan": "premium",
+      "price": 100,
+      "status": "canceled",
+      "startDate": "2025-11-30T09:01:52.772Z",
+      "endDate": "2025-12-30T09:01:52.772Z"
+    },
+    {
+      "id": "1764493357871",
+      "customerId": "1761700000000",
+      "plan": "basic",
+      "price": 50,
+      "status": "canceled",
+      "startDate": "2025-11-30T09:02:37.871Z",
+      "endDate": "2025-12-30T09:02:37.871Z"
+    },
+    {
+      "id": "1764493387200",
+      "customerId": "1761700000000",
+      "plan": "premium",
+      "price": 100,
+      "status": "canceled",
+      "startDate": "2025-11-30T09:25:25.456Z",
+      "endDate": "2025-12-30T09:25:25.457Z"
+    },
+    {
+      "id": "1764494889575",
+      "customerId": "1761700000000",
+      "plan": "enterprise",
+      "price": 200,
+      "status": "canceled",
+      "startDate": "2025-11-30T09:28:09.575Z",
+      "endDate": "2025-12-30T09:28:09.575Z"
+    },
+    {
+      "id": "1764494962866",
+      "customerId": "1761700000000",
+      "plan": "premium",
+      "price": 100,
+      "status": "canceled",
+      "startDate": "2025-11-30T09:29:22.866Z",
+      "endDate": "2025-12-30T09:29:22.866Z"
+    },
+    {
+      "id": "1764495564204",
+      "customerId": "1761700000000",
+      "plan": "basic",
+      "price": 50,
+      "status": "active",
+      "startDate": "2025-11-30T09:39:24.204Z",
+      "endDate": "2025-12-30T09:39:24.204Z"
     }
   ],
   "owners": [
@@ -216,46 +276,119 @@
       "updatedAt": null
     }
   ],
-  "documents": [],
-  "invoices": [],
-  "tasks": [],
+  "documents": [
+    {
+      "id": "doc_001",
+      "projectId": "1",
+      "title": "Contrato de instalación",
+      "type": "pdf",
+      "url": "https://example.com/docs/contrato_instalacion.pdf",
+      "createdAt": "2025-10-01T09:00:00Z"
+    },
+    {
+      "id": "doc_002",
+      "projectId": "2",
+      "title": "Manual de usuario IoT",
+      "type": "docx",
+      "url": "https://example.com/docs/manual_iot.docx",
+      "createdAt": "2025-11-15T10:00:00Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": 1,
+      "paymentId": "1762600000000",
+      "number": "INV-001",
+      "issueDate": "2025-10-01",
+      "createdAt": "2025-10-01T11:00:00Z",
+      "status": "unpaid"
+    },
+    {
+      "id": 2,
+      "paymentId": "1762570618041",
+      "number": "INV-002",
+      "issueDate": "2025-11-08",
+      "createdAt": "2025-11-08T03:00:00Z",
+      "status": "paid"
+    }
+  ],
+  "tasks": [
+    {
+      "id": 1,
+      "projectId": "1",
+      "name": "Install wiring",
+      "description": "Run network cables throughout the house",
+      "status": "pending",
+      "createdAt": "2025-10-01T09:00:00Z"
+    },
+    {
+      "id": 2,
+      "projectId": "1",
+      "name": "Configure smart locks",
+      "description": "Setup and test smart lock system",
+      "status": "in-progress",
+      "createdAt": "2025-10-03T14:00:00Z"
+    },
+    {
+      "id": 3,
+      "projectId": "2",
+      "name": "Install solar panels",
+      "description": "Mount and connect solar panels on rooftop",
+      "status": "completed",
+      "createdAt": "2025-11-20T08:00:00Z"
+    }
+  ],
   "remodelPlans": [],
   "budgets": [],
   "iotDevices": [
     {
-      "id": 1,
+      "id": "1",
       "projectId": 1,
       "type": "Temperature Sensor",
       "status": "active",
       "installedAt": "2025-10-01T08:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "projectId": 1,
       "type": "Smart Lock",
       "status": "active",
       "installedAt": "2025-10-05T09:00:00Z"
+    },
+    {
+      "id": "3",
+      "projectId": 2,
+      "type": "Solar Panel",
+      "status": "inactive",
+      "installedAt": "2025-11-15T10:00:00Z"
     }
   ],
   "notifications": [
     {
-      "id": 1,
+      "id": "1",
       "userId": 1,
       "projectId": 1,
       "message": "Nuevo combo instalado en tu propiedad",
       "createdAt": "2025-10-01T07:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "userId": 1,
       "projectId": 1,
       "message": "Incidente reportado: Sensor de humo activado",
       "createdAt": "2025-11-20T10:05:00Z"
+    },
+    {
+      "id": "3",
+      "userId": "1761700000000",
+      "projectId": 2,
+      "message": "Instalación de panel solar programada",
+      "createdAt": "2025-11-25T09:00:00Z"
     }
   ],
   "projects": [
     {
-      "id": 1,
+      "id": "1",
       "propertyId": 1,
       "userId": 1,
       "name": "Proyecto Seguridad Hogar",
@@ -268,7 +401,7 @@
   ],
   "readings": [
     {
-      "id": 1,
+      "id": "1",
       "iotDeviceId": 1,
       "projectId": 1,
       "metricName": "Temperature",
@@ -277,7 +410,7 @@
       "timestamp": "2025-11-29T18:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "iotDeviceId": 2,
       "projectId": 1,
       "metricName": "Lock Status",
@@ -288,7 +421,7 @@
   ],
   "workitems": [
     {
-      "id": 1,
+      "id": "1",
       "projectId": 1,
       "incidentId": 1,
       "assignedToUserId": 2,
@@ -298,7 +431,7 @@
       "completedAt": null
     },
     {
-      "id": 2,
+      "id": "2",
       "projectId": 1,
       "incidentId": 2,
       "assignedToUserId": 3,
@@ -308,5 +441,4 @@
       "completedAt": "2025-11-21T16:00:00Z"
     }
   ]
-
 }

@@ -197,7 +197,11 @@
       "pending": "Pending",
       "paid": "Paid",
       "completed": "Completed"
+    },
+    "subscription": {
+      "title": "Subscription Plans"
     }
+
   }
 
 

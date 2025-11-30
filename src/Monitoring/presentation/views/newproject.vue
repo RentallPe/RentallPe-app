@@ -24,8 +24,12 @@
               <img :src="combo.image" alt="" class="combo-img" />
               <h3 class="combo-title">
                 {{ combo.name }}
+
                 <span v-if="combo.planType === 'premium'" class="badge-premium">Premium</span>
+                <span v-if="combo.planType === 'enterprise'" class="badge-enterprise">Enterprise</span>
+
               </h3>
+              <p>{{ combo.planType }}</p>
               <p class="text-sm">Provider: {{ getProviderName(combo.providerId) }}</p>
             </div>
           </div>
@@ -99,13 +103,15 @@ import { useProviderStore } from "@/Provider/application/provider-store.js";
 import { usePropertyStore } from "@/Property/application/property-store.js";
 import { useSubscriptionStore } from "@/Subscription/application/subscription-store.js";
 import { useUserStore } from "@/IAM/application/user.store.js";
-import { useRentalStore } from "@/Rental/application/rental-store.js";
+import { usePaymentStore } from "@/Rental/application/payment-store.js";
+import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
 
 const providerStore = useProviderStore();
 const propertyStore = usePropertyStore();
 const subscriptionStore = useSubscriptionStore();
 const userStore = useUserStore();
-const rentalStore = useRentalStore();
+const paymentStore = usePaymentStore();
+const monitoringStore = useMonitoringStore();
 
 const dialogVisible = ref(false);
 const addressDialog = ref(false);
@@ -118,29 +124,22 @@ onMounted(async () => {
     providerStore.fetchCombos(),
     providerStore.fetchProviders(),
     propertyStore.fetchProperties(),
+
     subscriptionStore.load(userStore.user?.id)
   ]);
+  console.log("Providers:", providerStore.providers);
+  console.log("Combos:", providerStore.combos);
 });
 
-const visibleCombos = computed(() => {
-  const sub = subscriptionStore.subscription;
-  const combos = providerStore.combos;
+const providers = computed(() => providerStore.providers || []);
+const properties = computed(() => propertyStore.properties || []);
 
-  if (!sub) {
-    return combos.filter(c => c.planType === "basic");
-  }
+const visibleCombos = computed(() => providerStore.combos);
 
-  switch (sub.plan) {
-    case "basic":
-      return combos.filter(c => c.planType === "basic");
-    case "premium":
-      return combos.filter(c => c.planType === "basic" || c.planType === "premium");
-    case "enterprise":
-      return combos;
-    default:
-      return [];
-  }
-});
+function getProviderName(providerId) {
+  const provider = providers.value.find(p => p.id == providerId);
+  return provider ? provider.name : "Unknown";
+}
 
 function selectCombo(combo) {
   selectedCombo.value = combo;
@@ -154,24 +153,24 @@ function selectAddress(property) {
 
 async function buyCombo() {
   if (!selectedAddress.value) {
-    alert("Please select an address first.");
+    alert("Selecciona una propiedad primero.");
     return;
   }
 
   const sub = subscriptionStore.subscription;
   if (sub?.plan !== "premium" && selectedCombo.value.planType === "premium") {
-    alert("Upgrade to Premium to buy this combo.");
+    alert("Debes tener plan Premium para este combo.");
     return;
   }
 
-  // 1. Actualizar la propiedad con el combo comprado
+  // 1. Actualizar propiedad con combo
   const updatedProperty = {
     ...selectedAddress.value,
     combos: [...(selectedAddress.value.combos || []), selectedCombo.value]
   };
   await propertyStore.updateProperty(updatedProperty);
 
-  // 2. Crear un registro de pago
+  // 2. Crear pago
   const currentUser = userStore.user;
   const newPayment = {
     id: Date.now(),
@@ -185,18 +184,40 @@ async function buyCombo() {
     date: new Date().toISOString(),
     status: "pending"
   };
+  await paymentStore.createPayment(newPayment);
 
-  await rentalStore.create("payments", newPayment);
+  // 3. Crear proyecto en Monitoring
+  const newProject = {
+    id: Date.now(),
+    propertyId: updatedProperty.id,
+    userId: currentUser.id,
+    name: `Proyecto ${selectedCombo.value.name}`,
+    description: `Instalación de ${selectedCombo.value.name}`,
+    status: "active",
+    startDate: new Date().toISOString(),
+    endDate: null,
+    createdAt: new Date().toISOString()
+  };
+  await monitoringStore.createProject(newProject);
 
-  alert("Combo purchased and payment registered!");
+  // 4. Instalar dispositivos IoT asociados al combo
+  if (Array.isArray(selectedCombo.value.devices)) {
+    for (const d of selectedCombo.value.devices) {
+      await monitoringStore.createDevice({
+        id: Date.now(),
+        projectId: newProject.id,
+        type: d.type,
+        status: "active",
+        installedAt: new Date().toISOString()
+      });
+    }
+  }
+
+  alert("Combo comprado, proyecto creado e IoT instalados.");
   dialogVisible.value = false;
 }
-
-function getProviderName(providerId) {
-  const provider = providerStore.providers.find(p => p.id === providerId);
-  return provider ? provider.name : "Unknown";
-}
 </script>
+
 
 <style scoped>
 .new-project-wrapper {
@@ -264,4 +285,13 @@ function getProviderName(providerId) {
   color: #ffffff !important;
   background-color: #373737;
 }
+.badge-enterprise {
+  background: #3333cc;
+  color: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  margin-left: 0.5rem;
+}
+
 </style>

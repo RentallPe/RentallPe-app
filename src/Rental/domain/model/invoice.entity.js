@@ -1,19 +1,20 @@
-/*{
-      "id": 1,
-      "paymentId": 1,
-      "number": "INV-001",
-      "issueDate": "2025-10-01",
-      "createdAt": "2025-10-01T11:00:00Z"
-    }*/
-
+// Invoice entity
 import { Payment } from "@/Rental/domain/model/payment.entity.js";
 
 export class Invoice {
     constructor({ id, paymentId, number, issueDate, createdAt }) {
         this.id = id;
-        this.paymentId = Payment;
+        this.paymentId = paymentId; // 👈 usar el id, no la clase
         this.number = number;
         this.issueDate = new Date(issueDate);
         this.createdAt = new Date(createdAt);
+    }
+
+    setPayment(payment) {
+        if (payment instanceof Payment) {
+            this.payment = payment;
+        } else {
+            throw new Error("Invalid payment instance");
+        }
     }
 }

@@ -15,7 +15,11 @@ export const useUserStore = defineStore("user", {
         setUser(userData) {
             this.user = userData;
             this.role = userData.role;
+            if (userData.role === "provider") {
+                this.providerId = userData.providerId;
+            }
         },
+
         logout() {
             this.user = null;
             this.role = null;
@@ -37,7 +41,17 @@ export const useUserStore = defineStore("user", {
             else this.users.push(updated);
             return updated;
         },
-        async createUser(payload) {
+        async fetchUser() {
+            // cargar usuario actual desde localStorage
+            const stored = localStorage.getItem("currentUser");
+            if (stored) {
+                this.user = JSON.parse(stored);
+                this.role = this.user.role;
+                return this.user;
+            }
+            return null;},
+
+            async createUser(payload) {
             const res = await api.getEndpoint("users").create(payload);
             const created = UserAssembler.toEntityFromResource(res);
             this.users.push(created);

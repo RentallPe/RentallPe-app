@@ -5,6 +5,8 @@ import { IncidentAssembler } from "@/Monitoring/infrastructure/incident.assemble
 import { ProjectAssembler } from "@/Monitoring/infrastructure/project.assembler.js";
 import { NotificationAssembler } from "@/Monitoring/infrastructure/notification.assembler.js";
 import { IotDeviceAssembler } from "@/Monitoring/infrastructure/iotDevice.assembler.js";
+import { ReadingAssembler } from "@/Monitoring/infrastructure/reading.assembler.js";
+import { WorkitemAssembler } from "@/Monitoring/infrastructure/workitem.assembler.js";
 
 const api = new MonitoringApi();
 
@@ -13,7 +15,9 @@ export const useMonitoringStore = defineStore("monitoring", {
         incidents: [],
         projects: [],
         notifications: [],
-        iotDevices: []
+        iotDevices: [],
+        readings: [],
+        workitems: []
     }),
     actions: {
         async fetchIncidents() {
@@ -30,13 +34,33 @@ export const useMonitoringStore = defineStore("monitoring", {
             const res = await api.getEndpoint("projects").getAll();
             this.projects = ProjectAssembler.toEntitiesFromResponse(res);
         },
+        async createProject(payload) {
+            const res = await api.getEndpoint("projects").create(payload);
+            const project = ProjectAssembler.toEntityFromResource(res);
+            this.projects.push(project);
+            return project;
+        },
         async fetchNotifications() {
             const res = await api.getEndpoint("notifications").getAll();
             this.notifications = NotificationAssembler.toEntitiesFromResponse(res);
         },
-        async fetchIotDevices() {
+        async fetchDevices() {
             const res = await api.getEndpoint("iotDevices").getAll();
             this.iotDevices = IotDeviceAssembler.toEntitiesFromResponse(res);
+        },
+        async createDevice(payload) {
+            const res = await api.getEndpoint("iotDevices").create(payload);
+            const device = IotDeviceAssembler.toEntityFromResource(res);
+            this.iotDevices.push(device);
+            return device;
+        },
+        async fetchReadings() {
+            const res = await api.getEndpoint("readings").getAll();
+            this.readings = ReadingAssembler.toEntitiesFromResponse(res);
+        },
+        async fetchWorkitems() {
+            const res = await api.getEndpoint("workitems").getAll();
+            this.workitems = WorkitemAssembler.toEntitiesFromResponse(res);
         }
     }
 });

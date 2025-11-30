@@ -69,25 +69,42 @@ import { ref, onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useSubscriptionStore } from "@/Subscription/application/subscription-store";
 
-
-
 const { t } = useI18n();
-const subscription = ref(null);
 const store = useSubscriptionStore();
 const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
 
+// reactividad directa desde el store
+const subscription = computed(() => store.subscription);
+const plans = computed(() => store.plans);
 
 onMounted(() => {
   store.load(currentUser.id);
 });
-// Filtrar planes superiores al actual
+
+// planes superiores al actual
 const upgradePlans = computed(() => {
   if (!store.subscription) return store.plans;
   const currentIndex = store.plans.findIndex(p => p.id === store.subscription.plan);
   return store.plans.slice(currentIndex);
 });
 
+function createOrUpdateSubscription(planId) {
+  store.createOrUpdate(currentUser.id, planId);
+}
+
+function cancelSubscription() {
+  store.cancel(currentUser.id)
+      .then(() => {
+
+        window.location.reload();
+      })
+      .catch(err => {
+        console.error("Error al cancelar la suscripción:", err);
+      });
+}
+
 </script>
+
 
 
 <style scoped>

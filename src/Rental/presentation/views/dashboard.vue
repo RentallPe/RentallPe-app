@@ -67,25 +67,28 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { useUserStore } from "@/IAM/application/user.store.js";
 
-
+const userStore = useUserStore();
 const { t } = useI18n();
+
 const user = ref({ properties: [], incidents: [] });
 const pendingPayments = ref([]);
 const latestAlerts = ref([]);
 
 onMounted(async () => {
-  const data = await getUser();
-  user.value = data;
+  const data = await userStore.fetchUser(); // ahora sí existe
+  if (data) {
+    user.value = data;
 
-  pendingPayments.value = data.payments || [
-    { id: 1, propertyName: "Urban Cottage", amount: 1200, date: "12/11/2025" },
-    { id: 2, propertyName: "Hillside Home", amount: 3000, date: "20/11/2025" }
-  ];
+    pendingPayments.value = data.payments || [
+      { id: 1, propertyName: "Urban Cottage", amount: 1200, date: "12/11/2025" },
+      { id: 2, propertyName: "Hillside Home", amount: 3000, date: "20/11/2025" }
+    ];
 
-  latestAlerts.value = data.properties.flatMap(p => p.alerts || []).slice(0, 3);
+    latestAlerts.value = data.properties?.flatMap(p => p.alerts || []).slice(0, 3) || [];
+  }
 });
-
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
@@ -96,8 +99,8 @@ function formatDate(dateStr) {
     minute: "2-digit"
   });
 }
-
 </script>
+
 
 <style scoped>
 

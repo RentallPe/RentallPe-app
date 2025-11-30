@@ -1,31 +1,31 @@
 <script setup>
-import { onMounted, computed } from "vue";
-import { useProviderStore } from "@/Provider/application/provider-store.js";
+import { onMounted } from "vue";
 import { useI18n } from "vue-i18n";
+import { useProviderStore } from "@/Provider/application/provider-store.js";
+import { useUserStore } from "@/IAM/application/user.store.js";
+import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
 
 const { t } = useI18n();
-const rental = useProviderStore();
 
-const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-
-const combos = computed(() => {
-  const all = rental.list("combos").value ?? [];
-  return all
-      .filter(c => String(c.providerId) === String(currentUser.providerId))
-      .map(c => ({
-        ...c,
-        image: c.image || `https://picsum.photos/800/600?random=${c.id ?? Math.random()}`,
-        name: c.name ?? t("myCombos.unnamed"),
-        description: c.description ?? t("myCombos.noDescription"),
-        price: c.price ?? 0,
-        installDays: c.installDays ?? "—"
-      }));
-});
+const providerStore = useProviderStore();
+const userStore = useUserStore();
+const monitoringStore = useMonitoringStore();
 
 onMounted(async () => {
-  await rental.fetchAll("combos");
+  await Promise.all([
+    providerStore.fetchCombos(),
+    monitoringStore.fetchProjects(),
+    monitoringStore.fetchDevices(),
+    monitoringStore.fetchNotifications(),
+    monitoringStore.fetchReadings(),
+    monitoringStore.fetchWorkitems()
+  ]);
 });
+
+// 👉 Si necesitas combos del store
+const combos = providerStore.combos;
 </script>
+
 
 <template>
   <div class="combos-wrapper">
@@ -52,6 +52,35 @@ onMounted(async () => {
                 <p class="combo-description">{{ combo.description }}</p>
                 <p><strong>{{ t("myCombos.price") }}:</strong> ${{ combo.price }}</p>
                 <p><strong>{{ t("myCombos.installTime") }}:</strong> {{ combo.installDays }} {{ t("myCombos.days") }}</p>
+                <p><strong>{{ t("myCombos.status") }}:</strong> {{ combo.status }}</p>
+
+                <h4>{{ t("myCombos.devices") }}</h4>
+                <ul>
+                  <li v-for="d in combo.devices" :key="d.id">
+                    {{ d.type }} - {{ d.status }}
+                  </li>
+                </ul>
+
+                <h4>{{ t("myCombos.notifications") }}</h4>
+                <ul>
+                  <li v-for="n in combo.notifications" :key="n.id">
+                    {{ n.message }} ({{ new Date(n.createdAt).toLocaleString("es-PE") }})
+                  </li>
+                </ul>
+
+                <h4>{{ t("myCombos.readings") }}</h4>
+                <ul>
+                  <li v-for="r in combo.readings" :key="r.id">
+                    {{ r.metricName }}: {{ r.value }} {{ r.unit }}
+                  </li>
+                </ul>
+
+                <h4>{{ t("myCombos.workitems") }}</h4>
+                <ul>
+                  <li v-for="w in combo.workitems" :key="w.id">
+                    {{ w.description }} - {{ w.status }}
+                  </li>
+                </ul>
               </template>
             </pv-card>
           </div>
@@ -66,6 +95,7 @@ onMounted(async () => {
     </pv-card>
   </div>
 </template>
+
 
 <style scoped>
 .combos-wrapper {

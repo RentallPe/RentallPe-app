@@ -1,16 +1,26 @@
-import {Provider} from "@/Provider/domain/model/provider.entity.js";
+import { Provider } from "@/Provider/domain/model/provider.entity.js";
 
 export class ProviderAssembler {
+
     static toEntityFromResource(resource) {
-        return new Provider({...resource});
+        if (!resource) return null;
+
+        return new Provider({
+            id: Number(resource.id),
+            name: resource.name ?? "",
+            contact: resource.contact ?? ""
+        });
     }
 
     static toEntitiesFromResponse(response) {
-        if(response.status !== 200) {
-            console.error(`${response.status}: ${response.statusText}`);
-            return [];
-        }
-        let resources = response.data instanceof Array ? response.data : response.data['providers'];
-        return resources.map(resource => this.toEntityFromResource(resource));
+        const arr = Array.isArray(response)
+            ? response
+            : Array.isArray(response?.data)
+                ? response.data
+                : Array.isArray(response?.data?.providers)
+                    ? response.data.providers
+                    : [];
+
+        return arr.map(r => this.toEntityFromResource(r)).filter(Boolean);
     }
 }

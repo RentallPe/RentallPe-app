@@ -1,12 +1,5 @@
-/* {
-      "id": 1,
-      "projectId": 1,
-      "type": "Blueprint",
-      "filePath": "/docs/plan1.pdf",
-      "createdAt": "2025-10-01T10:00:00Z"
-    }*/
-
-import { Project } from "../../../Monitoring/domain/model/project.entity.js";
+// Document entity
+import { Project } from "@/Monitoring/domain/model/project.entity.js";
 
 export class Document {
     constructor({ id, projectId, type, filePath, createdAt }) {
@@ -14,7 +7,7 @@ export class Document {
         this.projectId = projectId;
         this.type = type;
         this.filePath = filePath;
-        this.createdAt = createdAt;
+        this.createdAt = new Date(createdAt);
     }
 
     setProject(project) {

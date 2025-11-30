@@ -11,13 +11,17 @@ export class ComboAssembler {
             description: resource.description ?? "",
             price: Number(resource.price) || 0,
             installDays: resource.installDays ?? "—",
+            planType: (
+                resource.planType ??
+                resource.plan_type ??
+                resource.plan ??
+                "basic"
+            ).toString().toLowerCase(),
             image: resource.image ?? resource.img ?? `https://picsum.photos/400/250?random=${resource.id}`
         });
-
     }
 
     static toEntitiesFromResponse(resp) {
-        // Si resp ya es un array, úsalo directamente
         const arr = Array.isArray(resp)
             ? resp
             : Array.isArray(resp.data)

@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import generalLoginComponent from "./login/general-login-component.vue";
 import profileView from "./IAM/presentation/views/profile-view.vue";
 import EditProfile from "./IAM/presentation/views/EditProfile.vue";
 import Support from "./Monitoring/presentation/views/Support.vue";
@@ -21,6 +20,8 @@ import AddCombo from "@/Provider/presentation/views/AddCombo.vue";
 import EditCombo from "@/Provider/presentation/views/EditCombo.vue";
 import PaymentProvider from "@/Provider/presentation/views/PaymentProvider.vue";
 import Subscription from "./Subscription/presentation/views/subscription.vue";
+import ProjectDetail from "@/Monitoring/presentation/views/ProjectDetail.vue";
+
 
 
 const routes = [
@@ -47,6 +48,8 @@ const routes = [
     { path: "/edit-combo/:id", component: EditCombo, props: true },
     { path: "/payment", component: PaymentProvider },
     { path: '/subscription', component: Subscription },
+    { path: "/projects/:id", component: ProjectDetail, props: true },
+
 
 
 
