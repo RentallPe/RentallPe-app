@@ -6,7 +6,7 @@
       "createdAt": "2025-10-01T10:00:00Z"
     }*/
 
-import { Project } from "./project.entity.js";
+import { Project } from "../../../Monitoring/domain/model/project.entity.js";
 
 export class Document {
     constructor({ id, projectId, type, filePath, createdAt }) {

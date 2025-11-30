@@ -6,8 +6,8 @@
       "estimatedDays": 30,
       "createdAt": "2025-10-01T13:00:00Z"
     }*/
-import {Project} from "@/Rental/domain/model/project.entity.js";
-import {Provider} from "@/Rental/domain/model/provider.entity.js";
+import {Project} from "@/Monitoring/domain/model/project.entity.js";
+import {Provider} from "@/Provider/domain/model/provider.entity.js";
 
 export class Budget {
     constructor({id, projectId, providerId, amount, estimatedDays, createdAt}) {

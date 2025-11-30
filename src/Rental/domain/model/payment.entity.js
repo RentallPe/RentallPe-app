@@ -7,7 +7,7 @@
       "createdAt": "2025-10-01T12:10:00Z"
     }*/
 
-import {Project} from "@/Rental/domain/model/project.entity.js";
+import {Project} from "@/Monitoring/domain/model/project.entity.js";
 
 export class Payment {
     constructor({id, projectId, amount, date, status, createdAt}) {

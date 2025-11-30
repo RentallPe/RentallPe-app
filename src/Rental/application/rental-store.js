@@ -1,58 +1,32 @@
+// src/Rental/application/rental-store.js
 import { defineStore } from 'pinia';
-import {BaseEndpoint} from "@/shared/infrastructure/base-endpoint.js";
 import { ref, computed, shallowRef } from 'vue';
 import { RentalApi } from '@/Rental/infrastructure/rental-api.js';
-import { UserAssembler } from '@/Rental/infrastructure/user.assembler.js';
-import { PropertyAssembler } from '@/Rental/infrastructure/property.assembler.js';
-import { OwnerAssembler } from '@/Rental/infrastructure/owner.assembler.js';
-import { ProviderAssembler } from '@/Rental/infrastructure/provider.assembler.js';
-import { ProjectAssembler } from '@/Rental/infrastructure/project.assembler.js';
-import { TaskAssembler } from '@/Rental/infrastructure/task.assembler.js';
-import { IncidentAssembler } from '@/Rental/infrastructure/incident.assembler.js';
+import { BudgetAssembler } from '@/Rental/infrastructure/budget.assembler.js';
 import { DocumentAssembler } from '@/Rental/infrastructure/document.assembler.js';
 import { InvoiceAssembler } from '@/Rental/infrastructure/invoice.assembler.js';
-import { IotDeviceAssembler } from '@/Rental/infrastructure/iotDevice.assembler.js';
-import { NotificationAssembler } from '@/Rental/infrastructure/notification.assembler.js';
-import { OwnerTypeAssembler } from '@/Rental/infrastructure/ownerType.assembler.js';
 import { PaymentAssembler } from '@/Rental/infrastructure/payment.assembler.js';
 import { RemodelPlanAssembler } from '@/Rental/infrastructure/remodelPlan.assembler.js';
-import { BudgetAssembler } from '@/Rental/infrastructure/budget.assembler.js';
-import { ComboAssembler } from '@/Rental/infrastructure/combo.assembler.js';
-import { SubscriptionAssembler } from '@/Rental/infrastructure/subscription.js';
-
-
+import { TaskAssembler } from '@/Rental/infrastructure/task.assembler.js';
 
 const api = new RentalApi();
 
 const assemblers = {
-    users: UserAssembler,
-    properties: PropertyAssembler,
-    owners: OwnerAssembler,
-    providers: ProviderAssembler,
-    projects: ProjectAssembler,
-    tasks: TaskAssembler,
-    incidents: IncidentAssembler,
+    budgets: BudgetAssembler,
     documents: DocumentAssembler,
     invoices: InvoiceAssembler,
-    iot_devices: IotDeviceAssembler,
-    notifications: NotificationAssembler,
     payments: PaymentAssembler,
-    owner_types: OwnerTypeAssembler,
     remodel_plans: RemodelPlanAssembler,
-    budgets: BudgetAssembler,
-    combos: ComboAssembler,
-    subscriptions: SubscriptionAssembler
+    tasks: TaskAssembler
 };
 
 export const useRentalStore = defineStore('rental', () => {
-
-    const lists    = shallowRef({});      
-    const loaded   = ref({});             
-    const indexes  = shallowRef({});     
+    const lists    = shallowRef({});
+    const loaded   = ref({});
+    const indexes  = shallowRef({});
     const errors   = shallowRef([]);
 
-
-    const inflight = new Map();           
+    const inflight = new Map();
 
     function ensureBuckets(name) {
         if (!lists.value[name])   lists.value[name] = [];
@@ -72,7 +46,6 @@ export const useRentalStore = defineStore('rental', () => {
         return ep;
     }
 
-
     async function fetchAll(name, { force = false } = {}) {
         ensureBuckets(name);
         if (loaded.value[name] && !force) return;
@@ -84,9 +57,7 @@ export const useRentalStore = defineStore('rental', () => {
 
         const p = ep.getAll()
             .then((resp) => {
-                console.log("Respuesta cruda de API:", resp)
                 const entities = A.toEntitiesFromResponse(resp);
-                console.log("Después de assembler:", entities)
                 lists.value[name] = entities;
                 loaded.value[name] = true;
 
@@ -109,10 +80,8 @@ export const useRentalStore = defineStore('rental', () => {
         await p;
     }
 
-
     async function fetchById(name, id) {
         ensureBuckets(name);
-
 
         const idx = indexes.value[name].get(id);
         if (typeof idx === 'number') return lists.value[name][idx];
@@ -139,7 +108,6 @@ export const useRentalStore = defineStore('rental', () => {
         }
     }
 
-
     async function create(name, payload) {
         ensureBuckets(name);
         const ep = endpoint(name);
@@ -158,7 +126,6 @@ export const useRentalStore = defineStore('rental', () => {
             throw e;
         }
     }
-
 
     async function update(name, payload) {
         ensureBuckets(name);
@@ -183,7 +150,6 @@ export const useRentalStore = defineStore('rental', () => {
         }
     }
 
-
     async function remove(name, id) {
         ensureBuckets(name);
         const ep = endpoint(name);
@@ -206,7 +172,6 @@ export const useRentalStore = defineStore('rental', () => {
         }
     }
 
-
     function list(name) {
         ensureBuckets(name);
         return computed(() => lists.value[name]);
@@ -227,43 +192,10 @@ export const useRentalStore = defineStore('rental', () => {
         const idx = indexes.value[name].get(id);
         return idx !== undefined ? lists.value[name][idx] : undefined;
     }
-    function availableCombosForUser(userId) {
-        ensureBuckets("combos");
-        ensureBuckets("subscriptions");
-
-        const combosList = lists.value["combos"] || [];
-        const subsList   = lists.value["subscriptions"] || [];
-
-        // Buscar la suscripción activa del usuario
-        const mySub = subsList.find(s => s.customerId === userId && s.status === "active");
-        if (!mySub) {
-            // Si no tiene suscripción, solo mostrar combos básicos
-            return combosList.filter(c => c.planType === "basic");
-        }
-
-        if (mySub.plan === "basic") {
-            return combosList.filter(c => c.planType === "basic");
-        }
-        if (mySub.plan === "premium") {
-            return combosList.filter(c => c.planType === "basic" || c.planType === "premium");
-        }
-        if (mySub.plan === "enterprise") {
-            return combosList; // ve todos
-        }
-
-        return [];
-    }
-
 
     return {
-
         lists, loaded, indexes, errors,
-
         fetchAll, fetchById, list, isLoaded, count, getLocalById,
-
-        create, update, remove,
-        availableCombosForUser
+        create, update, remove
     };
-
-
 });

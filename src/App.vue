@@ -11,9 +11,9 @@
 <script setup>
 import { useRoute } from 'vue-router'
 import { computed } from 'vue'
-import { useUserStore } from '@/stores/user'
-import SidebarCustomer from '@/public/Sidebar.vue'
-import SidebarProvider from '@/public/SidebarProvider.vue'
+import { useUserStore } from '@/IAM/application/user.store.js'
+import SidebarCustomer from '@/shared/views/components/Sidebar.vue'
+import SidebarProvider from '@/shared/views/components/SidebarProvider.vue'
 
 const route = useRoute()
 const user = useUserStore()

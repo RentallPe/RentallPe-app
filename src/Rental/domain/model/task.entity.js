@@ -6,7 +6,7 @@
       "status": "pending",
       "createdAt": "2025-10-01T09:00:00Z"
     }*/
-import { Project } from "@/Rental/domain/model/project.entity.js";
+import { Project } from "@/Monitoring/domain/model/project.entity.js";
 
 export class Task {
     constructor({ id, projectId, name, description, status, createdAt }) {
