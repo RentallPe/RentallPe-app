@@ -1,4 +1,4 @@
-// Rental/infrastructure/property.assembler.js
+
 import { Property } from "@/Property/domain/model/property.entity.js";
 
 export class PropertyAssembler {

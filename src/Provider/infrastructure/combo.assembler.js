@@ -11,13 +11,15 @@ export class ComboAssembler {
             description: resource.description ?? "",
             price: Number(resource.price) || 0,
             installDays: resource.installDays ?? "—",
+            image: resource.image ?? resource.img ?? `https://picsum.photos/400/250?random=${resource.id}`,
             planType: (
                 resource.planType ??
                 resource.plan_type ??
                 resource.plan ??
                 "basic"
             ).toString().toLowerCase(),
-            image: resource.image ?? resource.img ?? `https://picsum.photos/400/250?random=${resource.id}`
+            devices: resource.devices ?? []
+
         });
     }
 

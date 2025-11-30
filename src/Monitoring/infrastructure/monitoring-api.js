@@ -9,7 +9,8 @@ export class MonitoringApi {
             incidents: new BaseEndpoint(api, "/incidents"),
             projects: new BaseEndpoint(api, "/projects"),
             notifications: new BaseEndpoint(api, "/notifications"),
-            iotDevices: new BaseEndpoint(api, "/iotDevices")
+            iotDevices: new BaseEndpoint(api, "/iotDevices"),
+            workitems: new BaseEndpoint(api, "/workitems")
         };
     }
 

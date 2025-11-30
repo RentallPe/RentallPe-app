@@ -12,12 +12,23 @@
     },
     {
       "id": "1761604976429",
-      "fullName": "Humberto",
+      "fullName": "Humbertoo",
       "email": "humberto@example.com",
       "password": "1234",
       "phone": "987654321",
       "createdAt": "2025-10-27T22:42:56.429Z",
-      "role": "customer"
+      "photo": "https://randomuser.me/api/portraits/men/75.jpg",
+      "paymentMethods": [
+        {
+          "id": 1764538081185,
+          "type": "Visa",
+          "number": "1232 3232 3232 1323",
+          "expiry": "21/33",
+          "cvv": "123"
+        }
+      ],
+      "role": "customer",
+      "providerId": null
     },
     {
       "id": "1761608000000",
@@ -54,37 +65,165 @@
   "properties": [
     {
       "id": "1760165416141",
-      "ownerId": "1",
+      "ownerId": "1761604976429",
       "name": "Casa Principal",
       "address": "Av. Siempre Viva 123",
-      "region": "Lima",
       "province": "Lima",
-      "areaM2": 120,
-      "yearsOld": 5,
+      "region": "Lima",
       "status": "available",
-      "createdAt": "2025-10-11T06:50:16.141Z",
+      "handoverDate": null,
+      "progress": 0,
       "image": "https://picsum.photos/300/200?random=99",
+      "alerts": [],
+      "locks": [],
       "combos": [
         {
           "id": "2",
           "name": "Security Essentials",
           "price": 950
+        },
+        {
+          "id": 1,
+          "providerId": 1,
+          "name": "Smart Kitchen Pack",
+          "description": "Includes smart oven, water filter, and lighting.",
+          "price": 1200,
+          "installDays": 5,
+          "image": "https://picsum.photos/400/250?random=1"
         }
-      ]
+      ],
+      "areaM2": 120,
+      "yearsOld": 5,
+      "createdAt": "2025-10-11T06:50:16.141Z"
     },
     {
       "id": "1761705416141",
-      "ownerId": "1761700000000",
+      "ownerId": "1761604976429",
       "name": "Departamento Miraflores",
       "address": "Calle Las Flores 456",
-      "region": "Lima",
       "province": "Lima",
+      "region": "Lima",
+      "status": "available",
+      "handoverDate": null,
+      "progress": 0,
+      "image": "https://picsum.photos/300/200?random=101",
+      "alerts": [],
+      "locks": [],
+      "combos": [
+        {
+          "id": 7,
+          "providerId": 2,
+          "name": "Luxury Smart Pack",
+          "description": "Smart fridge, AI assistant, automated curtains.",
+          "price": 5000,
+          "installDays": 15,
+          "image": "https://picsum.photos/400/250?random=7"
+        },
+        {
+          "id": 7,
+          "providerId": 2,
+          "name": "Luxury Smart Pack",
+          "description": "Smart fridge, AI assistant, automated curtains.",
+          "price": 5000,
+          "installDays": 15,
+          "image": "https://picsum.photos/400/250?random=7",
+          "planType": "enterprise",
+          "devices": [
+            {
+              "type": "Smart Fridge"
+            },
+            {
+              "type": "AI Assistant"
+            },
+            {
+              "type": "Automated Curtains"
+            }
+          ]
+        }
+      ],
       "areaM2": 80,
       "yearsOld": 2,
+      "createdAt": "2025-11-15T09:00:00Z"
+    },
+    {
+      "id": null,
+      "ownerId": "1761604976429",
+      "address": "asdasd",
+      "ubigeo": "asdas",
+      "province": "asdasd",
+      "region": "asdas",
+      "areaM2": 0,
+      "yearsOld": 0,
       "status": "available",
-      "createdAt": "2025-11-15T09:00:00Z",
-      "image": "https://picsum.photos/300/200?random=101",
-      "combos": []
+      "createdAt": "2025-11-30T21:35:11.958Z",
+      "image": "https://picsum.photos/300/200?random=99",
+      "name": "New Property",
+      "handoverDate": null,
+      "progress": 0,
+      "alerts": [],
+      "locks": [],
+      "owner": null
+    },
+    {
+      "id": "a316",
+      "ownerId": "1761604976429",
+      "name": "Testeo3",
+      "address": "Jironlosdiamnate",
+      "province": "Lima",
+      "region": "Lima",
+      "status": "available",
+      "handoverDate": "2025-11-13T05:00:00.000Z",
+      "progress": 0,
+      "image": "https://picsum.photos/300/200?random=99",
+      "alerts": [],
+      "locks": [],
+      "combos": [
+        {
+          "id": 2,
+          "providerId": 1,
+          "name": "Security Essentials",
+          "description": "Smart locks, motion sensors, and cameras.",
+          "price": 950,
+          "installDays": 3,
+          "image": "https://picsum.photos/400/250?random=2",
+          "planType": "premium",
+          "devices": [
+            {
+              "type": "Smart Lock"
+            },
+            {
+              "type": "Motion Sensor"
+            },
+            {
+              "type": "Camera"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "providerId": 1,
+          "name": "Security Essentials",
+          "description": "Smart locks, motion sensors, and cameras.",
+          "price": 950,
+          "installDays": 3,
+          "image": "https://picsum.photos/400/250?random=2",
+          "planType": "premium",
+          "devices": [
+            {
+              "type": "Smart Lock"
+            },
+            {
+              "type": "Motion Sensor"
+            },
+            {
+              "type": "Camera"
+            }
+          ]
+        }
+      ],
+      "areaM2": 123,
+      "yearsOld": 5,
+      "createdAt": "2025-11-30T22:55:07.488Z"
     }
   ],
   "combos": [
@@ -95,7 +234,18 @@
       "description": "Includes smart oven, water filter, and lighting.",
       "price": 1200,
       "installDays": 5,
-      "planType": "premium"
+      "planType": "premium",
+      "devices": [
+        {
+          "type": "Smart Oven"
+        },
+        {
+          "type": "Water Filter"
+        },
+        {
+          "type": "Smart Lighting"
+        }
+      ]
     },
     {
       "id": "2",
@@ -104,7 +254,18 @@
       "description": "Smart locks, motion sensors, and cameras.",
       "price": 950,
       "installDays": 3,
-      "planType": "premium"
+      "planType": "premium",
+      "devices": [
+        {
+          "type": "Smart Lock"
+        },
+        {
+          "type": "Motion Sensor"
+        },
+        {
+          "type": "Camera"
+        }
+      ]
     },
     {
       "id": "3",
@@ -113,7 +274,18 @@
       "description": "Solar panels, smart thermostat, water-saving faucets.",
       "price": 2500,
       "installDays": 10,
-      "planType": "basic"
+      "planType": "basic",
+      "devices": [
+        {
+          "type": "Solar Panel"
+        },
+        {
+          "type": "Smart Thermostat"
+        },
+        {
+          "type": "Water-saving Faucet"
+        }
+      ]
     },
     {
       "id": "7",
@@ -122,7 +294,18 @@
       "description": "Smart fridge, AI assistant, automated curtains.",
       "price": 5000,
       "installDays": 15,
-      "planType": "enterprise"
+      "planType": "enterprise",
+      "devices": [
+        {
+          "type": "Smart Fridge"
+        },
+        {
+          "type": "AI Assistant"
+        },
+        {
+          "type": "Automated Curtains"
+        }
+      ]
     }
   ],
   "payments": [
@@ -151,6 +334,114 @@
       "propertyId": "1761705416141",
       "amount": 5000,
       "date": "2025-11-20T12:00:00.000Z",
+      "status": "pending"
+    },
+    {
+      "id": 1764538704502,
+      "comboId": 1,
+      "providerId": 1,
+      "customerId": 1761604976429,
+      "customerName": "Humbertoo",
+      "propertyId": 1760165416141,
+      "propertyName": "Casa Principal",
+      "amount": 1200,
+      "date": "2025-11-30T21:38:24.502Z",
+      "status": "pending"
+    },
+    {
+      "id": 1764539220733,
+      "comboId": 7,
+      "providerId": 2,
+      "customerId": 1761604976429,
+      "customerName": "Humbertoo",
+      "propertyId": 1761705416141,
+      "propertyName": "Departamento Miraflores",
+      "amount": 5000,
+      "date": "2025-11-30T21:47:00.733Z",
+      "status": "pending"
+    },
+    {
+      "id": 1764539605650,
+      "comboId": 7,
+      "providerId": 2,
+      "customerId": 1761604976429,
+      "customerName": "Humbertoo",
+      "propertyId": null,
+      "propertyName": "Nueva porpiedad2",
+      "amount": 5000,
+      "date": "2025-11-30T21:53:25.650Z",
+      "status": "pending"
+    },
+    {
+      "id": 1764540055689,
+      "comboId": 1,
+      "providerId": 1,
+      "customerId": 1761604976429,
+      "customerName": "Humbertoo",
+      "propertyId": null,
+      "propertyName": "Nueva porpiedad2",
+      "amount": 1200,
+      "date": "2025-11-30T22:00:55.689Z",
+      "status": "pending"
+    },
+    {
+      "id": 1764541823426,
+      "comboId": 2,
+      "providerId": 1,
+      "customerId": 1761604976429,
+      "customerName": "Humbertoo",
+      "propertyId": null,
+      "propertyName": "Nueva porpiedad2",
+      "amount": 950,
+      "date": "2025-11-30T22:30:23.426Z",
+      "status": "pending"
+    },
+    {
+      "id": 1764541941824,
+      "comboId": 2,
+      "providerId": 1,
+      "customerId": 1761604976429,
+      "customerName": "Humbertoo",
+      "propertyId": null,
+      "propertyName": "Nueva porpiedad2",
+      "amount": 950,
+      "date": "2025-11-30T22:32:21.824Z",
+      "status": "pending"
+    },
+    {
+      "id": 1764543023684,
+      "comboId": 7,
+      "providerId": 2,
+      "customerId": 1761604976429,
+      "customerName": "Humbertoo",
+      "propertyId": 1761705416141,
+      "propertyName": "Departamento Miraflores",
+      "amount": 5000,
+      "date": "2025-11-30T22:50:23.684Z",
+      "status": "pending"
+    },
+    {
+      "id": 1764543354404,
+      "comboId": 2,
+      "providerId": 1,
+      "customerId": 1761604976429,
+      "customerName": "Humbertoo",
+      "propertyId": null,
+      "propertyName": "Testeo3",
+      "amount": 950,
+      "date": "2025-11-30T22:55:54.404Z",
+      "status": "pending"
+    },
+    {
+      "id": 1764543420819,
+      "comboId": 2,
+      "providerId": 1,
+      "customerId": 1761604976429,
+      "customerName": "Humbertoo",
+      "propertyId": null,
+      "propertyName": "Testeo3",
+      "amount": 950,
+      "date": "2025-11-30T22:57:00.819Z",
       "status": "pending"
     }
   ],
@@ -244,6 +535,33 @@
       "status": "active",
       "startDate": "2025-11-30T09:39:24.204Z",
       "endDate": "2025-12-30T09:39:24.204Z"
+    },
+    {
+      "id": "1764538499067",
+      "customerId": "1761604976429",
+      "plan": "premium",
+      "price": 100,
+      "status": "canceled",
+      "startDate": "2025-11-30T21:35:08.923Z",
+      "endDate": "2025-12-30T21:35:08.923Z"
+    },
+    {
+      "id": "1764542986616",
+      "customerId": "1761604976429",
+      "plan": "premium",
+      "price": 100,
+      "status": "canceled",
+      "startDate": "2025-11-30T22:49:47.744Z",
+      "endDate": "2025-12-30T22:49:47.744Z"
+    },
+    {
+      "id": "1764543292773",
+      "customerId": "1761604976429",
+      "plan": "premium",
+      "price": 100,
+      "status": "active",
+      "startDate": "2025-11-30T22:54:52.773Z",
+      "endDate": "2025-12-30T22:54:52.773Z"
     }
   ],
   "owners": [
@@ -274,6 +592,14 @@
       "status": "pending",
       "createdAt": "2025-10-11T07:02:02.111Z",
       "updatedAt": null
+    },
+    {
+      "id": 1764537400932,
+      "projectId": 1,
+      "description": "asdasdas",
+      "status": "pending",
+      "createdAt": "2025-11-30T21:16:40.932Z",
+      "updatedAt": null
     }
   ],
   "documents": [
@@ -296,7 +622,7 @@
   ],
   "invoices": [
     {
-      "id": 1,
+      "id": "1",
       "paymentId": "1762600000000",
       "number": "INV-001",
       "issueDate": "2025-10-01",
@@ -304,7 +630,7 @@
       "status": "unpaid"
     },
     {
-      "id": 2,
+      "id": "2",
       "paymentId": "1762570618041",
       "number": "INV-002",
       "issueDate": "2025-11-08",
@@ -314,7 +640,7 @@
   ],
   "tasks": [
     {
-      "id": 1,
+      "id": "1",
       "projectId": "1",
       "name": "Install wiring",
       "description": "Run network cables throughout the house",
@@ -322,7 +648,7 @@
       "createdAt": "2025-10-01T09:00:00Z"
     },
     {
-      "id": 2,
+      "id": "2",
       "projectId": "1",
       "name": "Configure smart locks",
       "description": "Setup and test smart lock system",
@@ -330,7 +656,7 @@
       "createdAt": "2025-10-03T14:00:00Z"
     },
     {
-      "id": 3,
+      "id": "3",
       "projectId": "2",
       "name": "Install solar panels",
       "description": "Mount and connect solar panels on rooftop",
@@ -361,6 +687,69 @@
       "type": "Solar Panel",
       "status": "inactive",
       "installedAt": "2025-11-15T10:00:00Z"
+    },
+    {
+      "id": 1764543023699,
+      "projectId": 1764543023692,
+      "type": "Smart Fridge",
+      "status": "active",
+      "installedAt": "2025-11-30T22:50:23.699Z"
+    },
+    {
+      "id": 1764543023706,
+      "projectId": 1764543023692,
+      "type": "AI Assistant",
+      "status": "active",
+      "installedAt": "2025-11-30T22:50:23.706Z"
+    },
+    {
+      "id": 1764543023711,
+      "projectId": 1764543023692,
+      "type": "Automated Curtains",
+      "status": "active",
+      "installedAt": "2025-11-30T22:50:23.711Z"
+    },
+    {
+      "id": 1764543354418,
+      "projectId": 1764543354411,
+      "type": "Smart Lock",
+      "status": "active",
+      "installedAt": "2025-11-30T22:55:54.418Z"
+    },
+    {
+      "id": 1764543354426,
+      "projectId": 1764543354411,
+      "type": "Motion Sensor",
+      "status": "active",
+      "installedAt": "2025-11-30T22:55:54.426Z"
+    },
+    {
+      "id": 1764543354431,
+      "projectId": 1764543354411,
+      "type": "Camera",
+      "status": "active",
+      "installedAt": "2025-11-30T22:55:54.431Z"
+    },
+    {
+      "id": 1764543420833,
+      "projectId": 1764543420825,
+      "type": "Smart Lock",
+      "status": "active",
+      "installedAt": "2025-11-30T22:57:00.833Z"
+    },
+    {
+      "id": 1764543420840,
+      "projectId": 1764543420825,
+      "type": "Motion Sensor",
+      "status": "active",
+      "installedAt": "2025-11-30T22:57:00.840Z"
+    },
+    {
+      "id": 1764543420845,
+      "projectId": 1764543420825,
+      "type": "Camera",
+      "status": "active",
+      "installedAt": "2025-11-30T22:57:00.845Z"
     }
   ],
   "notifications": [
@@ -397,6 +786,105 @@
       "startDate": "2025-10-01T00:00:00Z",
       "endDate": "2025-12-01T00:00:00Z",
       "createdAt": "2025-09-25T12:00:00Z"
+    },
+    {
+      "id": 1764538704515,
+      "propertyId": "1760165416141",
+      "userId": "1761604976429",
+      "name": "Proyecto Smart Kitchen Pack",
+      "description": "Instalación de Smart Kitchen Pack",
+      "status": "active",
+      "startDate": "2025-11-30T21:38:24.515Z",
+      "endDate": null,
+      "createdAt": "2025-11-30T21:38:24.515Z"
+    },
+    {
+      "id": 1764539220740,
+      "propertyId": "1761705416141",
+      "userId": "1761604976429",
+      "name": "Proyecto Luxury Smart Pack",
+      "description": "Instalación de Luxury Smart Pack",
+      "status": "active",
+      "startDate": "2025-11-30T21:47:00.740Z",
+      "endDate": null,
+      "createdAt": "2025-11-30T21:47:00.740Z"
+    },
+    {
+      "id": 1764539605657,
+      "propertyId": null,
+      "userId": "1761604976429",
+      "name": "Proyecto Luxury Smart Pack",
+      "description": "Instalación de Luxury Smart Pack",
+      "status": "active",
+      "startDate": "2025-11-30T21:53:25.657Z",
+      "endDate": null,
+      "createdAt": "2025-11-30T21:53:25.657Z"
+    },
+    {
+      "id": 1764540055696,
+      "propertyId": null,
+      "userId": "1761604976429",
+      "name": "Proyecto Smart Kitchen Pack",
+      "description": "Instalación de Smart Kitchen Pack",
+      "status": "active",
+      "startDate": "2025-11-30T22:00:55.696Z",
+      "endDate": null,
+      "createdAt": "2025-11-30T22:00:55.696Z"
+    },
+    {
+      "id": 1764541823434,
+      "propertyId": null,
+      "userId": "1761604976429",
+      "name": "Proyecto Security Essentials",
+      "description": "Instalación de Security Essentials",
+      "status": "active",
+      "startDate": "2025-11-30T22:30:23.434Z",
+      "endDate": null,
+      "createdAt": "2025-11-30T22:30:23.434Z"
+    },
+    {
+      "id": 1764541941831,
+      "propertyId": null,
+      "userId": "1761604976429",
+      "name": "Proyecto Security Essentials",
+      "description": "Instalación de Security Essentials",
+      "status": "active",
+      "startDate": "2025-11-30T22:32:21.831Z",
+      "endDate": null,
+      "createdAt": "2025-11-30T22:32:21.831Z"
+    },
+    {
+      "id": 1764543023692,
+      "propertyId": "1761705416141",
+      "userId": "1761604976429",
+      "name": "Proyecto Luxury Smart Pack",
+      "description": "Instalación de Luxury Smart Pack",
+      "status": "active",
+      "startDate": "2025-11-30T22:50:23.692Z",
+      "endDate": null,
+      "createdAt": "2025-11-30T22:50:23.692Z"
+    },
+    {
+      "id": 1764543354411,
+      "propertyId": "a316",
+      "userId": "1761604976429",
+      "name": "Proyecto Security Essentials",
+      "description": "Instalación de Security Essentials",
+      "status": "active",
+      "startDate": "2025-11-30T22:55:54.411Z",
+      "endDate": null,
+      "createdAt": "2025-11-30T22:55:54.411Z"
+    },
+    {
+      "id": 1764543420825,
+      "propertyId": "a316",
+      "userId": "1761604976429",
+      "name": "Proyecto Security Essentials",
+      "description": "Instalación de Security Essentials",
+      "status": "active",
+      "startDate": "2025-11-30T22:57:00.826Z",
+      "endDate": null,
+      "createdAt": "2025-11-30T22:57:00.826Z"
     }
   ],
   "readings": [

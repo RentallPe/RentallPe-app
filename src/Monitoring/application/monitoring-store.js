@@ -54,10 +54,6 @@ export const useMonitoringStore = defineStore("monitoring", {
             this.iotDevices.push(device);
             return device;
         },
-        async fetchReadings() {
-            const res = await api.getEndpoint("readings").getAll();
-            this.readings = ReadingAssembler.toEntitiesFromResponse(res);
-        },
         async fetchWorkitems() {
             const res = await api.getEndpoint("workitems").getAll();
             this.workitems = WorkitemAssembler.toEntitiesFromResponse(res);

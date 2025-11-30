@@ -14,8 +14,8 @@ import {User} from "@/IAM/domain/model/user.entity.js";
 export class Project {
   constructor({id, propertyId, userId, name, status, startDate, endDate, createdAt}){
     this.id = id;
-    this.propertyId = new Property();
-    this.userId = new User();
+    this.propertyId = propertyId;   // ✅ guarda el ID
+    this.userId = userId;           // ✅ guarda el ID
     this.name = name;
     this.status = status;
     this.startDate = startDate;

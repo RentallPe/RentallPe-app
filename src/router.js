@@ -21,7 +21,8 @@ import EditCombo from "@/Provider/presentation/views/EditCombo.vue";
 import PaymentProvider from "@/Provider/presentation/views/PaymentProvider.vue";
 import Subscription from "./Subscription/presentation/views/subscription.vue";
 import ProjectDetail from "@/Monitoring/presentation/views/ProjectDetail.vue";
-
+import ProjectDevices from "@/Monitoring/presentation/views/ProjectDevices.vue";
+import Projects from "@/Monitoring/presentation/views/Projects.vue";
 
 
 const routes = [
@@ -48,7 +49,9 @@ const routes = [
     { path: "/edit-combo/:id", component: EditCombo, props: true },
     { path: "/payment", component: PaymentProvider },
     { path: '/subscription', component: Subscription },
+    { path: "/projects", name: "Projects", component: Projects },
     { path: "/projects/:id", component: ProjectDetail, props: true },
+    { path: "/projects/:id/devices", component: ProjectDevices, props: true },
 
 
 

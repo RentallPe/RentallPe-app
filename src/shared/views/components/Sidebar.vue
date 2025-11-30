@@ -31,6 +31,11 @@
         <span>{{ t('menu.support') }}</span>
       </router-link>
 
+      <router-link to="/projects" class="nav-item" active-class="active">
+        <i class="pi pi-briefcase"></i>
+        <span>{{ t('menu.projects') }}</span>
+      </router-link>
+
       <router-link to="/alerts" class="nav-item" active-class="active">
         <i class="pi pi-bell"></i>
         <span>{{ t('menu.alerts') }}</span>

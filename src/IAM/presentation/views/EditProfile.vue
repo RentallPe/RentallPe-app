@@ -9,18 +9,19 @@
       </template>
 
       <template #content>
-        <!-- grid sin desbordes -->
-        <div class="grid grid-reset">
+        <div v-if="loading">Loading…</div>
+        <div v-else class="grid grid-reset">
           <!-- Avatar -->
           <div class="col-12 md:col-4 flex flex-column align-items-center col-fix">
             <img :src="editUser.photo" alt="Profile photo" class="avatar-large" />
-            <pv-button label="Change profile pic" icon="pi pi-image" class="mt-3" severity="info" />
+            <input type="file" ref="fileInput" hidden @change="onPhotoChange" />
+            <pv-button label="Change profile pic" icon="pi pi-image" class="mt-3" severity="info"
+                       @click="$refs.fileInput.click()" />
           </div>
 
           <!-- Formulario -->
           <div class="col-12 md:col-8 col-fix">
             <h3 class="text-black mb-3">Information</h3>
-
             <div class="info-grid">
               <div class="info-item">
                 <label class="info-label" for="fullName">Name</label>
@@ -37,21 +38,20 @@
 
               <div class="info-item">
                 <label class="info-label">Payment Methods</label>
-                <div
-                    v-for="method in editUser.paymentMethods"
-                    :key="method.id"
-                    class="payment-item flex align-items-center justify-content-between"
-                >
+                <div v-if="!editUser.paymentMethods || editUser.paymentMethods.length === 0" class="info-value">—</div>
+                <div v-for="method in editUser.paymentMethods" :key="method.id"
+                     class="payment-item flex align-items-center justify-content-between">
                   <span class="info-value">
-                    {{ method.type }} **** {{ method.number.slice(-4) }} (exp: {{ method.expiry }})
+                    {{ method.type }} **** {{ String(method.number||'').slice(-4) }} (exp: {{ method.expiry }})
                   </span>
-                  <pv-button icon="pi pi-trash" severity="danger" text size="small" @click="deletePayment(method.id)" />
+                  <pv-button icon="pi pi-trash" severity="danger" text size="small"
+                             @click="deletePayment(method.id)" />
                 </div>
               </div>
             </div>
 
             <div class="actions mt-4">
-              <pv-button label="Save" severity="success" @click="saveUser" />
+              <pv-button label="Save" severity="success" @click="saveUser" :loading="saving" />
               <router-link to="/profile">
                 <pv-button label="Cancel" severity="danger" />
               </router-link>
@@ -63,6 +63,7 @@
   </div>
 </template>
 
+
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
@@ -71,34 +72,43 @@ import { useUserStore } from "@/IAM/application/user.store.js";
 const router = useRouter();
 const store = useUserStore();
 
-const USER_ID = 1;
+// Usuario dinámico desde localStorage
+const saved = localStorage.getItem("currentUser");
+const USER_ID = saved ? JSON.parse(saved).id : null;
 
 const user = ref(null);
 const editUser = ref({
   fullName: "",
   email: "",
   phone: "",
-  photo: "",
+  photo: "https://randomuser.me/api/portraits/men/75.jpg",
   paymentMethods: [],
 });
 
 const loading = ref(true);
 const saving  = ref(false);
+const fileInput = ref(null);
 
 onMounted(async () => {
   try {
-    user.value = await store.fetchUserById(USER_ID);
-    if (!user.value) throw new Error("Usuario no encontrado");
-
-    editUser.value = {
-      fullName: user.value.fullName ?? "",
-      email: user.value.email ?? "",
-      phone: user.value.phone ?? "",
-      photo: user.value.photo || "https://randomuser.me/api/portraits/men/75.jpg",
-      paymentMethods: Array.isArray(user.value.paymentMethods)
-          ? [...user.value.paymentMethods]
-          : [],
-    };
+    if (USER_ID) {
+      user.value = await store.fetchUserById(USER_ID);
+      if (!user.value) {
+        await store.fetchUsers();
+        user.value = store.users.find(u => String(u.id) === String(USER_ID)) || null;
+      }
+      if (user.value) {
+        editUser.value = {
+          fullName: user.value.fullName ?? "",
+          email: user.value.email ?? "",
+          phone: user.value.phone ?? "",
+          photo: user.value.photo || "https://randomuser.me/api/portraits/men/75.jpg",
+          paymentMethods: Array.isArray(user.value.paymentMethods)
+              ? [...user.value.paymentMethods]
+              : [],
+        };
+      }
+    }
   } catch (e) {
     console.error("Error al cargar usuario:", e);
   } finally {
@@ -116,6 +126,8 @@ async function saveUser() {
       id: user.value.id,
     };
     await store.updateUser(payload);
+    // actualizar localStorage
+    localStorage.setItem("currentUser", JSON.stringify(payload));
     router.push("/profile");
   } catch (e) {
     console.error("[edit-profile] save error:", e);
@@ -128,7 +140,18 @@ async function saveUser() {
 function deletePayment(id) {
   editUser.value.paymentMethods = editUser.value.paymentMethods.filter(m => m.id !== id);
 }
+
+function onPhotoChange(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    editUser.value.photo = reader.result; // base64
+  };
+  reader.readAsDataURL(file);
+}
 </script>
+
 
 <style scoped>
 

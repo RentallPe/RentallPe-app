@@ -20,61 +20,36 @@
 
           <div class="col-12 md:col-8 col-fix">
             <h3 class="section">{{ t('profile.information') }}</h3>
-
             <div class="info-grid">
-              <div class="info-item">
-                <span class="info-label">{{ t('profile.name') }}</span>
-                <span class="info-value">{{ user.fullName || '—' }}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Email</span>
-                <span class="info-value">{{ user.email || '—' }}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">{{ t('profile.phone') }}</span>
-                <span class="info-value">{{ user.phone || '—' }}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Role</span>
-                <span class="info-value">{{ user.role || '—' }}</span>
-              </div>
-              <div class="info-item">
-                <span class="info-label">Created At</span>
-                <span class="info-value">{{ createdAtText }}</span>
-              </div>
+              <div class="info-item"><span class="info-label">{{ t('profile.name') }}</span><span class="info-value">{{ user.fullName || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Email</span><span class="info-value">{{ user.email || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">{{ t('profile.phone') }}</span><span class="info-value">{{ user.phone || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Role</span><span class="info-value">{{ user.role || '—' }}</span></div>
+              <div class="info-item"><span class="info-label">Created At</span><span class="info-value">{{ createdAtText }}</span></div>
             </div>
           </div>
         </div>
-
         <div v-else class="loading">Loading…</div>
 
-        <!-- Vista para CUSTOMER -->
+        <!-- Vista CUSTOMER -->
         <div class="mt-5" v-if="!loading && user?.role === 'customer'">
           <h3 class="section">{{ t('profile.paymentMethods') }}</h3>
           <div class="info-item">
-            <div v-if="payments.length === 0" class="info-value">—</div>
+            <div v-if="!payments || payments.length === 0" class="info-value">—</div>
             <div v-for="method in payments" :key="method.id" class="payment-item">
-              <span class="info-value">
-                {{ method.type }} **** {{ String(method.number||'').slice(-4) }} (exp: {{ method.expiry }})
-              </span>
+              <span class="info-value">{{ method.type }} **** {{ String(method.number||'').slice(-4) }} (exp: {{ method.expiry }})</span>
             </div>
-            <a href="#" class="add-payment" @click.prevent="showDialog = true">
-              + {{ t('profile.addAnotherPayment') }}
-            </a>
+            <a href="#" class="add-payment" @click.prevent="showDialog = true">+ {{ t('profile.addAnotherPayment') }}</a>
           </div>
 
           <h3 class="section mt-5">{{ t('profile.myProperties') }}</h3>
           <div class="grid grid-reset">
-            <div v-if="userProps.length === 0" class="info-value">No properties yet.</div>
+            <div v-if="!userProps || userProps.length === 0" class="info-value">No properties yet.</div>
             <div v-for="property in userProps" :key="property.id" class="col-12 md:col-6 lg:col-4 col-fix">
               <pv-card class="property-card">
                 <template #header>
                   <router-link :to="`/property/${property.id}`">
-                    <img
-                        :src="property.image || ('https://picsum.photos/300/200?random=' + property.id)"
-                        alt="Property image"
-                        class="property-image"
-                    />
+                    <img :src="property.image || ('https://picsum.photos/300/200?random=' + property.id)" alt="Property image" class="property-image" />
                   </router-link>
                 </template>
                 <template #content>
@@ -84,7 +59,6 @@
               </pv-card>
             </div>
           </div>
-
           <div class="flex justify-content-end mt-4">
             <router-link to="/add-property">
               <pv-button :label="t('profile.addProperty')" icon="pi pi-plus" severity="success" />
@@ -92,32 +66,30 @@
           </div>
         </div>
 
-        <!-- Vista para PROVIDER -->
+        <!-- Vista PROVIDER -->
         <div class="mt-5" v-if="!loading && user?.role === 'provider'">
           <h3 class="section">My Combos</h3>
           <div class="grid grid-reset">
-            <div v-if="providerCombos.length === 0" class="info-value">No combos yet.</div>
+            <div v-if="!providerCombos || providerCombos.length === 0" class="info-value">No combos yet.</div>
             <div v-for="combo in providerCombos" :key="combo.id" class="col-12 md:col-6 lg:col-4 col-fix">
               <pv-card class="combo-card">
                 <template #header>
                   <router-link :to="`/combo/${combo.id}`">
-                    <img
-                        :src="combo.image || ('https://picsum.photos/400/250?random=' + combo.id)"
-                        alt="Combo image"
-                        class="combo-image"
-                    />
-
+                    <img :src="combo.image || ('https://picsum.photos/400/250?random=' + combo.id)" alt="Combo image" class="combo-image" />
                   </router-link>
                 </template>
                 <template #content>
-                  <h4 class="combo-title">{{ combo.name }}</h4>
+                  <h4 class="combo-title">
+                    {{ combo.name }}
+                    <span v-if="combo.planType === 'premium'" class="badge-premium">Premium</span>
+                    <span v-if="combo.planType === 'enterprise'" class="badge-enterprise">Enterprise</span>
+                  </h4>
                   <p class="combo-description">{{ combo.description }}</p>
                   <p class="combo-price"><strong>Price:</strong> ${{ combo.price }}</p>
                 </template>
               </pv-card>
             </div>
           </div>
-
           <div class="flex justify-content-end mt-4">
             <router-link to="/add-combo">
               <pv-button label="Add Combo" icon="pi pi-plus" severity="success" />
@@ -126,6 +98,7 @@
         </div>
       </template>
     </pv-card>
+
 
     <!-- Dialog para agregar método de pago (solo customer) -->
     <pv-dialog v-model:visible="showDialog" modal :header="t('profile.addPaymentOption')" :style="{ width: '400px' }">
@@ -160,9 +133,13 @@
 import { ref, onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useUserStore } from "@/IAM/application/user.store.js";
+import { usePropertyStore } from "@/Property/application/property-store.js";
+import { useProviderStore } from "@/Provider/application/provider-store.js";
 
 const { t } = useI18n();
 const store = useUserStore();
+const propertyStore = usePropertyStore();
+const providerStore = useProviderStore();
 
 // Usuario dinámico desde localStorage
 const saved = localStorage.getItem("currentUser");
@@ -178,6 +155,7 @@ const cardTypes  = [
   { label: "MasterCard", value: "MasterCard" },
 ];
 
+// Cargar datos
 onMounted(async () => {
   try {
     user.value = await store.fetchUserById(USER_ID);
@@ -185,13 +163,22 @@ onMounted(async () => {
       await store.fetchUsers();
       user.value = store.users.find(u => String(u.id) === String(USER_ID)) || null;
     }
+    await propertyStore.fetchProperties();
+    await providerStore.fetchCombos();
   } finally {
     loading.value = false;
   }
 });
 
+// Computed seguros
 const avatarUrl   = computed(() => user.value?.photo || "https://randomuser.me/api/portraits/men/75.jpg");
 const payments    = computed(() => user.value?.paymentMethods ?? []);
+const userProps   = computed(() => propertyStore.properties ?? []);
+const providerCombos = computed(() => {
+  const u = user.value;
+  if (!u || u.role !== "provider") return [];
+  return providerStore.combos.filter(c => String(c.providerId) === String(u.providerId));
+});
 const createdAtText = computed(() => {
   const s = user.value?.createdAt;
   if (!s) return "—";
@@ -203,6 +190,7 @@ const createdAtText = computed(() => {
       });
 });
 
+// Guardar método de pago
 async function savePayment() {
   if (!user.value) return;
   const method = { id: Date.now(), ...newPayment.value };
@@ -210,7 +198,7 @@ async function savePayment() {
     ...user.value,
     paymentMethods: [...(user.value.paymentMethods ?? []), method],
   };
-  await store.updateUser(next); // ✅ método correcto
+  await store.updateUser(next);
   user.value = next;
   showDialog.value = false;
   newPayment.value = { type: "", number: "", expiry: "", cvv: "" };

@@ -12,10 +12,11 @@ import {Project} from "@/Monitoring/domain/model/project.entity.js";
 export class IotDevice {
     constructor({id, projectId, type, status, installedAt}){
         this.id = id;
-        this.projectId = new Project();
+        this.projectId = projectId;
         this.type = type;
         this.status = status;
         this.installedAt = installedAt;
+        this.project = null;
     }
 
     setProject(project){

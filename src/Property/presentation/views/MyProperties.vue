@@ -3,11 +3,13 @@ import { onMounted, computed } from "vue";
 import { usePropertyStore } from "@/Property/application/property-store.js";
 
 const store = usePropertyStore();
+
 const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
 
 const properties = computed(() => {
+  if (!currentUser?.id) return [];
   return store.properties
-      .filter(p => String(p.ownerId) === String(currentUser.id))
+      .filter(p => String(p.ownerId) === String(currentUser.id)) // 👈 filtra por el id del usuario logueado
       .map(p => ({
         ...p,
         image: p.image || `https://picsum.photos/800/600?random=${p.id ?? Math.random()}`,
@@ -25,6 +27,7 @@ onMounted(async () => {
   await store.fetchProperties();
 });
 </script>
+
 
 
 <template>

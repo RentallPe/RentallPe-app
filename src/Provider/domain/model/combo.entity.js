@@ -9,7 +9,9 @@
     },*/
 
     export class Combo {
-        constructor({ id, providerId, name, description, price, installDays, image }) {
+        constructor({ id, providerId, name, description, price, installDays, image,planType = "basic",
+                        devices = []
+                    }) {
             this.id = id;
             this.providerId = providerId;
             this.name = name;
@@ -17,5 +19,7 @@
             this.price = price;
             this.installDays = installDays;
             this.image = image;
+            this.planType = planType;
+            this.devices = devices;
         } 
     }

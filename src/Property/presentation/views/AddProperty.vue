@@ -20,24 +20,62 @@
 
           <!-- Formulario -->
           <div class="col-12 md:col-8">
-            <h3 class="text-black mb-3">{{ t('addProperty.propertyDirection') }}</h3>
+            <h3 class="text-black mb-3">{{ t('addProperty.propertyInformation') }}</h3>
 
             <div class="info-grid">
+              <!-- Nombre -->
               <div class="info-item">
-                <label class="info-label" for="region">{{ t('addProperty.region') }}</label>
-                <pv-input-text id="region" v-model="newProperty.region" class="info-input" />
+                <label class="info-label" for="name">{{ t('addProperty.name') }}</label>
+                <pv-input-text id="name" v-model="newProperty.name" class="info-input" />
               </div>
-              <div class="info-item">
-                <label class="info-label" for="province">{{ t('addProperty.province') }}</label>
-                <pv-input-text id="province" v-model="newProperty.province" class="info-input" />
-              </div>
+
+              <!-- Dirección -->
               <div class="info-item">
                 <label class="info-label" for="address">{{ t('addProperty.address') }}</label>
                 <pv-input-text id="address" v-model="newProperty.address" class="info-input" />
               </div>
+
+              <!-- Región -->
+              <div class="info-item">
+                <label class="info-label" for="region">{{ t('addProperty.region') }}</label>
+                <pv-input-text id="region" v-model="newProperty.region" class="info-input" />
+              </div>
+
+              <!-- Provincia -->
+              <div class="info-item">
+                <label class="info-label" for="province">{{ t('addProperty.province') }}</label>
+                <pv-input-text id="province" v-model="newProperty.province" class="info-input" />
+              </div>
+
+              <!-- Ubigeo -->
               <div class="info-item">
                 <label class="info-label" for="ubigeo">{{ t('addProperty.ubigeo') }}</label>
                 <pv-input-text id="ubigeo" v-model="newProperty.ubigeo" class="info-input" />
+              </div>
+
+              <!-- Área en m² -->
+              <div class="info-item">
+                <label class="info-label" for="areaM2">{{ t('addProperty.areaM2') }}</label>
+                <pv-input-number id="areaM2" v-model="newProperty.areaM2" class="info-input" />
+              </div>
+
+              <!-- Antigüedad -->
+              <div class="info-item">
+                <label class="info-label" for="yearsOld">{{ t('addProperty.yearsOld') }}</label>
+                <pv-input-number id="yearsOld" v-model="newProperty.yearsOld" class="info-input" />
+              </div>
+
+              <!-- Estado -->
+              <div class="info-item">
+                <label class="info-label" for="status">{{ t('addProperty.status') }}</label>
+                <pv-dropdown id="status" v-model="newProperty.status"
+                             :options="['available','sold','maintenance']" class="info-input" />
+              </div>
+
+              <!-- Fecha de entrega -->
+              <div class="info-item">
+                <label class="info-label" for="handoverDate">{{ t('addProperty.handoverDate') }}</label>
+                <pv-calendar id="handoverDate" v-model="newProperty.handoverDate" dateFormat="yy-mm-dd" class="info-input" />
               </div>
             </div>
 
@@ -51,6 +89,7 @@
     </pv-card>
   </div>
 </template>
+
 
 <script setup>
 import { Property } from "@/Property/domain/model/property.entity.js";
@@ -66,7 +105,7 @@ const propertyStore = usePropertyStore();
 const subscriptionStore = useSubscriptionStore();
 
 const newProperty = ref(new Property({
-  id: null,
+  d: Date.now().toString(),
   ownerId: null,
   address: "",
   ubigeo: "",

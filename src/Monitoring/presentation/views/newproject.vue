@@ -29,11 +29,11 @@
                 <span v-if="combo.planType === 'enterprise'" class="badge-enterprise">Enterprise</span>
 
               </h3>
-              <p>{{ combo.planType }}</p>
               <p class="text-sm">Provider: {{ getProviderName(combo.providerId) }}</p>
             </div>
           </div>
         </div>
+
 
         <!-- Providers -->
         <h3 class="m-0 subtitle mt-5">Providers</h3>
@@ -105,6 +105,9 @@ import { useSubscriptionStore } from "@/Subscription/application/subscription-st
 import { useUserStore } from "@/IAM/application/user.store.js";
 import { usePaymentStore } from "@/Rental/application/payment-store.js";
 import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const providerStore = useProviderStore();
 const propertyStore = usePropertyStore();
@@ -124,7 +127,7 @@ onMounted(async () => {
     providerStore.fetchCombos(),
     providerStore.fetchProviders(),
     propertyStore.fetchProperties(),
-
+    monitoringStore.fetchDevices(),
     subscriptionStore.load(userStore.user?.id)
   ]);
   console.log("Providers:", providerStore.providers);
@@ -133,6 +136,7 @@ onMounted(async () => {
 
 const providers = computed(() => providerStore.providers || []);
 const properties = computed(() => propertyStore.properties || []);
+const devices = computed(() => monitoringStore.iotDevices || []);
 
 const visibleCombos = computed(() => providerStore.combos);
 
@@ -151,15 +155,24 @@ function selectAddress(property) {
   addressDialog.value = false;
 }
 
+
 async function buyCombo() {
-  if (!selectedAddress.value) {
-    alert("Selecciona una propiedad primero.");
+  // 1. Validar que haya una propiedad seleccionada
+  if (!selectedAddress.value || !selectedAddress.value.id) {
+    alert("Selecciona una propiedad válida primero.");
     return;
   }
 
+  // 2. Validar plan de suscripción
   const sub = subscriptionStore.subscription;
+  // Bloqueo para combos Premium
   if (sub?.plan !== "premium" && selectedCombo.value.planType === "premium") {
     alert("Debes tener plan Premium para este combo.");
+    return;
+  }
+  // Bloqueo para combos Enterprise
+  if (selectedCombo.value.planType === "enterprise") {
+    alert("Los combos Enterprise no se pueden comprar con tu suscripción actual.");
     return;
   }
 
@@ -215,6 +228,8 @@ async function buyCombo() {
 
   alert("Combo comprado, proyecto creado e IoT instalados.");
   dialogVisible.value = false;
+  router.push(`/projects/${newProject.id}/devices`);
+
 }
 </script>
 
