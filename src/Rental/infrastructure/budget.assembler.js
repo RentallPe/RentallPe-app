@@ -1,16 +1,29 @@
-import {Budget} from "../domain/model/budget.entity";
-
 export class BudgetAssembler {
     static toEntityFromResource(resource) {
-        return new Budget({...resource});
+        if (!resource) return null;
+        return new Budget({
+            id: String(resource.id),
+            projectId: resource.projectId ? String(resource.projectId) : null,
+            amount: Number(resource.amount ?? 0),
+            status: resource.status ?? "pending",
+            createdAt: resource.createdAt ?? new Date().toISOString()
+        });
     }
 
     static toEntitiesFromResponse(response) {
-        if(response.status !== 200) {
-            console.error(`${response.status}: ${response.statusText}`);
+        if (!response) {
+            console.error("BudgetAssembler: response vacío");
             return [];
         }
-        let resources = response.data instanceof Array ? response.data : response.data['budgets'];
-        return resources.map(resource => this.toEntityFromResource(resource));
+
+        const resources = Array.isArray(response)
+            ? response
+            : Array.isArray(response.data)
+                ? response.data
+                : response.data?.budgets ?? [];
+
+        return Array.isArray(resources)
+            ? resources.map(r => this.toEntityFromResource(r)).filter(Boolean)
+            : [];
     }
 }

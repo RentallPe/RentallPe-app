@@ -34,84 +34,249 @@ onMounted(async () => {
   <div class="properties-wrapper">
     <pv-card class="new-project-card">
       <template #title>
-        <h2 class="page-title">My Properties</h2>
+        <div class="header">
+          <div class="title-group">
+            <i class="pi pi-home header-icon"></i>
+            <div>
+              <h2 class="page-title">My Properties</h2>
+              <p class="page-subtitle">Manage your registered properties</p>
+            </div>
+          </div>
+
+          <router-link to="/add-property">
+            <pv-button label="Add property" icon="pi pi-plus" severity="primary" />
+          </router-link>
+        </div>
       </template>
 
       <template #content>
-        <div class="grid property-grid grid-reset">
+        <div v-if="properties.length === 0" class="empty-state">
+          <i class="pi pi-building empty-icon"></i>
+          <p>No properties registered yet.</p>
+        </div>
+
+        <div v-else class="grid property-grid grid-reset">
           <div
-            v-for="property in properties"
-            :key="property.id"
-            class="col-12 md:col-6 lg:col-4 col-fix"
+              v-for="property in properties"
+              :key="property.id"
+              class="col-12 md:col-6 lg:col-4 col-fix"
           >
             <pv-card class="property-card">
               <template #header>
                 <router-link :to="`/property/${property.id}`">
-                  <img :src="property.image" alt="Property image" class="property-img" />
+                  <div class="image-wrapper">
+                    <img :src="property.image" class="property-img" />
+                    <span class="status-badge">{{ property.status }}</span>
+                  </div>
                 </router-link>
               </template>
+
               <template #content>
                 <h3 class="property-title">{{ property.name }}</h3>
                 <p class="property-address">{{ property.address }}</p>
-                <p><strong>Province:</strong> {{ property.province }}</p>
-                <p><strong>Region:</strong> {{ property.region }}</p>
-                <p><strong>Status:</strong> {{ property.status }}</p>
-                <p><strong>Handover date:</strong> {{ property.handoverDate }}</p>
-                <div class="progress-bar">
-                  <div class="progress-fill" :style="{ width: property.progress + '%' }"></div>
+
+                <div class="property-info">
+                  <span><strong>Province:</strong> {{ property.province }}</span>
+                  <span><strong>Region:</strong> {{ property.region }}</span>
+                  <span><strong>Handover:</strong> {{ property.handoverDate }}</span>
                 </div>
-                <p>{{ property.progress }}% completed</p>
+
+                <div class="progress-wrapper">
+                  <div class="progress-text">{{ property.progress }}% completed</div>
+                  <div class="progress-bar">
+                    <div
+                        class="progress-fill"
+                        :style="{ width: property.progress + '%' }"
+                    ></div>
+                  </div>
+                </div>
               </template>
             </pv-card>
           </div>
-        </div>
-
-        <div class="actions">
-          <router-link to="/add-property">
-            <pv-button label="Add property" icon="pi pi-plus" severity="primary" />
-          </router-link>
         </div>
       </template>
     </pv-card>
   </div>
 </template>
 
-<style scoped>
 
-.properties-wrapper{
-  --sbw:260px;
-  margin-left:var(--sbw);
-  width:calc(100% - var(--sbw));
-  padding:2rem;
-  background:#f9fafb;
-  min-height:100dvh;
-  box-sizing:border-box;
-  overflow-x:clip;
+<style scoped>
+.properties-wrapper {
+  --sbw: 260px;
+  margin-left: var(--sbw);
+  width: calc(100% - var(--sbw));
+  padding: 2rem;
+  min-height: 100dvh;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
 }
 
-.new-project-card{ width:100%; max-width:1000px; margin:0 auto; border-radius:16px; overflow:hidden; background:#fff; }
-.page-title{ font-size:1.8rem; margin-bottom:1.5rem; color:#111; }
+.new-project-card {
+  width: 100%;
+  max-width: 1100px;
+  margin: auto;
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
 
+/* Header */
 
-.grid-reset{ margin-left:0 !important; margin-right:0 !important; }
-.grid-reset > [class*="col-"]{ padding-left:0 !important; padding-right:0 !important; }
-.col-fix{ min-width:0; }
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
 
+.title-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
 
-.property-card{ border-radius:12px; overflow:hidden; background:#fff; }
-.property-img{ width:100%; height:220px; object-fit:cover; display:block; }
-.property-title{ margin:.5rem 0 0; font-weight:600; color:#111; }
-.property-address{ color:#6b7280; margin:.25rem 0 .5rem; }
+.header-icon {
+  font-size: 2.2rem;
+  color: #44de6f;
+}
 
+.page-title {
+  margin: 0;
+  font-weight: 700;
+  color: #111827;
+  font-size: 1.8rem;
+}
 
-.progress-bar{ background:#eee; border-radius:8px; height:8px; margin:.5rem 0; overflow:hidden; }
-.progress-fill{ height:100%; border-radius:8px; background:#b22222; }
+.page-subtitle {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
 
+/* Empty */
 
-.actions{ display:flex; justify-content:end; margin-top:1rem; }
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: #6b7280;
+}
 
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
 
-@media (max-width:1024px){
-  .properties-wrapper{ margin-left:0; width:100%; padding:1rem; }
+/* Grid */
+
+.grid-reset {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.grid-reset > [class*="col-"] {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.col-fix {
+  min-width: 0;
+}
+
+/* Cards */
+
+.property-card {
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+  transition: all 0.25s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.property-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 30px rgba(0, 0, 0, 0.12);
+}
+
+.image-wrapper {
+  position: relative;
+}
+
+.property-img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+}
+
+/* Badge */
+
+.status-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #2563eb;
+  color: white;
+  font-size: 0.75rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* Content */
+
+.property-title {
+  margin: 0.25rem 0 0;
+  font-weight: 700;
+  color: #111827;
+}
+
+.property-address {
+  color: #6b7280;
+  margin: 0.25rem 0 0.5rem;
+  font-size: 0.9rem;
+}
+
+.property-info {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: #374151;
+}
+
+/* Progress */
+
+.progress-wrapper {
+  margin-top: 0.75rem;
+}
+
+.progress-text {
+  font-size: 0.8rem;
+  margin-bottom: 0.3rem;
+  color: #374151;
+}
+
+.progress-bar {
+  height: 8px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2563eb, #3b82f6);
+}
+
+/* Responsive */
+
+@media (max-width: 1024px) {
+  .properties-wrapper {
+    margin-left: 0;
+    width: 100%;
+    padding: 1rem;
+  }
 }
 </style>
+

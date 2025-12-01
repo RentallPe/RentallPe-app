@@ -49,18 +49,64 @@
         </div>
       </template>
     </pv-card>
+
+    <!-- Diálogo de confirmación -->
+    <pv-dialog v-model:visible="paymentDialogVisible" header="Confirmar Pago" modal :style="{ width: '420px' }">
+      <div v-if="selectedPayment">
+        <p>Vas a pagar con la tarjeta:</p>
+        <p><strong>{{ selectedPayment.cardType }}</strong> **** {{ String(selectedPayment.cardNumber).slice(-4) }}</p>
+        <p>Monto: S/. {{ selectedPayment.amount }}</p>
+      </div>
+      <template #footer>
+        <pv-button label="Cancelar" severity="secondary" @click="paymentDialogVisible=false" />
+        <pv-button label="Confirmar" severity="success" @click="confirmPayment" />
+      </template>
+    </pv-dialog>
   </div>
 </template>
-
 <script setup>
 import { onMounted, ref, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { usePaymentStore } from "@/Rental/application/payment-store.js";
+import { useUserStore } from "@/IAM/application/user.store.js";
 
 const { t } = useI18n();
 const store = usePaymentStore();
 
-onMounted(() => store.fetchPayments());
+const paymentDialogVisible = ref(false);
+const selectedPayment = ref(null);
+const userStore = useUserStore();
+const currentUser = computed(() => userStore.user);
+const pendingPayments = computed(() => {
+  if (!currentUser.value) return [];
+  return store.payments
+      .filter(p => {
+        const isPending = (p.status || "").toLowerCase() !== "paid";
+        const isMine =
+            String(p.customerId) === String(currentUser.value.id) ||
+            String(p.userId) === String(currentUser.value.id); // 👈 acepta ambos
+        console.log("Comparando:", p.customerId, p.userId, currentUser.value.id, "=>", isMine);
+        return isPending && isMine;
+      })
+      .map(p => ({
+        id: p.id,
+        propertyName: p.propertyName || `Property ${p.propertyId}`,
+        address: p.address || "—",
+        customerName: p.customerName || "—",
+        amount: p.amount,
+        maturityDate: formatDate(p.date),
+        status: p.status || "pending",
+        cardType: p.cardType || "Visa",
+        cardNumber: p.cardNumber || "0000 0000 0000 0000"
+      }));
+});
+
+
+onMounted(async () => {
+  await userStore.fetchUsers(); // o fetchUserById
+  await store.fetchPayments();
+});
+
 
 function formatDate(s) {
   if (!s) return "—";
@@ -72,31 +118,33 @@ function formatDate(s) {
   });
 }
 
-const pendingPayments = computed(() =>
-    store.payments
-        .filter(p => (p.status || "").toLowerCase() !== "paid")
-        .map(p => ({
-          id: p.id,
-          propertyName: p.propertyName || `Property ${p.propertyId}`,
-          address: p.address || "—",
-          customerName: p.customerName || "—",
-          amount: p.amount,
-          maturityDate: formatDate(p.date),
-          status: p.status || "pending"
-        }))
-);
+
+
 
 async function payCombo(payment) {
+  // Traer el detalle desde el backend
+  const paymentDetail = await store.getPaymentById(payment.id);
+  console.log("Detalle del pago:", paymentDetail);
+
+  // Guardar el pago seleccionado para mostrar en el diálogo
+  selectedPayment.value = paymentDetail;
+  paymentDialogVisible.value = true;
+
+}
+
+async function confirmPayment() {
+  console.log("ID a pagar:", selectedPayment.value.id);
   try {
-    await store.markAsPaid(payment.id);
+    await store.markAsPaid(selectedPayment.value.id);
     alert("Pago realizado con éxito");
+    paymentDialogVisible.value = false;
+
   } catch (err) {
     console.error("Error al pagar combo:", err);
     alert("No se pudo procesar el pago");
   }
 }
 </script>
-
 
 <style scoped>
 .billing-wrapper {

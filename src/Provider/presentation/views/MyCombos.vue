@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useProviderStore } from "@/Provider/application/provider-store.js";
 import { useUserStore } from "@/IAM/application/user.store.js";
@@ -11,19 +11,43 @@ const providerStore = useProviderStore();
 const userStore = useUserStore();
 const monitoringStore = useMonitoringStore();
 
+// Usuario actual desde localStorage
+const saved = localStorage.getItem("currentUser");
+const currentUser = saved ? JSON.parse(saved) : null;
+
 onMounted(async () => {
-  await Promise.all([
-    providerStore.fetchCombos(),
-    monitoringStore.fetchProjects(),
-    monitoringStore.fetchDevices(),
-    monitoringStore.fetchNotifications(),
-    monitoringStore.fetchReadings(),
-    monitoringStore.fetchWorkitems()
-  ]);
+await Promise.all([
+providerStore.fetchCombos(),
+monitoringStore.fetchProjects(),
+monitoringStore.fetchDevices(),
+monitoringStore.fetchNotifications(),
+monitoringStore.fetchReadings(),
+monitoringStore.fetchWorkitems()
+]);
 });
 
-// 👉 Si necesitas combos del store
-const combos = providerStore.combos;
+// 👉 Filtrar combos según el usuario
+const combos = computed(() => {
+if (!currentUser) return [];
+
+// Si es proveedor, mostrar solo combos de su providerId
+if (currentUser.role === "provider") {
+return providerStore.combos.filter(
+c => String(c.providerId) === String(currentUser.providerId)
+);
+}
+
+// Si es cliente, podrías mostrar combos asociados a sus propiedades o compras
+if (currentUser.role === "customer") {
+// Aquí puedes ajustar la lógica según tu modelo de datos
+return providerStore.combos.filter(
+c => String(c.customerId) === String(currentUser.id)
+);
+}
+
+// Si no aplica, devolver vacío
+return [];
+});
 </script>
 
 
@@ -48,40 +72,22 @@ const combos = providerStore.combos;
                 </router-link>
               </template>
               <template #content>
-                <h3 class="combo-title">{{ combo.name }}</h3>
+                <h3 class="combo-title">
+                  {{ combo.name }}
+                  <span :class="['plan-badge', combo.planType]">{{ combo.planType }}</span>
+                </h3>
                 <p class="combo-description">{{ combo.description }}</p>
                 <p><strong>{{ t("myCombos.price") }}:</strong> ${{ combo.price }}</p>
                 <p><strong>{{ t("myCombos.installTime") }}:</strong> {{ combo.installDays }} {{ t("myCombos.days") }}</p>
-                <p><strong>{{ t("myCombos.status") }}:</strong> {{ combo.status }}</p>
-
                 <h4>{{ t("myCombos.devices") }}</h4>
                 <ul>
-                  <li v-for="d in combo.devices" :key="d.id">
-                    {{ d.type }} - {{ d.status }}
+                  <li v-for="d in combo.devices" :key="d">
+                    {{ d }}
                   </li>
                 </ul>
 
-                <h4>{{ t("myCombos.notifications") }}</h4>
-                <ul>
-                  <li v-for="n in combo.notifications" :key="n.id">
-                    {{ n.message }} ({{ new Date(n.createdAt).toLocaleString("es-PE") }})
-                  </li>
-                </ul>
-
-                <h4>{{ t("myCombos.readings") }}</h4>
-                <ul>
-                  <li v-for="r in combo.readings" :key="r.id">
-                    {{ r.metricName }}: {{ r.value }} {{ r.unit }}
-                  </li>
-                </ul>
-
-                <h4>{{ t("myCombos.workitems") }}</h4>
-                <ul>
-                  <li v-for="w in combo.workitems" :key="w.id">
-                    {{ w.description }} - {{ w.status }}
-                  </li>
-                </ul>
               </template>
+
             </pv-card>
           </div>
         </div>
@@ -170,4 +176,39 @@ const combos = providerStore.combos;
     padding: 1rem;
   }
 }
+/* Forzar texto negro en todo el card */
+.combo-card,
+.combo-card h3,
+.combo-card p,
+.combo-card strong,
+.combo-card span,
+.combo-card li {
+  color: #111 !important;
+}
+
+/* Badge de planType */
+.plan-badge {
+  display: inline-block;
+  margin-left: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.plan-badge.basic {
+  background: #e5e7eb; /* gris */
+  color: #111;
+}
+
+.plan-badge.premium {
+  background: linear-gradient(135deg, gold, orange);
+  color: #000;
+}
+
+.plan-badge.enterprise {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: #fff;
+}
+
 </style>

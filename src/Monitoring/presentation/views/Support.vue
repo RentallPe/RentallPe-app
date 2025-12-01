@@ -65,6 +65,7 @@ import { useMonitoringStore } from '@/Monitoring/application/monitoring-store.js
 const store = useMonitoringStore();
 onMounted(() => store.fetchIncidents());
 
+// Mostrar todos los incidentes sin filtrar por usuario
 const incidents = computed(() => store.incidents ?? []);
 
 const dialogVisible = ref(false);
@@ -83,6 +84,7 @@ function formatDate(s) {
       : d.toLocaleString('es-PE', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' });
 }
 </script>
+
 
 
 <style scoped>

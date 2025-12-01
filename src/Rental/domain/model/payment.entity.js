@@ -10,12 +10,27 @@
 import {Project} from "@/Monitoring/domain/model/project.entity.js";
 
 export class Payment {
-    constructor({id, projectId, amount, date, status, createdAt}) {
+    constructor({
+                    id,
+                    comboId,
+                    propertyId,
+                    customerId,
+                    providerId,
+                    amount,
+                    status,
+                    date,
+                    propertyName,
+                    customerName
+                }) {
         this.id = id;
-        this.projectId = projectId;
+        this.comboId = comboId;
+        this.propertyId = propertyId;
+        this.customerId = customerId;
+        this.providerId = providerId;
         this.amount = amount;
-        this.date = new Date(date);
         this.status = status;
-        this.createdAt = new Date(createdAt);
+        this.date = date;
+        this.propertyName = propertyName;
+        this.customerName = customerName;
     }
 }

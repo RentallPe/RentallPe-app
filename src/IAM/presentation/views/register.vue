@@ -58,7 +58,7 @@ async function registerUser() {
   if (role.value === "provider") {
     // Crear nuevo provider
     const newProvider = {
-      id: Date.now(),
+      id: String(Date.now()),
       name: fullName.value,
       contact: email.value
     }
@@ -73,7 +73,7 @@ async function registerUser() {
   }
 
   const newUser = {
-    id: Date.now(),
+    id: String(Date.now()),
     fullName: fullName.value,
     email: email.value,
     password: password.value,

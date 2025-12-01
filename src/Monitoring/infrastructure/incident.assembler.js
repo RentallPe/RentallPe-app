@@ -1,16 +1,28 @@
-import {Incident} from '@/Monitoring/domain/model/incident.entity.js';
-
 export class IncidentAssembler {
     static toEntityFromResource(resource) {
-        return new Incident({...resource});
+        if (!resource) return null;
+        return {
+            id: String(resource.id),
+            projectId: String(resource.projectId),
+            message: resource.message ?? "",
+            createdAt: resource.createdAt ?? new Date().toISOString()
+        };
     }
 
     static toEntitiesFromResponse(response) {
-        if(response.status !== 200) {
-            console.error(`${response.status}: ${response.statusText}`);
+        if (!response) {
+            console.error("IncidentAssembler: response vacío");
             return [];
         }
-        let resources = response.data instanceof Array ? response.data : response.data['incidents'];
-        return resources.map(resource => this.toEntityFromResource(resource));
+
+        const resources = Array.isArray(response)
+            ? response
+            : Array.isArray(response.data)
+                ? response.data
+                : response.data?.incidents ?? [];
+
+        return Array.isArray(resources)
+            ? resources.map(r => this.toEntityFromResource(r)).filter(Boolean)
+            : [];
     }
 }

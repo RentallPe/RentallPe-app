@@ -32,14 +32,30 @@ export const useMonitoringStore = defineStore("monitoring", {
         },
         async fetchProjects() {
             const res = await api.getEndpoint("projects").getAll();
-            this.projects = ProjectAssembler.toEntitiesFromResponse(res);
-        },
+
+            console.log("RESPUESTA RAW API:", res);
+
+
+            const rawArray = Array.isArray(res) ? res : res?.data ?? [];
+
+            this.projects = rawArray;
+        }
+
+        ,
         async createProject(payload) {
             const res = await api.getEndpoint("projects").create(payload);
-            const project = ProjectAssembler.toEntityFromResource(res);
+            const project = ProjectAssembler.toEntityFromResource(res?.data ?? res);
+
+            if (!project) {
+                console.warn("Assembler devolvió null, usando payload como fallback");
+                this.projects.push(payload);
+                return payload;
+            }
+
             this.projects.push(project);
             return project;
-        },
+        }
+        ,
         async fetchNotifications() {
             const res = await api.getEndpoint("notifications").getAll();
             this.notifications = NotificationAssembler.toEntitiesFromResponse(res);
@@ -50,7 +66,7 @@ export const useMonitoringStore = defineStore("monitoring", {
         },
         async createDevice(payload) {
             const res = await api.getEndpoint("iotDevices").create(payload);
-            const device = IotDeviceAssembler.toEntityFromResource(res);
+            const device = IotDeviceAssembler.toEntityFromResource(res.data);
             this.iotDevices.push(device);
             return device;
         },

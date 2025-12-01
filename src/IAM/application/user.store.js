@@ -42,14 +42,14 @@ export const useUserStore = defineStore("user", {
             return updated;
         },
         async fetchUser() {
-            // cargar usuario actual desde localStorage
             const stored = localStorage.getItem("currentUser");
             if (stored) {
                 this.user = JSON.parse(stored);
                 this.role = this.user.role;
                 return this.user;
             }
-            return null;},
+            return null;
+        },
 
             async createUser(payload) {
             const res = await api.getEndpoint("users").create(payload);

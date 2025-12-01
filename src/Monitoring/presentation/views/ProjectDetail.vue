@@ -64,46 +64,108 @@ import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js
 const route = useRoute();
 const monitoringStore = useMonitoringStore();
 
-const projectId = Number(route.params.id);
+const projectId = String(route.params.id);
 
 const project = computed(() =>
-    monitoringStore.projects.find(p => p.id === projectId)
+    monitoringStore.projects.find(p => String(p.id) === projectId)
 );
 
 const projectDevices = computed(() =>
-    monitoringStore.iotDevices.filter(d => d.projectId === projectId)
+    monitoringStore.iotDevices.filter(d => String(d.projectId) === projectId)
 );
 
 const projectNotifications = computed(() =>
-    monitoringStore.notifications.filter(n => n.projectId === projectId)
+    monitoringStore.notifications.filter(n => String(n.projectId) === projectId)
 );
 
 const projectReadings = computed(() =>
-    monitoringStore.readings.filter(r => r.projectId === projectId)
+    monitoringStore.readings.filter(r => String(r.projectId) === projectId)
 );
 
 const projectWorkitems = computed(() =>
-    monitoringStore.workitems.filter(w => w.projectId === projectId)
+    monitoringStore.workitems.filter(w => String(w.projectId) === projectId)
 );
+
 </script>
 
 <style scoped>
 .project-detail-wrapper {
   padding: 2rem;
+  padding-left: 260px;
   display: flex;
   justify-content: center;
-  background-color: #f9fafb;
+  background: linear-gradient(180deg, #f9fafb, #f1f1f1);
   min-height: 100vh;
 }
 
 .project-detail-card {
   width: 100%;
-  max-width: 800px;
-  background: #fff;
-  border-radius: 16px;
+  max-width: 900px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  padding: 1.2rem;
 }
 
+/* TITULO PRINCIPAL */
+.project-detail-card h3 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 0.4rem;
+}
+
+.project-detail-card p {
+  color: #444;
+  margin: 0.2rem 0;
+  font-size: 0.95rem;
+}
+
+.project-detail-card strong {
+  color: #a14949;
+}
+
+/* SECCIONES */
+.project-detail-card h4 {
+  margin-top: 1.4rem;
+  margin-bottom: 0.5rem;
+  color: #b22222;
+  font-weight: 700;
+  border-bottom: 2px solid #f76c6c;
+  padding-bottom: 0.2rem;
+}
+
+/* LISTAS */
+.project-detail-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.project-detail-card li {
+  background: linear-gradient(135deg, #ffffff, #f3f3f3);
+  border-left: 5px solid #a14949;
+  border-radius: 10px;
+  padding: 0.6rem 0.8rem;
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-size: 0.9rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.05);
+}
+
+/* BOTÓN DISPOSITIVOS */
+.project-detail-card .p-button {
+  margin-top: 1rem;
+  background: #a14949 !important;
+  border: none !important;
+}
+
+.project-detail-card .p-button:hover {
+  background: #f76c6c !important;
+}
+
+/* TEXTO NEGRO */
 .text-black {
-  color: #000;
+  color: #111;
 }
 </style>

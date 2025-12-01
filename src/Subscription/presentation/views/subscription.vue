@@ -25,7 +25,7 @@
                   <div class="subscription-actions">
                     <pv-button :label="`Subscribe ${plan.name}`"
                                :icon="plan.icon"
-                               @click="createOrUpdateSubscription(plan.id)" />
+                               @click="openUpgradeDialog(plan)" />
                   </div>
                 </template>
               </pv-card>
@@ -47,7 +47,7 @@
                                :label="`Upgrade to ${plan.name}`"
                                :icon="plan.icon"
                                severity="success"
-                               @click="createOrUpdateSubscription(plan.id)" />
+                               @click="openUpgradeDialog(plan)" />
                     <span v-else class="status active">Plan actual</span>
                   </div>
                 </template>
@@ -55,12 +55,35 @@
             </div>
 
             <div class="cancel-section">
-              <pv-button label="Cancel SubscriptionEntity" severity="danger" icon="pi pi-times" @click="cancelSubscription" />
+              <pv-button label="Cancel Subscription" severity="danger" icon="pi pi-times" @click="cancelSubscription" />
             </div>
           </template>
         </div>
       </template>
     </pv-card>
+
+    <!-- Diálogo de confirmación de upgrade -->
+    <pv-dialog v-model:visible="upgradeDialogVisible" header="Confirmar Upgrade" modal :style="{ width: '420px' }">
+      <div v-if="selectedPlan">
+        <p><strong>Plan actual:</strong> {{ subscription?.plan || "Ninguno" }}</p>
+        <p><strong>Nuevo plan:</strong> {{ selectedPlan.name }}</p>
+        <p>Precio: S/ {{ selectedPlan.price }} / mes</p>
+
+        <h4>Método de pago</h4>
+        <ul class="card-list">
+          <li v-for="card in currentUser.paymentMethods" :key="card.id"
+              @click="selectedCard = card"
+              :class="{ selected: selectedCard?.id === card.id }">
+            💳 {{ card.type }} **** {{ String(card.number).slice(-4) }} (exp: {{ card.expiry }})
+          </li>
+        </ul>
+      </div>
+
+      <template #footer>
+        <pv-button label="Cancelar" severity="secondary" @click="upgradeDialogVisible=false" />
+        <pv-button label="Confirmar" severity="success" @click="confirmUpgrade" />
+      </template>
+    </pv-dialog>
   </div>
 </template>
 
@@ -68,12 +91,15 @@
 import { ref, onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useSubscriptionStore } from "@/Subscription/application/subscription-store";
+import { useUserStore } from "@/IAM/application/user.store.js";
 
 const { t } = useI18n();
 const store = useSubscriptionStore();
 const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
+const userStore = useUserStore();
 
-// reactividad directa desde el store
+
+
 const subscription = computed(() => store.subscription);
 const plans = computed(() => store.plans);
 
@@ -81,31 +107,48 @@ onMounted(() => {
   store.load(currentUser.id);
 });
 
-// planes superiores al actual
+
 const upgradePlans = computed(() => {
   if (!store.subscription) return store.plans;
   const currentIndex = store.plans.findIndex(p => p.id === store.subscription.plan);
   return store.plans.slice(currentIndex);
 });
 
-function createOrUpdateSubscription(planId) {
-  store.createOrUpdate(currentUser.id, planId);
+
+const upgradeDialogVisible = ref(false);
+const selectedPlan = ref(null);
+const selectedCard = ref(null);
+
+function openUpgradeDialog(plan) {
+  selectedPlan.value = plan;
+  upgradeDialogVisible.value = true;
+}
+
+async function confirmUpgrade() {
+  if (!selectedCard.value) {
+    alert("Selecciona una tarjeta de pago.");
+    return;
+  }
+  try {
+    await store.createOrUpdate(currentUser.id, selectedPlan.value.id, selectedCard.value);
+    alert(`Suscripción actualizada a ${selectedPlan.value.name} con la tarjeta ${selectedCard.value.type}`);
+    upgradeDialogVisible.value = false;
+  } catch (err) {
+    console.error("Error al actualizar suscripción:", err);
+    alert("No se pudo actualizar la suscripción");
+  }
 }
 
 function cancelSubscription() {
   store.cancel(currentUser.id)
       .then(() => {
-
         window.location.reload();
       })
       .catch(err => {
         console.error("Error al cancelar la suscripción:", err);
       });
 }
-
 </script>
-
-
 
 <style scoped>
 .subscription-wrapper {
@@ -130,12 +173,10 @@ function cancelSubscription() {
   padding: 1rem;
   transition: transform 0.2s, border-color 0.2s;
 }
-
 .plan-card:hover {
   transform: scale(1.02);
   border-color: #b22222;
 }
-
 .plan-card.active {
   border: 2px solid #28a745;
   background: #f0fff4;
@@ -169,7 +210,6 @@ function cancelSubscription() {
   background: #f9fafb;
   color: #111111;
 }
-
 .plan-card.premium h3 {
   color: #1a1a1a;
 }
@@ -179,14 +219,33 @@ function cancelSubscription() {
   background: #111111;
   color: #ffffff;
 }
-
 .plan-card.enterprise h3,
 .plan-card.enterprise p {
   color: #ffffff;
 }
-
 .plan-card.enterprise:hover {
   transform: scale(1.02);
   border-color: #b22222;
+}
+
+/* Tarjetas */
+.card-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+.card-list li {
+  padding: 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  border: 1px solid #ddd;
+}
+.card-list li:hover {
+  background: #f1f5f9;
+}
+.card-list li.selected {
+  background: #d4edda;
+  border-color: #28a745;
 }
 </style>

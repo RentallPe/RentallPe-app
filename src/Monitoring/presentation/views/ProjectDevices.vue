@@ -3,39 +3,60 @@
     <pv-card class="devices-card">
       <!-- Título -->
       <template #title>
-        <div class="flex align-items-center gap-2">
-          <i class="pi pi-cog text-primary text-2xl"></i>
-          <h2 class="m-0 text-black">Project Devices</h2>
+        <div class="header">
+          <div class="header-left">
+            <i class="pi pi-microchip text-primary text-2xl"></i>
+            <div>
+              <h2 class="title">Project Devices</h2>
+              <p class="subtitle">Devices for {{ project?.name }}</p>
+            </div>
+          </div>
         </div>
       </template>
 
       <!-- Contenido -->
       <template #content>
-        <h3 class="m-0 subtitle">Devices for {{ project?.name }}</h3>
-        <div class="grid">
+        <div v-if="projectDevices.length === 0" class="empty-state">
+          <i class="pi pi-inbox empty-icon"></i>
+          <p>No hay dispositivos instalados para este proyecto.</p>
+        </div>
+
+        <div v-else class="grid device-grid">
           <div
               v-for="device in projectDevices"
               :key="device.id"
               class="col-12 md:col-4"
           >
             <div class="device-card">
-              <h3 class="device-title">{{ device.type }}</h3>
-              <p>Status: {{ device.status }}</p>
-              <p>Installed: {{ device.installedAt }}</p>
+              <div class="device-header">
+                <h3 class="device-title">{{ device.type }}</h3>
+                <span
+                    class="status-badge"
+                    :class="device.status === 'active' ? 'active' : 'inactive'"
+                >
+                  {{ device.status }}
+                </span>
+              </div>
 
-              <div class="flex gap-2 mt-2">
-                <pv-button
-                    label="Toggle"
-                    icon="pi pi-power-off"
-                    severity="info"
-                    @click="toggleDevice(device)"
-                />
-                <pv-button
-                    label="Details"
-                    icon="pi pi-info-circle"
-                    severity="secondary"
-                    @click="viewDevice(device)"
-                />
+              <div class="device-body">
+                <p><strong>Installed:</strong> {{ device.installedAt }}</p>
+
+                <div class="actions">
+                  <pv-button
+                      label="Toggle"
+                      icon="pi pi-power-off"
+                      severity="info"
+                      size="small"
+                      @click="toggleDevice(device)"
+                  />
+                  <pv-button
+                      label="Details"
+                      icon="pi pi-info-circle"
+                      severity="secondary"
+                      size="small"
+                      @click="viewDevice(device)"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -53,22 +74,18 @@ import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js
 const route = useRoute();
 const monitoringStore = useMonitoringStore();
 
-const projectId = Number(route.params.id);
+const projectId = String(route.params.id);
 
-// Proyecto actual
 const project = computed(() =>
-    monitoringStore.projects.find(p => p.id === projectId)
+    monitoringStore.projects.find(p => String(p.id) === projectId)
 );
 
-// Dispositivos del proyecto
 const projectDevices = computed(() =>
-    monitoringStore.iotDevices.filter(d => d.projectId === projectId)
+    monitoringStore.iotDevices.filter(d => d && String(d.projectId) === projectId)
 );
 
-// Acciones
 function toggleDevice(device) {
   device.status = device.status === "active" ? "inactive" : "active";
-  // Aquí podrías llamar a monitoringStore.updateDevice(device) si lo implementas
 }
 
 function viewDevice(device) {
@@ -81,44 +98,117 @@ function viewDevice(device) {
   padding: 2rem;
   display: flex;
   justify-content: center;
-  background-color: #f9fafb;
+  background: linear-gradient(to bottom right, #f4f6f9, #e9ecf1);
   min-height: 100vh;
 }
 
 .devices-card {
   width: 100%;
-  max-width: 1000px;
-  background: #fff;
-  border-radius: 16px;
+  max-width: 1100px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.title {
+  margin: 0;
+  font-weight: 700;
+  color: #1f2933;
 }
 
 .subtitle {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-  color: #555;
+  margin: 0;
+  font-size: 0.95rem;
+  color: #6b7280;
 }
 
-.device-card {
-  transition: transform 0.2s;
+/* Empty State */
+.empty-state {
   text-align: center;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  background: #eeeeee;
-  padding: 1rem;
+  padding: 3rem;
+  color: #6b7280;
+}
+
+.empty-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+/* Grid */
+.device-grid {
+  margin-top: 1rem;
+}
+
+/* Device Card */
+.device-card {
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 1.2rem;
+  border: 1px solid #e5e7eb;
+  transition: all 0.25s ease;
 }
 
 .device-card:hover {
-  transform: scale(1.02);
-  border-color: #b22222;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.08);
+  border-color: #3b82f6;
+}
+
+.device-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
 }
 
 .device-title {
-  margin-top: 0.5rem;
+  margin: 0;
   font-weight: 600;
-  color: #111111;
+  color: #111827;
 }
 
-.text-black {
-  color: #000;
+/* Status badge */
+.status-badge {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.status-badge.active {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.status-badge.inactive {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Body */
+.device-body {
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
 }
 </style>

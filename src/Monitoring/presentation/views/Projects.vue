@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-import { onMounted, computed } from "vue";
+import { onMounted, computed, watch } from "vue";
 import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
 import { useUserStore } from "@/IAM/application/user.store.js";
 
@@ -41,58 +41,129 @@ const monitoringStore = useMonitoringStore();
 const userStore = useUserStore();
 
 onMounted(async () => {
-  await Promise.all([
-    monitoringStore.fetchProjects(),
-    monitoringStore.fetchDevices(),
-    monitoringStore.fetchWorkitems()
-  ]);
+  // Primero asegúrate que el usuario esté cargado
+  if (!userStore.user) {
+    await userStore.fetchCurrentUser(); // si tienes este método
+  }
+
+  await monitoringStore.fetchProjects();
+  await monitoringStore.fetchDevices();
+  await monitoringStore.fetchWorkitems();
 });
 
-const myProjects = computed(() =>
-    monitoringStore.projects.filter(p => String(p.userId) === String(userStore.user?.id))
+const myProjects = computed(() => {
+  const list = Array.isArray(monitoringStore.projects)
+      ? monitoringStore.projects
+      : [];
+
+  if (!userStore.user?.id) return [];
+
+  return list.filter(
+      p => String(p.userId) === String(userStore.user.id)
+  );
+});
+
+
+watch(
+    () => userStore.user,
+    (val) => {
+      console.log("Usuario cargado:", val);
+    },
+    { immediate: true }
 );
 
-
+watch(
+    () => monitoringStore.projects,
+    (val) => {
+      console.log("Proyectos cargados:", val);
+    },
+    { immediate: true }
+);
 </script>
 
 <style scoped>
 .projects-wrapper {
   padding: 2rem;
+  padding-left: 260px;
   display: flex;
   justify-content: center;
-  background-color: #f9fafb;
+  background: linear-gradient(180deg, #f9fafb, #f1f1f1);
   min-height: 100vh;
 }
 
 .projects-card {
   width: 100%;
   max-width: 1000px;
-  background: #fff;
-  border-radius: 16px;
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  padding: 0.5rem;
 }
 
+/* GRID */
+.grid {
+  margin-top: 1rem;
+}
+
+/* TARJETA DE PROYECTO */
 .project-card {
-  border: 1px solid #eee;
-  border-radius: 12px;
-  background: #eeeeee;
-  padding: 1rem;
+  background: linear-gradient(135deg, #ffffff, #f3f3f3);
+  border: 1px solid #e5e5e5;
+  border-left: 6px solid #b22222;
+  border-radius: 14px;
+  padding: 1.2rem;
   margin-bottom: 1rem;
-  transition: transform 0.2s;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  transition: all 0.25s ease;
 }
 
 .project-card:hover {
-  transform: scale(1.02);
-  border-color: #b22222;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.12);
+  border-left-color: #f76c6c;
 }
 
+/* TITULO */
 .project-title {
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.1rem;
   color: #111111;
+  margin-bottom: 0.3rem;
 }
+
+/* TEXTO */
+.project-card p {
+  margin: 0.3rem 0;
+  color: #444444;
+  font-size: 0.95rem;
+}
+
+/* STATUS DESTACADO */
+.project-card strong {
+  color: #a14949;
+}
+
+/* BOTÓN */
+.project-card .p-button {
+  margin-top: 0.6rem;
+  background: #a14949 !important;
+  border: none !important;
+}
+
+.project-card .p-button:hover {
+  background: #f76c6c !important;
+}
+
+/* TEXTO GENERAL */
 .text-black {
-  color: #000;
-}
-.denyy{
   color: #111111;
+}
+
+/* MENSAJE SIN PROYECTOS */
+.denyy {
+  color: #666666;
+  font-size: 1rem;
+  text-align: center;
+  padding: 1.5rem;
 }
 </style>

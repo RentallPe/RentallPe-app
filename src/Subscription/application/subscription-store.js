@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { fetchSubscriptions, createSubscription, updateSubscription } from "../infrastructure/subscription-api.js";
 
-export const useSubscriptionStore = defineStore("subscription", {
+export const useSubscriptionStore = defineStore("subscriptions", {
     state: () => ({
         subscription: null,
         plans: [

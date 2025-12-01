@@ -1,29 +1,30 @@
-/*{
-      "id": 1,
-      "projectId": 1,
-      "description": "Water leak in bathroom",
-      "status": "pending",
-      "createdAt": "2025-10-01T09:30:00Z",
-      "updatedAt": null
-    }*/
-
-import { Project } from "./project.entity.js";
-
-export class Incident {
-    constructor({ id, projectId, description, status, createdAt, updatedAt }) {
-        this.id = id;
-        this.projectId = projectId;
-        this.description = description;
-        this.status = status;
-        this.createdAt = new Date(createdAt);
-        this.updatedAt = updatedAt;
+export class IncidentAssembler {
+    static toEntityFromResource(resource) {
+        if (!resource) return null;
+        return {
+            id: String(resource.id),
+            projectId: String(resource.projectId),
+            description: resource.description ?? "",
+            status: resource.status ?? "pending",
+            createdAt: resource.createdAt ?? new Date().toISOString(),
+            updatedAt: resource.updatedAt ?? null
+        };
     }
 
-    setProject(project) {
-        if (project instanceof Project) {
-            this.project = project;
-        } else {
-            throw new Error("Invalid project instance");
+    static toEntitiesFromResponse(response) {
+        if (!response) {
+            console.error("IncidentAssembler: response vacío");
+            return [];
         }
+
+        const resources = Array.isArray(response)
+            ? response
+            : Array.isArray(response.data)
+                ? response.data
+                : response.data?.incidents ?? [];
+
+        return Array.isArray(resources)
+            ? resources.map(r => this.toEntityFromResource(r)).filter(Boolean)
+            : [];
     }
 }

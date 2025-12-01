@@ -54,7 +54,14 @@ export const useProviderStore = defineStore("provider", {
                 return this.providers.find(p => p.id === user.providerId);
             }
             return null;
+        },
+        async createProvider(payload) {
+            const res = await api.getEndpoint("providers").create(payload);
+            const provider = ProviderAssembler.toEntityFromResource(res.data ?? res);
+            this.providers.push(provider);
+            return provider;
         }
+
 
     }
 });

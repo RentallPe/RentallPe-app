@@ -1,6 +1,7 @@
 <template>
   <div class="add-property-wrapper">
     <pv-card class="add-property-card">
+      <!-- Título -->
       <template #title>
         <div class="flex align-items-center gap-2">
           <i class="pi pi-home text-primary text-2xl"></i>
@@ -8,6 +9,7 @@
         </div>
       </template>
 
+      <!-- Contenido -->
       <template #content>
         <div class="grid">
           <!-- Imagen -->
@@ -75,7 +77,13 @@
               <!-- Fecha de entrega -->
               <div class="info-item">
                 <label class="info-label" for="handoverDate">{{ t('addProperty.handoverDate') }}</label>
-                <pv-calendar id="handoverDate" v-model="newProperty.handoverDate" dateFormat="yy-mm-dd" class="info-input" />
+                <pv-calendar
+                    id="handoverDate"
+                    v-model="newProperty.handoverDate"
+                    class="info-input"
+                    showIcon
+                    :manualInput="false"
+                />
               </div>
             </div>
 
@@ -89,7 +97,6 @@
     </pv-card>
   </div>
 </template>
-
 
 <script setup>
 import { Property } from "@/Property/domain/model/property.entity.js";
@@ -105,7 +112,7 @@ const propertyStore = usePropertyStore();
 const subscriptionStore = useSubscriptionStore();
 
 const newProperty = ref(new Property({
-  d: Date.now().toString(),
+  id: String(Date.now()),
   ownerId: null,
   address: "",
   ubigeo: "",
@@ -117,42 +124,78 @@ const newProperty = ref(new Property({
   createdAt: new Date().toISOString(),
   image: "https://picsum.photos/300/200?random=99",
   name: "New Property",
-  handoverDate: null,
+  handoverDate: null,   // 👈 inicializado en null
   progress: 0,
   alerts: [],
   locks: []
 }));
 
 async function saveProperty() {
-  const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-  if (!currentUser?.id) {
-    alert("No user logged in.");
-    return;
+  try {
+    let raw = localStorage.getItem("currentUser");
+    let currentUser = null;
+
+    if (raw) {
+      try {
+        currentUser = JSON.parse(raw);
+      } catch {
+        currentUser = { id: raw };
+      }
+    }
+
+    if (!currentUser?.id) {
+      console.error("Usuario inválido:", raw);
+      alert("Sesión inválida. Vuelve a iniciar sesión.");
+      return;
+    }
+
+    // Normalizar propiedad
+    newProperty.value = {
+      id: String(newProperty.value.id || Date.now()),
+      ownerId: String(currentUser.id),
+      address: newProperty.value.address ?? "",
+      ubigeo: newProperty.value.ubigeo ?? "",
+      province: newProperty.value.province ?? "",
+      region: newProperty.value.region ?? "",
+      areaM2: Number(newProperty.value.areaM2 || 0),
+      yearsOld: Number(newProperty.value.yearsOld || 0),
+      status: newProperty.value.status ?? "active",
+      image: newProperty.value.image ?? "",
+      name: newProperty.value.name ?? "",
+      handoverDate: newProperty.value.handoverDate ?? null,
+      progress: Number(newProperty.value.progress || 0),
+      alerts: Array.isArray(newProperty.value.alerts) ? newProperty.value.alerts : [],
+      locks: Array.isArray(newProperty.value.locks) ? newProperty.value.locks : [],
+      createdAt: newProperty.value.createdAt || new Date().toISOString()
+    };
+
+    // Convertir fecha si es Date
+    if (newProperty.value.handoverDate instanceof Date) {
+      const d = newProperty.value.handoverDate;
+      newProperty.value.handoverDate =
+          d.getFullYear() + "-" +
+          String(d.getMonth() + 1).padStart(2, "0") + "-" +
+          String(d.getDate()).padStart(2, "0");
+    }
+
+    // Crear propiedad
+    const saved = await propertyStore.createProperty(newProperty.value);
+
+    if (!saved || !saved.id) {
+      console.error("Propiedad inválida devuelta:", saved);
+      alert("No se pudo guardar la propiedad.");
+      return;
+    }
+
+    // Redirección
+    router.push("/my-properties");
+
+  } catch (err) {
+    console.error("Error fatal en saveProperty:", err);
+    alert("Error crítico al guardar la propiedad.");
   }
-  newProperty.value.ownerId = currentUser.id;
-
-  await subscriptionStore.load(currentUser.id);
-  await propertyStore.fetchProperties();
-
-  const mySub = subscriptionStore.subscription;
-  const userProps = propertyStore.properties.filter(p => p.ownerId === currentUser.id);
-
-  let maxProps = 2;
-  if (mySub?.plan === "premium") maxProps = 5;
-  if (mySub?.plan === "enterprise") maxProps = Infinity;
-
-  if (userProps.length >= maxProps) {
-    alert(`Tu plan (${mySub?.plan || "sin suscripción"}) no permite más propiedades.`);
-    return;
-  }
-
-  await propertyStore.createProperty(newProperty.value);
-  router.push("/my-properties");
 }
 </script>
-
-
-
 
 
 <style scoped>

@@ -1,18 +1,20 @@
 <template>
   <div class="new-project-wrapper">
     <pv-card class="new-project-card">
-      <!-- Título -->
+
+      <!-- TÍTULO -->
       <template #title>
-        <div class="flex align-items-center gap-2">
-          <i class="pi pi-home text-primary text-2xl"></i>
-          <h2 class="m-0 text-black">New Project</h2>
+        <div class="header">
+          <i class="pi pi-home header-icon"></i>
+          <h2 class="page-title">New Project</h2>
         </div>
       </template>
 
-      <!-- Contenido -->
+      <!-- CONTENIDO -->
       <template #content>
-        <!-- Combos -->
-        <h3 class="m-0 subtitle">Our combos</h3>
+
+        <!-- COMBOS -->
+        <h3 class="section-title">Our Combos</h3>
         <div class="grid">
           <div
               v-for="combo in visibleCombos"
@@ -20,82 +22,150 @@
               class="col-12 md:col-4"
               @click="selectCombo(combo)"
           >
-            <div class="combo-card cursor-pointer">
-              <img :src="combo.image" alt="" class="combo-img" />
-              <h3 class="combo-title">
-                {{ combo.name }}
+            <div class="combo-card">
+              <img :src="combo.image" class="combo-img" />
 
-                <span v-if="combo.planType === 'premium'" class="badge-premium">Premium</span>
-                <span v-if="combo.planType === 'enterprise'" class="badge-enterprise">Enterprise</span>
+              <div class="combo-content">
+                <h3 class="combo-title">
+                  {{ combo.name }}
+                  <span v-if="combo.planType === 'premium'" class="badge premium">Premium</span>
+                  <span v-if="combo.planType === 'enterprise'" class="badge enterprise">Enterprise</span>
+                </h3>
 
-              </h3>
-              <p class="text-sm">Provider: {{ getProviderName(combo.providerId) }}</p>
+                <p class="provider-text">
+                  <i class="pi pi-building"></i>
+                  {{ getProviderName(combo.providerId) }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
 
-
-        <!-- Providers -->
-        <h3 class="m-0 subtitle mt-5">Providers</h3>
+        <!-- PROVIDERS -->
+        <h3 class="section-title mt-6">Providers</h3>
         <div class="grid small-providers">
-          <div v-for="provider in providers" :key="provider.id" class="col-12 md:col-3">
+          <div
+              v-for="provider in providers"
+              :key="provider.id"
+              class="col-12 md:col-3"
+          >
             <router-link :to="`/provider/${provider.id}`" class="no-underline">
-              <pv-card class="provider-card">
-                <template #title>{{ provider.name }}</template>
-                <template #content>
-                  <p class="text-sm">{{ provider.contact }}</p>
-                </template>
-              </pv-card>
+              <div class="provider-card">
+                <h4>{{ provider.name }}</h4>
+                <p>{{ provider.contact }}</p>
+              </div>
             </router-link>
           </div>
         </div>
+
       </template>
     </pv-card>
-
-    <!-- Dialog detalle combo -->
-    <pv-dialog v-model:visible="dialogVisible" header="Combo detail" modal :style="{ width: '40vw' }">
+    <pv-dialog
+        v-model:visible="dialogVisible"
+        modal
+        :style="{ width: '42vw' }"
+        class="combo-dialog"
+        header=" "
+    >
       <template v-if="selectedCombo">
-        <img :src="selectedCombo.image" alt="" class="combo-img mb-3" />
-        <h3>{{ selectedCombo.name }}</h3>
-        <p>{{ selectedCombo.description }}</p>
-        <p><strong>Installation time:</strong> {{ selectedCombo.installDays }} days</p>
-        <p><strong>Provider:</strong> {{ getProviderName(selectedCombo.providerId) }}</p>
+        <!-- Imagen -->
+        <div class="combo-detail-hero">
+          <img :src="selectedCombo.image" />
+          <div class="combo-detail-overlay">
+            <h2>{{ selectedCombo.name }}</h2>
 
-        <div class="flex align-items-center gap-2 mt-3">
-          <span><strong>Send to:</strong></span>
-          <pv-button
-              :label="selectedAddress?.address || 'Select address'"
-              icon="pi pi-map-marker"
-              @click="addressDialog = true"
-          />
+            <span
+                v-if="selectedCombo.planType === 'premium'"
+                class="badge premium"
+            >
+          Premium
+        </span>
+
+            <span
+                v-if="selectedCombo.planType === 'enterprise'"
+                class="badge enterprise"
+            >
+          Enterprise
+        </span>
+          </div>
         </div>
 
-        <div class="flex justify-content-end mt-4">
-          <pv-button
-              :label="`Buy - $${selectedCombo.price}`"
-              severity="danger"
-              icon="pi pi-shopping-cart"
-              @click="buyCombo"
-          />
+        <!-- Info -->
+        <div class="combo-detail-body">
+          <p class="combo-detail-desc">
+            {{ selectedCombo.description }}
+          </p>
+
+          <div class="combo-detail-grid">
+            <div class="detail-box">
+              <i class="pi pi-clock"></i>
+              <div>
+                <span>Installation</span>
+                <strong>{{ selectedCombo.installDays }} days</strong>
+              </div>
+            </div>
+
+            <div class="detail-box">
+              <i class="pi pi-building"></i>
+              <div>
+                <span>Provider</span>
+                <strong>{{ getProviderName(selectedCombo.providerId) }}</strong>
+              </div>
+            </div>
+
+            <div class="detail-box price-box">
+              <i class="pi pi-tag"></i>
+              <div>
+                <span>Price</span>
+                <strong>${{ selectedCombo.price }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dirección -->
+          <div class="address-select">
+            <span>Send to:</span>
+            <pv-button
+                class="address-btn"
+                :label="selectedAddress?.address || 'Select address'"
+                icon="pi pi-map-marker"
+                @click="addressDialog = true"
+            />
+          </div>
+
+          <!-- Acciones -->
+          <div class="combo-detail-actions">
+            <pv-button
+                label="Buy Now"
+                icon="pi pi-shopping-cart"
+                severity="danger"
+                class="buy-btn"
+                @click="buyCombo"
+            />
+          </div>
         </div>
       </template>
     </pv-dialog>
 
-    <!-- Dialog selección de dirección -->
-    <pv-dialog v-model:visible="addressDialog" header="Select address" modal :style="{ width: '30vw' }">
-      <ul>
+    <!-- DIALOG COMBO -->
+
+
+    <!-- DIALOG ADDRESS -->
+    <pv-dialog v-model:visible="addressDialog" header="Select Address" modal :style="{ width: '30vw' }">
+      <ul class="address-list">
         <li
             v-for="property in properties"
             :key="property.id"
-            class="cursor-pointer mb-2"
             @click="selectAddress(property)"
         >
-          {{ property.name }} - {{ property.address }}
+          <i class="pi pi-home"></i>
+          {{ property.name }} — {{ property.address }}
         </li>
       </ul>
     </pv-dialog>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
@@ -135,8 +205,15 @@ onMounted(async () => {
 });
 
 const providers = computed(() => providerStore.providers || []);
-const properties = computed(() => propertyStore.properties || []);
+const currentUser = computed(() => userStore.user);
+const properties = computed(() => {
+  const all = propertyStore.properties || [];
+  if (!currentUser.value) return [];
+  return all.filter(p => String(p.ownerId) === String(currentUser.value.id));
+});
+
 const devices = computed(() => monitoringStore.iotDevices || []);
+
 
 const visibleCombos = computed(() => providerStore.combos);
 
@@ -157,40 +234,50 @@ function selectAddress(property) {
 
 
 async function buyCombo() {
-  // 1. Validar que haya una propiedad seleccionada
+  // 1. Validar propiedad seleccionada
   if (!selectedAddress.value || !selectedAddress.value.id) {
     alert("Selecciona una propiedad válida primero.");
     return;
   }
 
-  // 2. Validar plan de suscripción
+  // 2. Validar usuario
+  const currentUser = userStore.user;
+  if (!currentUser || !currentUser.id) {
+    alert("Sesión inválida. Vuelve a iniciar sesión.");
+    return;
+  }
+
+  // 3. Validar combo seleccionado
+  if (!selectedCombo.value || !selectedCombo.value.id) {
+    alert("Selecciona un combo válido primero.");
+    return;
+  }
+
+  // 4. Validar plan
   const sub = subscriptionStore.subscription;
-  // Bloqueo para combos Premium
   if (sub?.plan !== "premium" && selectedCombo.value.planType === "premium") {
     alert("Debes tener plan Premium para este combo.");
     return;
   }
-  // Bloqueo para combos Enterprise
   if (selectedCombo.value.planType === "enterprise") {
     alert("Los combos Enterprise no se pueden comprar con tu suscripción actual.");
     return;
   }
 
-  // 1. Actualizar propiedad con combo
+  // 5. Actualizar propiedad
   const updatedProperty = {
     ...selectedAddress.value,
     combos: [...(selectedAddress.value.combos || []), selectedCombo.value]
   };
   await propertyStore.updateProperty(updatedProperty);
 
-  // 2. Crear pago
-  const currentUser = userStore.user;
+  // 6. Crear pago
   const newPayment = {
-    id: Date.now(),
+    id: String(Date.now()),
     comboId: Number(selectedCombo.value.id),
     providerId: Number(selectedCombo.value.providerId),
-    customerId: Number(currentUser?.id),
-    customerName: currentUser?.fullName || "Unknown",
+    customerId: Number(currentUser.id),
+    customerName: currentUser.fullName || "Unknown",
     propertyId: Number(selectedAddress.value.id),
     propertyName: selectedAddress.value.name,
     amount: Number(selectedCombo.value.price),
@@ -199,11 +286,11 @@ async function buyCombo() {
   };
   await paymentStore.createPayment(newPayment);
 
-  // 3. Crear proyecto en Monitoring
+  // 7. Crear proyecto
   const newProject = {
-    id: Date.now(),
-    propertyId: updatedProperty.id,
-    userId: currentUser.id,
+    id: String(Date.now()),
+    propertyId: updatedProperty.id ? String(updatedProperty.id) : null,
+    userId: currentUser.id ? String(currentUser.id) : null,
     name: `Proyecto ${selectedCombo.value.name}`,
     description: `Instalación de ${selectedCombo.value.name}`,
     status: "active",
@@ -211,14 +298,20 @@ async function buyCombo() {
     endDate: null,
     createdAt: new Date().toISOString()
   };
-  await monitoringStore.createProject(newProject);
 
-  // 4. Instalar dispositivos IoT asociados al combo
+
+  const savedProject = await monitoringStore.createProject(newProject);
+  if (!savedProject || !savedProject.id) {
+    alert("No se pudo crear el proyecto.");
+    return;
+  }
+
+  // 8. Crear dispositivos IoT
   if (Array.isArray(selectedCombo.value.devices)) {
     for (const d of selectedCombo.value.devices) {
       await monitoringStore.createDevice({
-        id: Date.now(),
-        projectId: newProject.id,
+        id: String(Date.now() + Math.random()),
+        projectId: savedProject.id,
         type: d.type,
         status: "active",
         installedAt: new Date().toISOString()
@@ -226,11 +319,15 @@ async function buyCombo() {
     }
   }
 
+  // 9. Refrescar proyectos
+  await monitoringStore.fetchProjects();
+
   alert("Combo comprado, proyecto creado e IoT instalados.");
   dialogVisible.value = false;
-  router.push(`/projects/${newProject.id}/devices`);
 
+  router.push(`/projects/${savedProject.id}/devices`);
 }
+
 </script>
 
 
@@ -239,74 +336,313 @@ async function buyCombo() {
   padding: 2rem;
   display: flex;
   justify-content: center;
-  background-color: #f9fafb;
+  background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
   min-height: 100vh;
 }
+
 .new-project-card {
   width: 100%;
-  max-width: 1000px;
-  background: #fff;
-  border-radius: 16px;
-}
-.subtitle {
-  font-size: 1.2rem;
-  margin-bottom: 1.5rem;
-  color: #555;
-}
-.combo-card {
-  transition: transform 0.2s;
-  text-align: center;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  background: #eeeeee;
+  max-width: 1100px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
   padding: 1rem;
 }
-.combo-card:hover {
-  transform: scale(1.02);
-  border-color: #b22222;
+
+/* HEADER */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
 }
+
+.header-icon {
+  font-size: 2rem;
+  color: #b22222;
+}
+
+.page-title {
+  margin: 0;
+  font-weight: 700;
+  color: #111;
+}
+
+/* SECTION */
+
+.section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+  color: #374151;
+}
+
+/* COMBO CARD */
+
+.combo-card {
+  background: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(0,0,0,.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+}
+
+.combo-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 28px rgba(178,34,34,.25);
+}
+
 .combo-img {
   width: 100%;
-  border-radius: 8px;
+  height: 180px;
+  object-fit: cover;
 }
+
+.combo-content {
+  padding: 0.9rem;
+}
+
 .combo-title {
-  margin-top: 0.5rem;
+  margin: 0 0 0.4rem 0;
   font-weight: 600;
-  color: #111111;
+  color: #111827;
 }
-.badge-premium {
-  background: gold;
-  color: #000;
-  padding: 0.2rem 0.5rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  margin-left: 0.5rem;
-}
-.small-providers .provider-card {
+
+.provider-text {
   font-size: 0.85rem;
-  padding: 0.5rem;
+  color: #6b7280;
 }
-.text-black {
+
+/* BADGES */
+
+.badge {
+  font-size: 0.7rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  margin-left: 0.4rem;
+  font-weight: 700;
+}
+
+.badge.premium {
+  background: linear-gradient(135deg, gold, orange);
   color: #000;
 }
-.combo-card,
-.combo-card h3,
-.combo-card p {
-  color: #111111 !important;
-}
-.provider-card,
-.provider-card h3,
-.provider-card p {
-  color: #ffffff !important;
-  background-color: #373737;
-}
-.badge-enterprise {
-  background: #3333cc;
+
+.badge.enterprise {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
   color: #fff;
-  padding: 0.2rem 0.5rem;
-  border-radius: 6px;
-  font-size: 0.8rem;
-  margin-left: 0.5rem;
 }
+
+/* PROVIDERS */
+
+.provider-card {
+  background: rgba(0,0,0,.75);
+  border-radius: 14px;
+  padding: 0.9rem;
+  text-align: center;
+  color: #fff;
+  transition: transform 0.25s ease;
+}
+
+.provider-card:hover {
+  transform: translateY(-4px);
+}
+
+.provider-card h4 {
+  margin: 0 0 0.3rem;
+  font-size: 1rem;
+}
+
+.provider-card p {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
+/* DIALOG */
+
+.dialog-title {
+  font-weight: 700;
+  color: #111;
+}
+
+.dialog-desc {
+  color: #555;
+}
+
+.select-address {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1.2rem;
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+/* ADDRESS LIST */
+
+.address-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.address-list li {
+  padding: 0.6rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.address-list li:hover {
+  background: #f1f5f9;
+}
+/* DIALOG */
+
+.combo-dialog :deep(.p-dialog-content) {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 18px;
+}
+
+/* HERO */
+
+.combo-detail-hero {
+  position: relative;
+  height: 220px;
+}
+
+.combo-detail-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+
+.combo-detail-overlay h2 {
+  margin: 0;
+  font-weight: 700;
+  color: #111;
+}
+
+/* BODY */
+
+.combo-detail-body {
+  padding: 1.2rem;
+  color: #111;
+}
+
+.combo-detail-desc {
+  color: #555;
+  font-size: .95rem;
+  margin-bottom: 1.2rem;
+}
+
+/* INFO GRID */
+
+.combo-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
+  margin-bottom: 1.2rem;
+}
+
+.detail-box {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem;
+  border-radius: 12px;
+  background: #f3f4f6;
+  font-size: 0.85rem;
+}
+
+.detail-box i {
+  font-size: 1.2rem;
+  color: #b22222;
+}
+
+.detail-box span {
+  color: #6b7280;
+}
+
+.detail-box strong {
+  display: block;
+  font-weight: 700;
+}
+
+.price-box {
+  background: rgba(178,34,34,.1);
+}
+
+/* ADDRESS */
+
+.address-select {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.address-btn {
+  border-radius: 999px;
+}
+
+/* ACTIONS */
+
+.combo-detail-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.buy-btn {
+  border-radius: 12px;
+  font-weight: 700;
+  padding: 0.7rem 1.5rem;
+  box-shadow: 0 6px 16px rgba(178,34,34,.4);
+}
+
+/* BADGES */
+
+.badge {
+  width: fit-content;
+  margin-top: 0.3rem;
+  font-size: .7rem;
+  padding: .15rem .6rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.badge.premium {
+  background: linear-gradient(135deg, gold, orange);
+  color: #000;
+}
+
+.badge.enterprise {
+  background: linear-gradient(135deg, #2563eb, #3b82f6);
+  color: white;
+}
+.combo-detail-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.1), rgba(255,255,255,.95));
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1rem;
+  color: #dadada;
+}.combo-dialog :deep(.p-dialog) {
+   background: white !important;
+
+ }
+.combo-dialog :deep(.p-dialog) {
+  background: white !important;
+}
+
 
 </style>

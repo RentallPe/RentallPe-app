@@ -1,16 +1,32 @@
-import {Notification} from "@/Monitoring/domain/model/notification.entity.js";
+import { Notification } from "@/Monitoring/domain/model/notification.entity.js";
 
 export class NotificationAssembler {
     static toEntityFromResource(resource) {
-        return new Notification({...resource});
+        if (!resource) return null;
+        return new Notification({
+            id: String(resource.id),
+            userId: String(resource.userId),
+            projectId: String(resource.projectId),
+            message: resource.message ?? "",
+            createdAt: resource.createdAt ?? new Date().toISOString()
+        });
     }
 
     static toEntitiesFromResponse(response) {
-        if(response.status !== 200) {
-            console.error(`${response.status}: ${response.statusText}`);
+        if (!response) {
+            console.error("NotificationAssembler: response vacío");
             return [];
         }
-        let resources = response.data instanceof Array ? response.data : response.data['notifications'];
-        return resources.map(resource => this.toEntityFromResource(resource));
+
+        // Si es array plano
+        const resources = Array.isArray(response)
+            ? response
+            : Array.isArray(response.data)
+                ? response.data
+                : response.data?.notifications ?? [];
+
+        return Array.isArray(resources)
+            ? resources.map(r => this.toEntityFromResource(r)).filter(Boolean)
+            : [];
     }
 }

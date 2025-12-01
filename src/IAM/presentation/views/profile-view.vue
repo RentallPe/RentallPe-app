@@ -1,133 +1,242 @@
 <template>
   <div class="profile-wrapper">
-    <pv-card class="profile-card">
+    <pv-card class="profile-card glass">
+
+      <!-- HEADER -->
       <template #title>
-        <div class="flex align-items-center gap-2">
-          <i class="pi pi-user text-2xl"></i>
-          <h2 class="m-0 title">{{ t('profile.title') }}</h2>
+        <div class="profile-header">
+          <div class="flex align-items-center gap-3">
+            <i class="pi pi-user profile-icon"></i>
+            <h2 class="title">{{ t('profile.title') }}</h2>
+          </div>
+
           <router-link to="/edit-profile">
-            <pv-button icon="pi pi-pencil" size="small" />
+            <pv-button icon="pi pi-pencil" size="small" rounded />
           </router-link>
         </div>
       </template>
 
       <template #content>
-        <!-- Datos generales -->
+
+        <!-- INFO GENERAL -->
         <div v-if="!loading && user" class="profile-info grid grid-reset">
           <div class="col-12 md:col-4 flex justify-content-center col-fix">
-            <pv-avatar :image="avatarUrl" shape="circle" size="xlarge" class="shadow-2 border-circle" />
+            <pv-avatar
+                :image="avatarUrl"
+                shape="circle"
+                size="xlarge"
+                class="profile-avatar"
+            />
           </div>
 
           <div class="col-12 md:col-8 col-fix">
             <h3 class="section">{{ t('profile.information') }}</h3>
+
             <div class="info-grid">
-              <div class="info-item"><span class="info-label">{{ t('profile.name') }}</span><span class="info-value">{{ user.fullName || '—' }}</span></div>
-              <div class="info-item"><span class="info-label">Email</span><span class="info-value">{{ user.email || '—' }}</span></div>
-              <div class="info-item"><span class="info-label">{{ t('profile.phone') }}</span><span class="info-value">{{ user.phone || '—' }}</span></div>
-              <div class="info-item"><span class="info-label">Role</span><span class="info-value">{{ user.role || '—' }}</span></div>
-              <div class="info-item"><span class="info-label">Created At</span><span class="info-value">{{ createdAtText }}</span></div>
+              <div class="info-item">
+                <span class="info-label">{{ t('profile.name') }}</span>
+                <span class="info-value">{{ user.fullName || '—' }}</span>
+              </div>
+
+              <div class="info-item">
+                <span class="info-label">Email</span>
+                <span class="info-value">{{ user.email || '—' }}</span>
+              </div>
+
+              <div class="info-item">
+                <span class="info-label">{{ t('profile.phone') }}</span>
+                <span class="info-value">{{ user.phone || '—' }}</span>
+              </div>
+
+              <div class="info-item">
+                <span class="info-label">Role</span>
+                <span class="info-value role-badge">{{ user.role }}</span>
+              </div>
+
+              <div class="info-item">
+                <span class="info-label">Created At</span>
+                <span class="info-value">{{ createdAtText }}</span>
+              </div>
             </div>
           </div>
         </div>
+
         <div v-else class="loading">Loading…</div>
 
-        <!-- Vista CUSTOMER -->
-        <div class="mt-5" v-if="!loading && user?.role === 'customer'">
+        <!-- ================= CUSTOMER ================= -->
+        <div class="mt-6" v-if="!loading && user?.role === 'customer'">
+
           <h3 class="section">{{ t('profile.paymentMethods') }}</h3>
-          <div class="info-item">
-            <div v-if="!payments || payments.length === 0" class="info-value">—</div>
-            <div v-for="method in payments" :key="method.id" class="payment-item">
-              <span class="info-value">{{ method.type }} **** {{ String(method.number||'').slice(-4) }} (exp: {{ method.expiry }})</span>
+
+          <div class="payment-box">
+            <div v-if="!payments || payments.length === 0" class="muted">—</div>
+
+            <div
+                v-for="method in payments"
+                :key="method.id"
+                class="payment-item"
+            >
+              💳 {{ method.type }} **** {{ String(method.number||'').slice(-4) }}
+              <span class="expiry">(exp: {{ method.expiry }})</span>
             </div>
-            <a href="#" class="add-payment" @click.prevent="showDialog = true">+ {{ t('profile.addAnotherPayment') }}</a>
+
+            <a
+                href="#"
+                class="add-payment"
+                @click.prevent="showDialog = true"
+            >+ {{ t('profile.addAnotherPayment') }}</a>
           </div>
 
-          <h3 class="section mt-5">{{ t('profile.myProperties') }}</h3>
+          <!-- PROPIEDADES -->
+          <h3 class="section mt-6">{{ t('profile.myProperties') }}</h3>
+
           <div class="grid grid-reset">
-            <div v-if="!userProps || userProps.length === 0" class="info-value">No properties yet.</div>
-            <div v-for="property in userProps" :key="property.id" class="col-12 md:col-6 lg:col-4 col-fix">
-              <pv-card class="property-card">
+            <div
+                v-if="!userProps || userProps.length === 0"
+                class="muted"
+            >
+              No properties yet.
+            </div>
+
+            <div
+                v-for="property in userProps"
+                :key="property.id"
+                class="col-12 md:col-6 lg:col-4 col-fix"
+            >
+              <pv-card class="property-card hover-card">
                 <template #header>
                   <router-link :to="`/property/${property.id}`">
-                    <img :src="property.image || ('https://picsum.photos/300/200?random=' + property.id)" alt="Property image" class="property-image" />
+                    <img
+                        :src="property.image || ('https://picsum.photos/300/200?random=' + property.id)"
+                        class="property-image"
+                    />
                   </router-link>
                 </template>
+
                 <template #content>
-                  <h4 class="property-title">{{ property.name || ('Property ' + property.id) }}</h4>
+                  <h4 class="property-title">
+                    {{ property.name || ('Property ' + property.id) }}
+                  </h4>
                   <p class="property-address">{{ property.address }}</p>
                 </template>
               </pv-card>
             </div>
           </div>
+
           <div class="flex justify-content-end mt-4">
             <router-link to="/add-property">
-              <pv-button :label="t('profile.addProperty')" icon="pi pi-plus" severity="success" />
+              <pv-button
+                  :label="t('profile.addProperty')"
+                  icon="pi pi-plus"
+                  severity="success"
+                  class="soft-btn"
+              />
             </router-link>
           </div>
         </div>
 
-        <!-- Vista PROVIDER -->
-        <div class="mt-5" v-if="!loading && user?.role === 'provider'">
+        <!-- ================= PROVIDER ================= -->
+        <div class="mt-6" v-if="!loading && user?.role === 'provider'">
+
           <h3 class="section">My Combos</h3>
+
           <div class="grid grid-reset">
-            <div v-if="!providerCombos || providerCombos.length === 0" class="info-value">No combos yet.</div>
-            <div v-for="combo in providerCombos" :key="combo.id" class="col-12 md:col-6 lg:col-4 col-fix">
-              <pv-card class="combo-card">
+            <div
+                v-if="!providerCombos || providerCombos.length === 0"
+                class="muted"
+            >
+              No combos yet.
+            </div>
+
+            <div
+                v-for="combo in providerCombos"
+                :key="combo.id"
+                class="col-12 md:col-6 lg:col-4 col-fix"
+            >
+              <pv-card class="combo-card hover-card">
+
                 <template #header>
                   <router-link :to="`/combo/${combo.id}`">
-                    <img :src="combo.image || ('https://picsum.photos/400/250?random=' + combo.id)" alt="Combo image" class="combo-image" />
+                    <img
+                        :src="combo.image || ('https://picsum.photos/400/250?random=' + combo.id)"
+                        class="combo-image"
+                    />
                   </router-link>
                 </template>
+
                 <template #content>
                   <h4 class="combo-title">
                     {{ combo.name }}
-                    <span v-if="combo.planType === 'premium'" class="badge-premium">Premium</span>
-                    <span v-if="combo.planType === 'enterprise'" class="badge-enterprise">Enterprise</span>
+
+                    <span v-if="combo.planType === 'premium'" class="badge premium">
+                      Premium
+                    </span>
+
+                    <span v-if="combo.planType === 'enterprise'" class="badge enterprise">
+                      Enterprise
+                    </span>
                   </h4>
+
                   <p class="combo-description">{{ combo.description }}</p>
-                  <p class="combo-price"><strong>Price:</strong> ${{ combo.price }}</p>
+
+                  <p class="combo-price">
+                    <strong>${{ combo.price }}</strong>
+                  </p>
                 </template>
+
               </pv-card>
             </div>
           </div>
+
           <div class="flex justify-content-end mt-4">
             <router-link to="/add-combo">
-              <pv-button label="Add Combo" icon="pi pi-plus" severity="success" />
+              <pv-button label="Add Combo" icon="pi pi-plus" severity="success" class="soft-btn" />
             </router-link>
           </div>
+
         </div>
       </template>
     </pv-card>
 
-
-    <!-- Dialog para agregar método de pago (solo customer) -->
-    <pv-dialog v-model:visible="showDialog" modal :header="t('profile.addPaymentOption')" :style="{ width: '400px' }">
+    <!-- ================= DIALOG PAGO ================= -->
+    <pv-dialog
+        v-model:visible="showDialog"
+        modal
+        :header="t('profile.addPaymentOption')"
+        :style="{ width: '420px' }"
+        class="glass"
+    >
       <div class="p-fluid">
         <div class="field">
-          <label for="cardType">{{ t('profile.type') }}</label>
-          <pv-dropdown id="cardType" v-model="newPayment.type" :options="cardTypes" optionLabel="label" optionValue="value" :placeholder="t('profile.type')" />
+          <label>{{ t('profile.type') }}</label>
+          <pv-dropdown v-model="newPayment.type" :options="cardTypes"
+                       optionLabel="label" optionValue="value" />
         </div>
+
         <div class="field">
-          <label for="cardNumber">{{ t('profile.number') }}</label>
-          <pv-input-mask id="cardNumber" v-model="newPayment.number" mask="9999 9999 9999 9999" placeholder="1234 5678 9012 3456" />
+          <label>{{ t('profile.number') }}</label>
+          <pv-input-mask v-model="newPayment.number" mask="9999 9999 9999 9999" />
         </div>
+
         <div class="field">
-          <label for="expiry">{{ t('profile.expiry') }}</label>
-          <pv-input-mask id="expiry" v-model="newPayment.expiry" mask="99/99" placeholder="MM/YY" />
+          <label>{{ t('profile.expiry') }}</label>
+          <pv-input-mask v-model="newPayment.expiry" mask="99/99" />
         </div>
+
         <div class="field">
-          <label for="cvv">{{ t('profile.cvv') }}</label>
-          <pv-input-mask id="cvv" v-model="newPayment.cvv" mask="999" placeholder="123" />
+          <label>{{ t('profile.cvv') }}</label>
+          <pv-input-mask v-model="newPayment.cvv" mask="999" />
         </div>
       </div>
 
       <template #footer>
-        <pv-button :label="t('profile.cancel')" severity="danger" @click="showDialog = false" />
+        <pv-button :label="t('profile.cancel')" severity="secondary" />
         <pv-button :label="t('profile.accept')" severity="success" @click="savePayment" />
       </template>
     </pv-dialog>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted, computed } from "vue";
@@ -173,7 +282,14 @@ onMounted(async () => {
 // Computed seguros
 const avatarUrl   = computed(() => user.value?.photo || "https://randomuser.me/api/portraits/men/75.jpg");
 const payments    = computed(() => user.value?.paymentMethods ?? []);
-const userProps   = computed(() => propertyStore.properties ?? []);
+const userProps = computed(() => {
+  const allProperties = propertyStore.properties ?? [];
+  if (!user.value) return [];
+  return allProperties.filter(
+      p => String(p.ownerId) === String(user.value.id)
+  );
+});
+
 const providerCombos = computed(() => {
   const u = user.value;
   if (!u || u.role !== "provider") return [];
@@ -207,51 +323,169 @@ async function savePayment() {
 
 
 <style scoped>
-:global(html), :global(body), :global(#app) { background: #f9fafb; color: #111827; }
-:root { color-scheme: light; }
-
 .profile-wrapper{
-  --sbw:260px;
-  margin-left:var(--sbw);
-  width:calc(100% - var(--sbw));
   padding:2rem;
+  background:linear-gradient(135deg,#f8fafc,#eef2f7);
+  min-height:100vh;
+}
+
+.profile-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  background-color: #ffffff !important; /* 👈 fuerza fondo blanco */
+}
+.profile-card :deep(.p-card-body),
+.profile-card :deep(.p-card-content),
+.profile-card :deep(.p-card-title) {
+  background-color: #ffffff !important;
+}
+
+
+/* HEADER */
+.profile-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.profile-icon{
+  font-size:2rem;
+  color:#b91c1c;
+}
+
+.title{
+  margin:0;
+  font-weight:700;
+}
+
+/* AVATAR */
+.profile-avatar{
+  box-shadow:0 0 0 6px rgba(185,28,28,.15), 0 15px 40px rgba(0,0,0,.2);
+}
+
+/* INFO GRID */
+.info-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:1.2rem;
+}
+
+.info-item{
+  display:flex;
+  flex-direction:column;
+  padding:.6rem;
+  border-radius:12px;
   background:#f9fafb;
-  min-height:100dvh;
-  box-sizing:border-box;
-  overflow-x:clip;
 }
 
-.profile-card{ width:100%; max-width:1000px; margin:0 auto; border-radius:16px; overflow:hidden; }
-.profile-card, .p-card { background:#ffffff !important; color:#111827 !important; }
-.title{ color:#111827; }
-.section{ color:#111827; margin-bottom:1rem; }
-
-.grid-reset{ margin-left:0 !important; margin-right:0 !important; }
-.grid-reset > [class*="col-"]{ padding-left:0 !important; padding-right:0 !important; }
-.col-fix{ min-width:0; }
-
-.info-grid{ display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:1.2rem; }
-.info-item{ display:flex; flex-direction:column; padding:.5rem 0; border-bottom:1px solid #e5e7eb; }
-.info-label{ font-size:.85rem; color:#6b7280; margin-bottom:.2rem; }
-.info-value{ font-size:1.05rem; font-weight:500; color:#111827; }
-.add-payment{ font-size:.85rem; color:#d32f2f; margin-top:.3rem; text-decoration:none; cursor:pointer; }
-.loading{ padding:1rem 0; color:#111827; }
-
-.property-card{ border-radius:12px; overflow:hidden; }
-.property-image{ width:100%; height:180px; object-fit:cover; }
-.property-title{ margin:.5rem 0 0; font-weight:600; color:#111827; }
-.property-address{ margin:0; color:#6b7280; }
-
-.combo-card{ border-radius:12px; overflow:hidden; }
-.combo-image{ width:100%; height:180px; object-fit:cover; }
-.combo-title{ margin:.5rem 0 0; font-weight:600; color:#111827; }
-.combo-description{ margin:.2rem 0; color:#6b7280; }
-.combo-price{ margin:0; color:#111827; }
-
-@media (max-width:1280px){
-  .info-grid{ grid-template-columns:1fr; gap:1rem; }
+.info-label{
+  font-size:.8rem;
+  color:#6b7280;
 }
-@media (max-width:1024px){
-  .profile-wrapper{ margin-left:0; width:100%; padding:1rem; }
+
+.info-value{
+  font-weight:600;
+  color:#111827;
+}
+
+/* ROLE */
+.role-badge{
+  text-transform:capitalize;
+  background:#fee2e2;
+  color:#991b1b;
+  padding:.15rem .6rem;
+  border-radius:999px;
+  width:fit-content;
+}
+
+/* HOVER CARDS */
+.hover-card{
+  transition:.25s;
+}
+.hover-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 15px 30px rgba(0,0,0,.15);
+}
+
+/* PROPERTY */
+.property-image,.combo-image{
+  height:180px;
+  object-fit:cover;
+}
+
+.property-title,.combo-title{
+  font-weight:700;
+  margin:.5rem 0 0;
+}
+
+/* BADGES */
+.badge{
+  font-size:.7rem;
+  padding:.15rem .6rem;
+  border-radius:999px;
+  margin-left:.4rem;
+}
+.badge.premium{
+  background:linear-gradient(135deg,gold,orange);
+  color:#000;
+}
+.badge.enterprise{
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:#fff;
+}
+
+/* PAYMENT */
+.payment-box{
+  background:#f9fafb;
+  border-radius:14px;
+  padding:1rem;
+}
+.payment-item{
+  padding:.25rem 0;
+  font-weight:500;
+}
+.expiry{
+  color:#6b7280;
+  font-size:.85rem;
+}
+
+/* BUTTONS */
+.soft-btn{
+  border-radius:999px;
+  padding:.6rem 1.4rem;
+}
+
+/* RESPONSIVE */
+@media (max-width:900px){
+  .info-grid{grid-template-columns:1fr;}
+}
+.profile-card {
+  max-width: 1100px;
+  margin: 0 auto;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  background-color: #ffffff !important;
+  color: #111111 !important;
+}
+
+
+.profile-card h2,
+.profile-card h3,
+.profile-card h4,
+.profile-card p
+ {
+  color: #111111 ;
+}
+.role-badge{
+  text-transform:capitalize;
+  background:#fee2e2;
+  color:#991b1b;
+  padding:.15rem .6rem;
+  border-radius:999px;
+  width:fit-content;
 }
 </style>
