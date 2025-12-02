@@ -7,8 +7,8 @@
           <div class="header-left">
             <i class="pi pi-microchip text-primary text-2xl"></i>
             <div>
-              <h2 class="title">Project Devices</h2>
-              <p class="subtitle">Devices for {{ project?.name }}</p>
+              <h2 class="title">{{ t('devices.title') }}</h2>
+              <p class="subtitle">{{ t('devices.subtitle') }} {{ project?.name }}</p>
             </div>
           </div>
         </div>
@@ -18,7 +18,7 @@
       <template #content>
         <div v-if="projectDevices.length === 0" class="empty-state">
           <i class="pi pi-inbox empty-icon"></i>
-          <p>No hay dispositivos instalados para este proyecto.</p>
+          <p>{{ t('devices.noDevices') }}</p>
         </div>
 
         <div v-else class="grid device-grid">
@@ -34,23 +34,23 @@
                     class="status-badge"
                     :class="device.status === 'active' ? 'active' : 'inactive'"
                 >
-                  {{ device.status }}
+                  {{ t('devices.status.' + device.status) }}
                 </span>
               </div>
 
               <div class="device-body">
-                <p><strong>Installed:</strong> {{ device.installedAt }}</p>
+                <p><strong>{{ t('devices.installed') }}:</strong> {{ device.installedAt }}</p>
 
                 <div class="actions">
                   <pv-button
-                      label="Toggle"
+                      :label="t('devices.toggle')"
                       icon="pi pi-power-off"
                       severity="info"
                       size="small"
                       @click="toggleDevice(device)"
                   />
                   <pv-button
-                      label="Details"
+                      :label="t('devices.details')"
                       icon="pi pi-info-circle"
                       severity="secondary"
                       size="small"
@@ -65,15 +65,14 @@
     </pv-card>
   </div>
 </template>
-
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
-
+import { useI18n } from "vue-i18n";
 const route = useRoute();
 const monitoringStore = useMonitoringStore();
-
+const { t } = useI18n();
 const projectId = String(route.params.id);
 
 const project = computed(() =>

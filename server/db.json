@@ -120,23 +120,23 @@
       "owner": null,
       "combos": [
         {
-          "id": 2,
-          "providerId": 1,
-          "name": "Security Essentials",
-          "description": "Smart locks, motion sensors, and cameras.",
-          "price": 950,
-          "installDays": 3,
-          "image": "https://picsum.photos/400/250?random=2",
-          "planType": "premium",
+          "id": 3,
+          "providerId": 2,
+          "name": "Eco Living Combo",
+          "description": "Solar panels, smart thermostat, water-saving faucets.",
+          "price": 2500,
+          "installDays": 10,
+          "image": "https://picsum.photos/400/250?random=3",
+          "planType": "basic",
           "devices": [
             {
-              "type": "Smart Lock"
+              "type": "Solar Panel"
             },
             {
-              "type": "Motion Sensor"
+              "type": "Smart Thermostat"
             },
             {
-              "type": "Camera"
+              "type": "Water-saving Faucet"
             }
           ]
         }
@@ -204,23 +204,23 @@
       "owner": null,
       "combos": [
         {
-          "id": 1,
+          "id": 2,
           "providerId": 1,
-          "name": "Smart Kitchen Pack",
-          "description": "Includes smart oven, water filter, and lighting.",
-          "price": 1200,
-          "installDays": 5,
-          "image": "https://picsum.photos/400/250?random=1",
+          "name": "Security Essentials",
+          "description": "Smart locks, motion sensors, and cameras.",
+          "price": 950,
+          "installDays": 3,
+          "image": "https://picsum.photos/400/250?random=2",
           "planType": "premium",
           "devices": [
             {
-              "type": "Smart Oven"
+              "type": "Smart Lock"
             },
             {
-              "type": "Water Filter"
+              "type": "Motion Sensor"
             },
             {
-              "type": "Smart Lighting"
+              "type": "Camera"
             }
           ]
         }
@@ -263,6 +263,48 @@
             },
             {
               "type": "Camera"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1764625603675",
+      "ownerId": "1761604976429",
+      "address": "Prubeasvivas123",
+      "ubigeo": "Anderson",
+      "province": "Lima",
+      "region": "Lima",
+      "areaM2": 123,
+      "yearsOld": 5,
+      "status": "available",
+      "createdAt": "2025-12-01T21:46:43.675Z",
+      "image": "https://picsum.photos/300/200?random=99",
+      "name": "TesteodePrubeas",
+      "handoverDate": null,
+      "progress": 0,
+      "alerts": [],
+      "locks": [],
+      "owner": null,
+      "combos": [
+        {
+          "id": 1,
+          "providerId": 1,
+          "name": "Smart Kitchen Pack",
+          "description": "Includes smart oven, water filter, and lighting.",
+          "price": 1200,
+          "installDays": 5,
+          "image": "https://picsum.photos/400/250?random=1",
+          "planType": "premium",
+          "devices": [
+            {
+              "type": "Smart Oven"
+            },
+            {
+              "type": "Water Filter"
+            },
+            {
+              "type": "Smart Lighting"
             }
           ]
         }
@@ -366,7 +408,7 @@
   ],
   "payments": [
     {
-      "id": 1764554427194,
+      "id": "1764554427194",
       "comboId": 2,
       "providerId": 1,
       "customerId": 1761604976429,
@@ -378,7 +420,7 @@
       "status": "pending"
     },
     {
-      "id": 1764555060238,
+      "id": "1764555060238",
       "comboId": 3,
       "providerId": 2,
       "customerId": 1761604976429,
@@ -426,6 +468,100 @@
       "date": "2025-12-01T08:32:14.590Z",
       "propertyName": "Propiedad3",
       "customerName": "Lorenzo"
+    },
+    {
+      "id": "1764620975450",
+      "comboId": "2",
+      "propertyId": "1764546889952",
+      "customerId": "1761604976429",
+      "providerId": "1",
+      "amount": 950,
+      "status": "paid",
+      "date": "2025-12-01T20:29:35.450Z",
+      "propertyName": "New Property4",
+      "customerName": "Humbertoo"
+    },
+    {
+      "id": "1764625444401",
+      "comboId": "3",
+      "propertyId": "1760165416141",
+      "customerId": "1761604976429",
+      "providerId": "2",
+      "amount": 2500,
+      "status": "paid",
+      "date": "2025-12-01T21:44:04.401Z",
+      "propertyName": "Casa Principal",
+      "customerName": "Humbertoo"
+    },
+    {
+      "id": "1764625638001",
+      "comboId": "7",
+      "propertyId": "1764625603675",
+      "customerId": "1761604976429",
+      "providerId": "2",
+      "amount": 5000,
+      "status": "paid",
+      "date": "2025-12-01T21:47:18.001Z",
+      "propertyName": "TesteodePrubeas",
+      "customerName": "Humbertoo"
+    },
+    {
+      "id": "1764627138209",
+      "comboId": "1",
+      "propertyId": "1764625603675",
+      "customerId": "1761604976429",
+      "providerId": "1",
+      "amount": 1200,
+      "status": "confirmed",
+      "date": "2025-12-01T22:12:18.209Z",
+      "propertyName": "TesteodePrubeas",
+      "customerName": "Humbertoo"
+    },
+    {
+      "id": "1764628911249",
+      "comboId": null,
+      "propertyId": null,
+      "customerId": "1761604976429",
+      "providerId": null,
+      "amount": 100,
+      "status": "paid",
+      "date": "2025-12-01T22:41:51.249Z",
+      "propertyName": "Suscripción Premium",
+      "customerName": "Cliente"
+    },
+    {
+      "id": "1764628919859",
+      "comboId": null,
+      "propertyId": null,
+      "customerId": "1761604976429",
+      "providerId": null,
+      "amount": 200,
+      "status": "paid",
+      "date": "2025-12-01T22:41:59.859Z",
+      "propertyName": "Suscripción Enterprise",
+      "customerName": "Cliente"
+    },
+    {
+      "id": "1764629369572",
+      "comboId": null,
+      "propertyId": null,
+      "customerId": "1761604976429",
+      "providerId": null,
+      "amount": 100,
+      "status": "paid",
+      "date": "2025-12-01T22:49:29.572Z",
+      "propertyName": "Suscripción Premium",
+      "customerName": "Cliente"
+    },
+    {
+      "id": "1764631540515",
+      "customerId": "1761604976429",
+      "customerName": "Cliente",
+      "propertyName": "Suscripción Basic",
+      "amount": 50,
+      "date": "2025-12-01T23:25:40.515Z",
+      "status": "pending",
+      "type": "subscription"
     }
   ],
   "subscriptions": [
@@ -485,7 +621,7 @@
       "customerId": "1761604976429",
       "plan": "premium",
       "price": 100,
-      "status": "active",
+      "status": "canceled",
       "startDate": "2025-12-01T03:15:27.501Z",
       "endDate": "2025-12-31T03:15:27.501Z"
     },
@@ -497,6 +633,38 @@
       "status": "active",
       "startDate": "2025-12-01T08:25:43.142Z",
       "endDate": "2025-12-31T08:25:43.142Z"
+    },
+    {
+      "id": "1764628911239",
+      "customerId": "1761604976429",
+      "plan": "premium",
+      "price": 100,
+      "status": "canceled",
+      "startDate": "2025-12-01T22:41:51.239Z"
+    },
+    {
+      "id": "1764628919847",
+      "customerId": "1761604976429",
+      "plan": "enterprise",
+      "price": 200,
+      "status": "canceled",
+      "startDate": "2025-12-01T22:41:59.847Z"
+    },
+    {
+      "id": "1764629369563",
+      "customerId": "1761604976429",
+      "plan": "premium",
+      "price": 100,
+      "status": "canceled",
+      "startDate": "2025-12-01T22:49:29.563Z"
+    },
+    {
+      "id": "1764631540504",
+      "customerId": "1761604976429",
+      "plan": "basic",
+      "price": 50,
+      "status": "active",
+      "startDate": "2025-12-01T23:25:40.504Z"
     }
   ],
   "owners": [
@@ -529,7 +697,7 @@
       "updatedAt": null
     },
     {
-      "id": 1764537400932,
+      "id": "1764537400932",
       "projectId": 1,
       "description": "asdasdas",
       "status": "pending",
@@ -537,7 +705,7 @@
       "updatedAt": null
     },
     {
-      "id": 1764550625633,
+      "id": "1764550625633",
       "projectId": 1,
       "description": "asdasdas asdasdas",
       "status": "pending",
@@ -545,7 +713,7 @@
       "updatedAt": null
     },
     {
-      "id": 1764570341177,
+      "id": "1764570341177",
       "projectId": 1,
       "description": "asda2",
       "status": "pending",
@@ -619,157 +787,25 @@
   "budgets": [],
   "iotDevices": [
     {
-      "id": "1764551357754.2524",
-      "projectId": "1764551357746",
-      "type": "Smart Lock",
+      "id": "1764625656394.2302",
+      "projectId": "1764625656387",
+      "type": "Smart Fridge",
       "status": "active",
-      "installedAt": "2025-12-01T01:09:17.754Z"
+      "installedAt": "2025-12-01T21:47:36.394Z"
     },
     {
-      "id": "1764551357761.6685",
-      "projectId": "1764551357746",
-      "type": "Motion Sensor",
+      "id": "1764625656402.226",
+      "projectId": "1764625656387",
+      "type": "AI Assistant",
       "status": "active",
-      "installedAt": "2025-12-01T01:09:17.761Z"
+      "installedAt": "2025-12-01T21:47:36.402Z"
     },
     {
-      "id": "1764551357766.442",
-      "projectId": "1764551357746",
-      "type": "Camera",
+      "id": "1764625656407.7634",
+      "projectId": "1764625656387",
+      "type": "Automated Curtains",
       "status": "active",
-      "installedAt": "2025-12-01T01:09:17.766Z"
-    },
-    {
-      "id": "1764551378223.8872",
-      "projectId": "1764551378213",
-      "type": "Solar Panel",
-      "status": "active",
-      "installedAt": "2025-12-01T01:09:38.223Z"
-    },
-    {
-      "id": "1764551378232.8018",
-      "projectId": "1764551378213",
-      "type": "Smart Thermostat",
-      "status": "active",
-      "installedAt": "2025-12-01T01:09:38.232Z"
-    },
-    {
-      "id": "1764551378238.6243",
-      "projectId": "1764551378213",
-      "type": "Water-saving Faucet",
-      "status": "active",
-      "installedAt": "2025-12-01T01:09:38.238Z"
-    },
-    {
-      "id": "1764554427208.8894",
-      "projectId": "1764554427201",
-      "type": "Smart Lock",
-      "status": "active",
-      "installedAt": "2025-12-01T02:00:27.208Z"
-    },
-    {
-      "id": "1764554427216.1807",
-      "projectId": "1764554427201",
-      "type": "Motion Sensor",
-      "status": "active",
-      "installedAt": "2025-12-01T02:00:27.216Z"
-    },
-    {
-      "id": "1764554427261.6145",
-      "projectId": "1764554427201",
-      "type": "Camera",
-      "status": "active",
-      "installedAt": "2025-12-01T02:00:27.261Z"
-    },
-    {
-      "id": "1764555060252.809",
-      "projectId": "1764555060245",
-      "type": "Solar Panel",
-      "status": "active",
-      "installedAt": "2025-12-01T02:11:00.252Z"
-    },
-    {
-      "id": "1764555060260.0344",
-      "projectId": "1764555060245",
-      "type": "Smart Thermostat",
-      "status": "active",
-      "installedAt": "2025-12-01T02:11:00.260Z"
-    },
-    {
-      "id": "1764555060266.8948",
-      "projectId": "1764555060245",
-      "type": "Water-saving Faucet",
-      "status": "active",
-      "installedAt": "2025-12-01T02:11:00.266Z"
-    },
-    {
-      "id": "1764556158596.981",
-      "projectId": "1764556158588",
-      "type": "Smart Lock",
-      "status": "active",
-      "installedAt": "2025-12-01T02:29:18.596Z"
-    },
-    {
-      "id": "1764556158604.766",
-      "projectId": "1764556158588",
-      "type": "Motion Sensor",
-      "status": "active",
-      "installedAt": "2025-12-01T02:29:18.604Z"
-    },
-    {
-      "id": "1764556158612.0098",
-      "projectId": "1764556158588",
-      "type": "Camera",
-      "status": "active",
-      "installedAt": "2025-12-01T02:29:18.612Z"
-    },
-    {
-      "id": "1764558934055.7053",
-      "projectId": "1764558934047",
-      "type": "Smart Oven",
-      "status": "active",
-      "installedAt": "2025-12-01T03:15:34.055Z"
-    },
-    {
-      "id": "1764558934063.734",
-      "projectId": "1764558934047",
-      "type": "Water Filter",
-      "status": "active",
-      "installedAt": "2025-12-01T03:15:34.063Z"
-    },
-    {
-      "id": "1764558934069.1904",
-      "projectId": "1764558934047",
-      "type": "Smart Lighting",
-      "status": "active",
-      "installedAt": "2025-12-01T03:15:34.069Z"
-    },
-    {
-      "id": "1764577743918.388",
-      "projectId": "1764577743911",
-      "status": "active",
-      "installedAt": "2025-12-01T08:29:03.918Z"
-    },
-    {
-      "id": "1764577934604.7336",
-      "projectId": "1764577934597",
-      "type": "Smart Lock",
-      "status": "active",
-      "installedAt": "2025-12-01T08:32:14.604Z"
-    },
-    {
-      "id": "1764577934642.7412",
-      "projectId": "1764577934597",
-      "type": "Motion Sensor",
-      "status": "active",
-      "installedAt": "2025-12-01T08:32:14.642Z"
-    },
-    {
-      "id": "1764577934659.8064",
-      "projectId": "1764577934597",
-      "type": "Camera",
-      "status": "active",
-      "installedAt": "2025-12-01T08:32:14.659Z"
+      "installedAt": "2025-12-01T21:47:36.407Z"
     }
   ],
   "notifications": [
@@ -834,96 +870,103 @@
       "paymentId": "1764577934590",
       "status": "unread",
       "date": "2025-12-01T08:54:39.815Z"
+    },
+    {
+      "id": "5782",
+      "providerId": "1",
+      "title": "Pago recibido",
+      "message": "El cliente Humbertoo ha pagado el combo New Property4",
+      "paymentId": "1764620975450",
+      "status": "unread",
+      "date": "2025-12-01T21:45:49.216Z"
+    },
+    {
+      "id": "2d0e",
+      "providerId": "2",
+      "title": "Pago recibido",
+      "message": "El cliente Humbertoo ha pagado el combo TesteodePrubeas",
+      "paymentId": "1764625638001",
+      "status": "unread",
+      "date": "2025-12-01T21:47:36.425Z"
+    },
+    {
+      "id": "29c0",
+      "providerId": "1",
+      "title": "Confirmar instalación",
+      "message": "El cliente Humbertoo ha pagado el combo TesteodePrubeas. Confirma la instalación para crear el proyecto.",
+      "paymentId": "1764627138209",
+      "status": "unread",
+      "date": "2025-12-01T22:12:35.384Z"
+    },
+    {
+      "id": "fa42",
+      "providerId": null,
+      "title": "Confirmar instalación",
+      "message": "El cliente Cliente ha pagado el combo Suscripción Premium. Confirma la instalación para crear el proyecto.",
+      "paymentId": "1764629369572",
+      "status": "unread",
+      "date": "2025-12-01T23:02:22.158Z"
+    },
+    {
+      "id": "acbb",
+      "userId": "1761604976429",
+      "message": "Tu pago del combo Suscripción Premium fue registrado. Espera confirmación del proveedor.",
+      "createdAt": "2025-12-01T23:02:22.166Z",
+      "status": "unread"
+    },
+    {
+      "id": "2efc",
+      "providerId": null,
+      "title": "Confirmar instalación",
+      "message": "El cliente Cliente ha pagado el combo Suscripción Enterprise. Confirma la instalación para crear el proyecto.",
+      "paymentId": "1764628919859",
+      "status": "unread",
+      "date": "2025-12-01T23:02:24.341Z"
+    },
+    {
+      "id": "6a02",
+      "userId": "1761604976429",
+      "message": "Tu pago del combo Suscripción Enterprise fue registrado. Espera confirmación del proveedor.",
+      "createdAt": "2025-12-01T23:02:24.349Z",
+      "status": "unread"
+    },
+    {
+      "id": "07cb",
+      "providerId": null,
+      "title": "Confirmar instalación",
+      "message": "El cliente Cliente ha pagado el combo Suscripción Premium. Confirma la instalación para crear el proyecto.",
+      "paymentId": "1764628911249",
+      "status": "unread",
+      "date": "2025-12-01T23:02:29.145Z"
+    },
+    {
+      "id": "730d",
+      "userId": "1761604976429",
+      "message": "Tu pago del combo Suscripción Premium fue registrado. Espera confirmación del proveedor.",
+      "createdAt": "2025-12-01T23:02:29.152Z",
+      "status": "unread"
     }
   ],
   "projects": [
     {
-      "id": "1764551357746",
-      "propertyId": "1764546889952",
+      "id": "1764625656387",
+      "propertyId": "1764625603675",
       "userId": "1761604976429",
-      "name": "Proyecto Security Essentials",
-      "description": "Instalación de Security Essentials",
+      "name": "Proyecto TesteodePrubeas",
+      "description": "Instalación del combo 7",
       "status": "active",
-      "startDate": "2025-12-01T01:09:17.746Z",
-      "endDate": null,
-      "createdAt": "2025-12-01T01:09:17.746Z"
+      "startDate": "2025-12-01T21:47:36.387Z",
+      "createdAt": "2025-12-01T21:47:36.387Z"
     },
     {
-      "id": "1764551378213",
-      "propertyId": "1761705416141",
+      "id": "1764627448028",
+      "propertyId": "1764625603675",
       "userId": "1761604976429",
-      "name": "Proyecto Eco Living Combo",
-      "description": "Instalación de Eco Living Combo",
+      "name": "Proyecto TesteodePrubeas",
+      "description": "Instalación del combo 1",
       "status": "active",
-      "startDate": "2025-12-01T01:09:38.213Z",
-      "endDate": null,
-      "createdAt": "2025-12-01T01:09:38.213Z"
-    },
-    {
-      "id": "1764554427201",
-      "propertyId": "1761705416141",
-      "userId": "1761604976429",
-      "name": "Proyecto Security Essentials",
-      "description": "Instalación de Security Essentials",
-      "status": "active",
-      "startDate": "2025-12-01T02:00:27.201Z",
-      "endDate": null,
-      "createdAt": "2025-12-01T02:00:27.201Z"
-    },
-    {
-      "id": "1764555060245",
-      "propertyId": "1764546889952",
-      "userId": "1761604976429",
-      "name": "Proyecto Eco Living Combo",
-      "description": "Instalación de Eco Living Combo",
-      "status": "active",
-      "startDate": "2025-12-01T02:11:00.245Z",
-      "endDate": null,
-      "createdAt": "2025-12-01T02:11:00.245Z"
-    },
-    {
-      "id": "1764556158588",
-      "propertyId": "1760165416141",
-      "userId": "1761604976429",
-      "name": "Proyecto Security Essentials",
-      "description": "Instalación de Security Essentials",
-      "status": "active",
-      "startDate": "2025-12-01T02:29:18.588Z",
-      "endDate": null,
-      "createdAt": "2025-12-01T02:29:18.588Z"
-    },
-    {
-      "id": "1764558934047",
-      "propertyId": "1764546889952",
-      "userId": "1761604976429",
-      "name": "Proyecto Smart Kitchen Pack",
-      "description": "Instalación de Smart Kitchen Pack",
-      "status": "active",
-      "startDate": "2025-12-01T03:15:34.047Z",
-      "endDate": null,
-      "createdAt": "2025-12-01T03:15:34.047Z"
-    },
-    {
-      "id": "1764577743911",
-      "propertyId": "1764576601545",
-      "userId": "1764576478809",
-      "name": "Proyecto Combo3",
-      "description": "Instalación de Combo3",
-      "status": "active",
-      "startDate": "2025-12-01T08:29:03.911Z",
-      "endDate": null,
-      "createdAt": "2025-12-01T08:29:03.911Z"
-    },
-    {
-      "id": "1764577934597",
-      "propertyId": "1764576601545",
-      "userId": "1764576478809",
-      "name": "Proyecto Security Essentials",
-      "description": "Instalación de Security Essentials",
-      "status": "active",
-      "startDate": "2025-12-01T08:32:14.597Z",
-      "endDate": null,
-      "createdAt": "2025-12-01T08:32:14.597Z"
+      "startDate": "2025-12-01T22:17:28.028Z",
+      "createdAt": "2025-12-01T22:17:28.028Z"
     }
   ],
   "readings": [

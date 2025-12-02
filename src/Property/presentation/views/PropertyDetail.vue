@@ -9,7 +9,7 @@
             <i class="pi pi-building header-icon"></i>
             <div>
               <h2 class="page-title">{{ property?.name }}</h2>
-              <span class="status-badge">Active</span>
+              <span class="status-badge">{{ t('propertyDetail.active') }}</span>
             </div>
           </div>
 
@@ -31,7 +31,7 @@
       <template #content>
         <div v-if="loading" class="loading-state">
           <i class="pi pi-spin pi-spinner"></i>
-          <p>Loading property...</p>
+          <p>{{ t('propertyDetail.loading') }}</p>
         </div>
 
         <div v-else-if="error" class="error-state">
@@ -50,17 +50,17 @@
           <!-- Info -->
           <div class="col-12 md:col-6 info-panel">
             <div class="info-item">
-              <span>Address</span>
+              <span>{{ t('propertyDetail.address') }}</span>
               <strong>{{ property?.address }}</strong>
             </div>
 
             <div class="info-item">
-              <span>Handover date</span>
-              <strong>{{ property?.handoverDate || 'Not defined' }}</strong>
+              <span>{{ t('propertyDetail.handoverDate') }}</span>
+              <strong>{{ property?.handoverDate || t('propertyDetail.notDefined') }}</strong>
             </div>
 
             <div class="info-item">
-              <span>Progress</span>
+              <span>{{ t('propertyDetail.progress') }}</span>
               <strong>{{ property?.progress }}%</strong>
             </div>
 
@@ -74,7 +74,7 @@
             </div>
 
             <router-link to="/alerts" class="alerts-btn">
-              <pv-button label="View Alerts" icon="pi pi-bell" severity="info" />
+              <pv-button :label="t('propertyDetail.viewAlerts')" icon="pi pi-bell" severity="info" />
             </router-link>
           </div>
         </div>
@@ -84,12 +84,12 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { usePropertyStore } from "@/Property/application/property-store.js";
-
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const store = usePropertyStore();

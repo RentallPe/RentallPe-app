@@ -4,24 +4,24 @@
       <template #title>
         <div class="flex align-items-center gap-2">
           <i class="pi pi-phone text-primary text-2xl"></i>
-          <h2 class="m-0 text-black">Support</h2>
+          <h2 class="m-0 text-black">{{ t('support.title') }}</h2>
         </div>
       </template>
 
       <template #content>
-        <h3 class="text-black mb-3">Our phone contacts</h3>
+        <h3 class="text-black mb-3">{{ t('support.phoneContacts') }}</h3>
         <div class="table-wrap">
           <pv-data-table :value="contacts" class="minimal-table">
-            <pv-column field="department" header="Department" />
-            <pv-column field="number" header="Number" />
+            <pv-column field="department" :header="t('support.department')" />
+            <pv-column field="number" :header="t('support.number')" />
           </pv-data-table>
         </div>
 
-        <h3 class="text-black mb-3 mt-4">Incidents</h3>
+        <h3 class="text-black mb-3 mt-4">{{ t('support.incidents') }}</h3>
         <div class="table-wrap">
           <pv-data-table :value="incidents" class="minimal-table">
-            <pv-column field="id" header="INC number" />
-            <pv-column header="Status">
+            <pv-column field="id" :header="t('support.incNumber')" />
+            <pv-column :header="t('support.status')">
               <template #body="{ data }">
                 <span class="status pending">{{ data.status }}</span>
               </template>
@@ -36,22 +36,22 @@
 
         <div class="flex justify-content-end mt-4">
           <router-link to="/register-incident">
-            <pv-button label="Register incident" icon="pi pi-exclamation-triangle" severity="danger" />
+            <pv-button :label="t('support.registerIncident')" icon="pi pi-exclamation-triangle" severity="danger" />
           </router-link>
         </div>
       </template>
     </pv-card>
 
     <pv-dialog
-      v-model:visible="dialogVisible"
-      header="Incident detail"
-      modal
-      :style="{ width: 'min(90vw, 560px)' }"
+        v-model:visible="dialogVisible"
+        :header="t('support.incidentDetail')"
+        modal
+        :style="{ width: 'min(90vw, 560px)' }"
     >
-      <p><strong>INC:</strong> {{ selected?.id ?? '—' }}</p>
-      <p><strong>Status:</strong> {{ selected?.status ?? '—' }}</p>
-      <p><strong>Date:</strong> {{ formatDate(selected?.createdAt) }}</p>
-      <p><strong>Description:</strong></p>
+      <p><strong>{{ t('support.inc') }}:</strong> {{ selected?.id ?? '—' }}</p>
+      <p><strong>{{ t('support.status') }}:</strong> {{ selected?.status ?? '—' }}</p>
+      <p><strong>{{ t('support.date') }}:</strong> {{ formatDate(selected?.createdAt) }}</p>
+      <p><strong>{{ t('support.description') }}:</strong></p>
       <p>{{ selected?.description ?? '—' }}</p>
     </pv-dialog>
   </div>

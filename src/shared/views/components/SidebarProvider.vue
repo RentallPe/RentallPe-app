@@ -1,8 +1,10 @@
 <template>
   <aside class="sidebar">
     <div class="sidebar-logo">
+      <img src="@/assets/logo-rentalpe.png" alt="RentallPe Logo" class="logo-img" />
       <span class="logo-text">RentallPe</span>
     </div>
+
 
     <nav class="sidebar-nav">
       <router-link to="/dashboard" class="nav-item" active-class="active">
@@ -26,6 +28,16 @@
         <span>{{ t('menu.support') }}</span>
       </router-link>
 
+      <router-link to="/notifications" class="nav-item" active-class="active">
+        <i class="pi pi-inbox"></i>
+        <span>{{ t('notifications.title') }}</span>
+      </router-link>
+      <router-link to="/projects" class="nav-item" active-class="active">
+        <i class="pi pi-briefcase"></i>
+        <span>{{ t('menu.projects') }}</span>
+      </router-link>
+
+
       <router-link to="/alerts" class="nav-item" active-class="active">
         <i class="pi pi-bell"></i>
         <span>{{ t('menu.alerts') }}</span>
@@ -45,8 +57,9 @@
         <pv-select-button v-model="locale" :options="availableLocales" />
         <button class="logout-btn" @click="logout">
           <i class="pi pi-sign-out"></i>
-          <span>Logout</span>
+          <span>{{ t('menu.logout') }}</span>
         </button>
+
       </div>
     </nav>
   </aside>

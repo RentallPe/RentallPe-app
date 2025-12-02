@@ -6,7 +6,7 @@
       <template #title>
         <div class="header">
           <i class="pi pi-home header-icon"></i>
-          <h2 class="page-title">New Project</h2>
+          <h2 class="page-title">{{ t('newProject.title') }}</h2>
         </div>
       </template>
 
@@ -14,7 +14,7 @@
       <template #content>
 
         <!-- COMBOS -->
-        <h3 class="section-title">Our Combos</h3>
+        <h3 class="section-title">{{ t('newProject.combos') }}</h3>
         <div class="grid">
           <div
               v-for="combo in visibleCombos"
@@ -28,8 +28,8 @@
               <div class="combo-content">
                 <h3 class="combo-title">
                   {{ combo.name }}
-                  <span v-if="combo.planType === 'premium'" class="badge premium">Premium</span>
-                  <span v-if="combo.planType === 'enterprise'" class="badge enterprise">Enterprise</span>
+                  <span v-if="combo.planType === 'premium'" class="badge premium">{{ t('newProject.premium') }}</span>
+                  <span v-if="combo.planType === 'enterprise'" class="badge enterprise">{{ t('newProject.enterprise') }}</span>
                 </h3>
 
                 <p class="provider-text">
@@ -42,7 +42,7 @@
         </div>
 
         <!-- PROVIDERS -->
-        <h3 class="section-title mt-6">Providers</h3>
+        <h3 class="section-title mt-6">{{ t('newProject.providers') }}</h3>
         <div class="grid small-providers">
           <div
               v-for="provider in providers"
@@ -60,12 +60,14 @@
 
       </template>
     </pv-card>
+
+    <!-- DIALOG COMBO -->
     <pv-dialog
         v-model:visible="dialogVisible"
         modal
         :style="{ width: '42vw' }"
         class="combo-dialog"
-        header=" "
+        :header="t('newProject.comboDetails')"
     >
       <template v-if="selectedCombo">
         <!-- Imagen -->
@@ -74,19 +76,8 @@
           <div class="combo-detail-overlay">
             <h2>{{ selectedCombo.name }}</h2>
 
-            <span
-                v-if="selectedCombo.planType === 'premium'"
-                class="badge premium"
-            >
-          Premium
-        </span>
-
-            <span
-                v-if="selectedCombo.planType === 'enterprise'"
-                class="badge enterprise"
-            >
-          Enterprise
-        </span>
+            <span v-if="selectedCombo.planType === 'premium'" class="badge premium">{{ t('newProject.premium') }}</span>
+            <span v-if="selectedCombo.planType === 'enterprise'" class="badge enterprise">{{ t('newProject.enterprise') }}</span>
           </div>
         </div>
 
@@ -100,15 +91,15 @@
             <div class="detail-box">
               <i class="pi pi-clock"></i>
               <div>
-                <span>Installation</span>
-                <strong>{{ selectedCombo.installDays }} days</strong>
+                <span>{{ t('newProject.installation') }}</span>
+                <strong>{{ selectedCombo.installDays }} {{ t('newProject.days') }}</strong>
               </div>
             </div>
 
             <div class="detail-box">
               <i class="pi pi-building"></i>
               <div>
-                <span>Provider</span>
+                <span>{{ t('newProject.provider') }}</span>
                 <strong>{{ getProviderName(selectedCombo.providerId) }}</strong>
               </div>
             </div>
@@ -116,7 +107,7 @@
             <div class="detail-box price-box">
               <i class="pi pi-tag"></i>
               <div>
-                <span>Price</span>
+                <span>{{ t('newProject.price') }}</span>
                 <strong>${{ selectedCombo.price }}</strong>
               </div>
             </div>
@@ -124,10 +115,10 @@
 
           <!-- Dirección -->
           <div class="address-select">
-            <span>Send to:</span>
+            <span>{{ t('newProject.sendTo') }}</span>
             <pv-button
                 class="address-btn"
-                :label="selectedAddress?.address || 'Select address'"
+                :label="selectedAddress?.address || t('newProject.selectAddress')"
                 icon="pi pi-map-marker"
                 @click="addressDialog = true"
             />
@@ -136,7 +127,7 @@
           <!-- Acciones -->
           <div class="combo-detail-actions">
             <pv-button
-                label="Buy Now"
+                :label="t('newProject.buyNow')"
                 icon="pi pi-shopping-cart"
                 severity="danger"
                 class="buy-btn"
@@ -147,11 +138,8 @@
       </template>
     </pv-dialog>
 
-    <!-- DIALOG COMBO -->
-
-
     <!-- DIALOG ADDRESS -->
-    <pv-dialog v-model:visible="addressDialog" header="Select Address" modal :style="{ width: '30vw' }">
+    <pv-dialog v-model:visible="addressDialog" :header="t('newProject.selectAddress')" modal :style="{ width: '30vw' }">
       <ul class="address-list">
         <li
             v-for="property in properties"
@@ -166,7 +154,6 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useProviderStore } from "@/Provider/application/provider-store.js";
@@ -177,8 +164,11 @@ import { usePaymentStore } from "@/Rental/application/payment-store.js";
 import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
 import { useRouter } from "vue-router";
 
-const router = useRouter();
 
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
+
+const router = useRouter();
 const providerStore = useProviderStore();
 const propertyStore = usePropertyStore();
 const subscriptionStore = useSubscriptionStore();
@@ -255,13 +245,13 @@ async function buyCombo() {
 
   // 4. Validar plan
   const sub = subscriptionStore.subscription;
-  if (sub?.plan !== "premium" && selectedCombo.value.planType === "premium") {
-    alert("Debes tener plan Premium para este combo.");
-    return;
-  }
-  if (selectedCombo.value.planType === "enterprise") {
-    alert("Los combos Enterprise no se pueden comprar con tu suscripción actual.");
-    return;
+  let allowedCombos = [];
+  if (sub?.plan === "basic") {
+    allowedCombos = providerStore.combos.filter(c => c.planType === "basic");
+  } else if (sub?.plan === "premium") {
+    allowedCombos = providerStore.combos.filter(c => c.planType === "basic" || c.planType === "premium");
+  } else if (sub?.plan === "enterprise") {
+    allowedCombos = providerStore.combos;
   }
 
   // 5. Actualizar propiedad
@@ -285,19 +275,10 @@ async function buyCombo() {
     status: "pending"
   };
   await paymentStore.createPayment(newPayment);
+  alert("Pago pendiente creado. Debes pagarlo antes de acceder al proyecto.");
+  dialogVisible.value = false;
 
-  // 7. Crear proyecto
-  const newProject = {
-    id: String(Date.now()),
-    propertyId: updatedProperty.id ? String(updatedProperty.id) : null,
-    userId: currentUser.id ? String(currentUser.id) : null,
-    name: `Proyecto ${selectedCombo.value.name}`,
-    description: `Instalación de ${selectedCombo.value.name}`,
-    status: "active",
-    startDate: new Date().toISOString(),
-    endDate: null,
-    createdAt: new Date().toISOString()
-  };
+
 
 
   const savedProject = await monitoringStore.createProject(newProject);
@@ -325,7 +306,6 @@ async function buyCombo() {
   alert("Combo comprado, proyecto creado e IoT instalados.");
   dialogVisible.value = false;
 
-  router.push(`/projects/${savedProject.id}/devices`);
 }
 
 </script>

@@ -1,124 +1,143 @@
 {
-  "menu": {
-    "dashboard": "Dashboard",
-    "profile": "Profile",
-    "newProject": "New project +",
-    "myProperties": "My properties",
-    "support": "Support",
-    "alerts": "Alerts",
-    "consumption": "Consumption",
-    "billing": "Billing"
-  },
-  "addProperty": {
-  "title": "Add Property",
-  "uploadPhoto": "Upload Photo",
-  "propertyDirection": "Property Information",
-  "region": "Region",
-  "province": "Province",
-  "address": "Address",
-  "ubigeo": "Ubigeo",
-  "done": "Done"
-},
-  "alerts": {
-    "title": "Alerts",
-    "latest": "Latest alerts",
-    "lock": "Lock"
-  },
-  "billing": {
-    "title": "My pending payments",
-    "address": "Address",
-    "installment": "Installment",
-    "amount": "Amount",
-    "dueDate": "Due date"
-  },
-  "comboDetail": {
-    "description": "Description",
-    "installationTime": "Installation time",
-    "days": "days",
-    "sendTo": "Send to",
-    "selectAddress": "Select address",
-    "price": "Price",
-    "buy": "Buy",
-    "dialogTitle": "Select the address",
-    "alertSelectAddress": "Please select an address first.",
-    "alertPurchased": "Combo purchased and assigned to property!"
-  },
-  "dashboard": {
-    "welcome": "Welcome back!",
-    "myProperties": "My Properties",
-    "viewAll": "View all",
-    "latestAlerts": "Latest Alerts",
-    "seeAlerts": "See alerts",
-    "pendingPayments": "Pending Payments",
-    "goToBilling": "Go to billing",
-    "incidents": "Incidents",
-    "manageIncidents": "Manage incidents",
-    "amount": "Amount",
-    "due": "Due",
-    "status": "Status"
-  },
+
+
   "editProfile": {
-    "title": "Editing my profile",
-    "changePhoto": "Change profile pic",
-    "information": "Information",
-    "name": "Name",
-    "country": "Country",
-    "department": "Department",
+    "title": "Edit Profile",
+    "loading": "Loading…",
+    "changePhoto": "Change photo",
+    "profileInfo": "Profile Information",
+    "fullName": "Full Name",
+    "email": "Email",
+    "phone": "Phone",
+    "password": "Password",
+    "role": "Role",
+    "providerId": "Provider ID",
     "paymentMethods": "Payment Methods",
-    "save": "Save",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "save": "Save changes"
   },
-  "properties": {
-    "title": "My Properties",
-    "handoverDate": "Handover date",
-    "notDefined": "Not defined",
-    "completed": "completed",
-    "addProperty": "Add property"
+
+  "login": {
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "register": "Register",
+    "forgotPassword": "Forgot your password?"
   },
-  "newProject": {
-    "title": "New Project",
-    "ourCombos": "Our combos",
-    "comboDetail": "Combo detail",
-    "installationTime": "Installation time",
-    "days": "days",
-    "sendTo": "Send to",
-    "selectAddress": "Select address",
-    "buy": "Buy",
-    "buyWithPrice": "Buy - $${price}",
-    "alertSelectAddress": "Please select an address first.",
-    "alertPurchased": "Combo purchased and assigned to property!"
-  },
+
   "profile": {
     "title": "My Profile",
-    "information": "Information",
+    "information": "General Information",
     "name": "Name",
-    "country": "Country",
-    "department": "Department",
+    "phone": "Phone",
+    "role": "Role",
+    "createdAt": "Created at",
     "paymentMethods": "Payment Methods",
     "addAnotherPayment": "Add another payment method",
     "myProperties": "My Properties",
-    "addPaymentOption": "Add Payment Option",
+    "addProperty": "Add Property",
+    "myCombos": "My Combos",
+    "addCombo": "Add Combo",
+
+    "addPaymentOption": "Add payment method",
     "type": "Type",
     "number": "Number",
-    "expiry": "Expiration Date",
-    "cvv": "Security Code",
+    "expiry": "Expiry",
+    "cvv": "CVV",
     "cancel": "Cancel",
-    "accept": "Accept"
+    "accept": "Accept",
+
+    "noProperties": "No properties yet.",
+    "noCombos": "No combos yet."
   },
-  "propertyDetail": {
-    "address": "Address",
-    "handoverDate": "Handover date",
-    "notDefined": "Not defined",
-    "progress": "Progress"
+
+  "register": {
+    "fullName": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "repeatPassword": "Repeat password",
+    "selectRole": "Select your role",
+    "customer": "Customer",
+    "provider": "Provider",
+    "register": "Register",
+    "login": "Log In",
+    "forgotPassword": "Forgot your password?"
+  },
+  "alerts": {
+    "title": "Alerts",
+    "loading": "Loading alerts...",
+    "error": "Error",
+    "noProperties": "No properties for this user.",
+    "latest": "Latest alerts",
+    "noAlerts": "No alerts recorded.",
+    "lock": "Lock history",
+    "noLocks": "No lock records."
+  },
+  "newProject": {
+    "title": "New Project",
+    "combos": "Our Combos",
+    "premium": "Premium",
+    "enterprise": "Enterprise",
+    "providers": "Providers",
+    "comboDetails": "Combo Details",
+    "installation": "Installation",
+    "days": "days",
+    "provider": "Provider",
+    "price": "Price",
+    "sendTo": "Send to:",
+    "selectAddress": "Select address",
+    "buyNow": "Buy Now"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "loading": "Loading notifications...",
+    "error": "Error",
+    "noNotifications": "You have no notifications.",
+    "defaultTitle": "Notification",
+    "confirmInstall": "Confirm installation",
+    "delete": "Delete",
+    "status": {
+      "unread": "Unread",
+      "read": "Read"
+    }
+  },
+  "projectDetail": {
+    "title": "Project Detail",
+    "notFound": "Project not found.",
+    "status": "Status",
+    "start": "Start",
+    "devices": "IoT Devices",
+    "notifications": "Notifications",
+    "readings": "Recent readings",
+    "workitems": "Workitems",
+    "viewDevices": "View devices"
+  },
+  "devices": {
+    "title": "Project Devices",
+    "subtitle": "Devices for",
+    "noDevices": "No devices installed for this project.",
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "installed": "Installed",
+    "toggle": "Toggle",
+    "details": "Details"
+  },
+  "projects": {
+    "title": "My Projects",
+    "noProjects": "You have not created any projects yet.",
+    "status": "Status",
+    "start": "Start",
+    "viewDetail": "View detail",
+    "confirmInstall": "Confirm installation"
   },
   "incident": {
     "title": "Register incident",
     "back": "Back",
     "subtitle": "Tell us your problem",
     "placeholder": "Describe the issue you're experiencing...",
-    "send": "Send",
-    "alertEmpty": "Please describe the incident before submitting.",
-    "statusPending": "Pending"
+    "send": "Send"
   },
   "support": {
     "title": "Support",
@@ -130,79 +149,195 @@
     "status": "Status",
     "registerIncident": "Register incident",
     "incidentDetail": "Incident detail",
+    "inc": "INC",
     "date": "Date",
     "description": "Description"
   },
-  "alerts": {
-    "title": "Alerts",
-    "latest": "Latest Alerts",
-    "lock": "Lock Events"
+  "addProperty": {
+    "title": "Add Property",
+    "uploadPhoto": "Upload photo",
+    "propertyInformation": "Property Information",
+    "name": "Name",
+    "address": "Address",
+    "region": "Region",
+    "province": "Province",
+    "ubigeo": "Ubigeo",
+    "areaM2": "Area in m²",
+    "yearsOld": "Years Old",
+    "status": "Status",
+    "handoverDate": "Handover Date",
+    "done": "Done",
+    "statusOptions": {
+      "available": "Available",
+      "sold": "Sold",
+      "maintenance": "Maintenance"
+    }
   },
-  "menu": {
-    "dashboard": "Dashboard",
-    "myCombos": "My Combos",
-    "store": "Store",
-    "support": "Support",
-    "alerts": "Alerts",
-    "payment": "Payments",
-    "profile": "Profile",
-    "subscription": "Subscription"
+  "properties": {
+    "title": "My Properties",
+    "subtitle": "Manage your registered properties",
+    "addProperty": "Add property",
+    "noProperties": "No properties registered yet.",
+    "province": "Province",
+    "region": "Region",
+    "handover": "Handover",
+    "completed": "completed"
+  },
+  "propertyDetail": {
+    "active": "Active",
+    "loading": "Loading property...",
+    "address": "Address",
+    "handoverDate": "Handover date",
+    "notDefined": "Not defined",
+    "progress": "Progress",
+    "viewAlerts": "View Alerts"
   },
   "addCombo": {
     "title": "Add Combo",
-    "uploadImage": "Upload Image",
+    "uploadImage": "Upload image",
     "infoTitle": "Combo Information",
     "name": "Name",
     "description": "Description",
     "price": "Price",
-    "installDays": "Install Days",
-    "imageUrl": "Image URL",
-    "save": "Save",
-    "alerts": {
-      "fillFields": "Please fill all required fields",
-      "created": "Combo created successfully!",
-      "uploadNotImplemented": "Image upload not implemented yet."
-    }
+    "installDays": "Installation days",
+    "planType": "Plan Type",
+    "planOptions": {
+      "basic": "Basic",
+      "premium": "Premium",
+      "enterprise": "Enterprise"
+    },
+    "devicesTitle": "Devices in this combo",
+    "devicePlaceholder": "Smart Lock, Camera...",
+    "noDevices": "No devices added",
+    "save": "Save"
   },
   "editCombo": {
     "title": "Edit Combo",
-    "name": "Combo name",
+    "name": "Name",
     "description": "Description",
     "price": "Price",
-    "installDays": "Install days",
+    "installDays": "Installation days",
     "imageUrl": "Image URL",
     "update": "Update",
-    "cancel": "Cancel",
-    "alerts": {
-      "fillFields": "Please fill all required fields",
-      "updated": "Combo updated successfully!"
-    }
+    "cancel": "Cancel"
   },
   "myCombos": {
     "title": "My Combos",
-    "unnamed": "Unnamed Combo",
-    "noDescription": "No description",
     "price": "Price",
-    "installTime": "Install time",
+    "installTime": "Installation time",
     "days": "days",
-    "add": "Add combo"
+    "devices": "Devices",
+    "add": "Add combo",
+    "planOptions": {
+      "basic": "Basic",
+      "premium": "Premium",
+      "enterprise": "Enterprise"
+    }
   },
   "payments": {
     "title": "Payments",
     "combo": "Combo",
     "customer": "Customer",
     "date": "Date",
-    "noPayments": "No payments yet.",
+    "status": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "noPayments": "No payments registered yet."
+  },
+  "providerDetail": {
+    "contact": "Contact",
+    "combos": "Combos",
+    "premium": "Premium",
+    "enterprise": "Enterprise",
+    "days": "days",
+    "sendTo": "Send to:",
+    "selectAddress": "Select address",
+    "buyNow": "Buy Now"
+  },
+  "billing": {
+    "title": "Billing",
+    "pending": "pending",
+    "address": "Address",
+    "customer": "Customer",
+    "amount": "Amount",
+    "dueDate": "Due Date",
+    "payNow": "Pay Now",
+    "confirmPayment": "Confirm Payment",
+    "totalToPay": "Total to pay",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
     "status": {
       "pending": "Pending",
       "paid": "Paid",
-      "completed": "Completed"
-    },
-    "subscription": {
-      "title": "Subscription Plans"
+      "failed": "Failed"
     }
-
+  },
+  "comboDetail": {
+    "description": "Description",
+    "installTime": "Installation time",
+    "days": "days",
+    "price": "Price",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+  "dashboard": {
+    "welcome": "Welcome to Dashboard",
+    "kpis": {
+      "properties": "Properties",
+      "pendingPayments": "Pending Payments",
+      "subscription": "Subscription"
+    },
+    "myProperties": "My Properties",
+    "viewAll": "View all",
+    "subscription": "Subscription",
+    "currentPlan": "Current Plan",
+    "price": "Price",
+    "manageSubscription": "Manage subscription",
+    "pendingPayments": "Pending Payments",
+    "viewPayments": "View payments",
+    "paymentsChart": "Payments Chart"
+  },
+  "menu": {
+    "dashboard": "Dashboard",
+    "profile": "Profile",
+    "myCombos": "My Combos",
+    "newProject": "New Project",
+    "myProperties": "My Properties",
+    "support": "Support",
+    "projects": "Projects",
+    "alerts": "Alerts",
+    "billing": "Billing",
+    "subscription": "Subscription",
+    "logout": "Logout"
+  },
+  "subscription": {
+    "title": "Subscription",
+    "currentPlan": "Current Plan",
+    "month": "month",
+    "subscribeTo": "Subscribe to {plan}",
+    "upgradeTo": "Upgrade to {plan}",
+    "current": "CURRENT",
+    "activePlan": "Active Plan",
+    "cancel": "Cancel Subscription",
+    "confirmUpgrade": "Confirm Upgrade",
+    "none": "None",
+    "newPlan": "New Plan",
+    "paymentMethod": "Payment Method",
+    "confirm": "Confirm"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "message": "The page you are looking for does not exist or has been moved."
+  },
+  "buttons": {
+    "goHome": "Go back home"
   }
+
+
+
+
 
 
 

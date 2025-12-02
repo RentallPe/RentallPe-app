@@ -4,14 +4,20 @@
       <img src="/src/assets/logo-rentalpe.png" alt="RentalPe Logo" class="logo" />
       <h2 class="brand">RENTALPE</h2>
 
-      <input v-model="email" type="email" placeholder="correo electrónico" class="form-control" />
-      <input v-model="password" type="password" placeholder="contraseña" class="form-control" />
+      <input v-model="email" type="email" :placeholder="t('login.email')" class="form-control" />
+      <input v-model="password" type="password" :placeholder="t('login.password')" class="form-control" />
 
-      <button class="btn btn-login" @click="loginUser">Ingresar</button>
+      <button class="btn btn-login" @click="loginUser">
+        {{ t('login.login') }}
+      </button>
 
       <p class="text-muted mt-3">
-        <a @click="$router.push('/register')" class="link">Registrarse</a> |
-        <a href="#" class="link">¿olvidó su contraseña?</a>
+        <a @click="$router.push('/register')" class="link">
+          {{ t('login.register') }}
+        </a> |
+        <a href="#" class="link">
+          {{ t('login.forgotPassword') }}
+        </a>
       </p>
     </div>
   </div>

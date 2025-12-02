@@ -2,6 +2,8 @@
 import { onMounted, computed } from "vue";
 import { usePropertyStore } from "@/Property/application/property-store.js";
 
+import { useI18n } from "vue-i18n";
+const { t } = useI18n();
 const store = usePropertyStore();
 
 const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
@@ -38,13 +40,13 @@ onMounted(async () => {
           <div class="title-group">
             <i class="pi pi-home header-icon"></i>
             <div>
-              <h2 class="page-title">My Properties</h2>
-              <p class="page-subtitle">Manage your registered properties</p>
+              <h2 class="page-title">{{ t('properties.title') }}</h2>
+              <p class="page-subtitle">{{ t('properties.subtitle') }}</p>
             </div>
           </div>
 
           <router-link to="/add-property">
-            <pv-button label="Add property" icon="pi pi-plus" severity="primary" />
+            <pv-button :label="t('properties.addProperty')" icon="pi pi-plus" severity="primary" />
           </router-link>
         </div>
       </template>
@@ -52,7 +54,7 @@ onMounted(async () => {
       <template #content>
         <div v-if="properties.length === 0" class="empty-state">
           <i class="pi pi-building empty-icon"></i>
-          <p>No properties registered yet.</p>
+          <p>{{ t('properties.noProperties') }}</p>
         </div>
 
         <div v-else class="grid property-grid grid-reset">
@@ -76,13 +78,15 @@ onMounted(async () => {
                 <p class="property-address">{{ property.address }}</p>
 
                 <div class="property-info">
-                  <span><strong>Province:</strong> {{ property.province }}</span>
-                  <span><strong>Region:</strong> {{ property.region }}</span>
-                  <span><strong>Handover:</strong> {{ property.handoverDate }}</span>
+                  <span><strong>{{ t('properties.province') }}:</strong> {{ property.province }}</span>
+                  <span><strong>{{ t('properties.region') }}:</strong> {{ property.region }}</span>
+                  <span><strong>{{ t('properties.handover') }}:</strong> {{ property.handoverDate }}</span>
                 </div>
 
                 <div class="progress-wrapper">
-                  <div class="progress-text">{{ property.progress }}% completed</div>
+                  <div class="progress-text">
+                    {{ property.progress }}% {{ t('properties.completed') }}
+                  </div>
                   <div class="progress-bar">
                     <div
                         class="progress-fill"

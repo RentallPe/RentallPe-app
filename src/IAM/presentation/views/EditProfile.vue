@@ -6,13 +6,13 @@
       <template #title>
         <div class="flex align-items-center gap-2">
           <i class="pi pi-user-edit text-primary text-2xl"></i>
-          <h2 class="m-0 text-black">Edit Profile</h2>
+          <h2 class="m-0 text-black">{{ t('editProfile.title') }}</h2>
         </div>
       </template>
 
       <!-- CONTENT -->
       <template #content>
-        <div v-if="loading">Loading…</div>
+        <div v-if="loading">{{ t('common.loading') }}</div>
 
         <div v-else class="grid">
 
@@ -25,7 +25,7 @@
             <input type="file" ref="fileInput" hidden @change="onPhotoChange" />
 
             <pv-button
-                label="Change photo"
+                :label="t('editProfile.changePhoto')"
                 icon="pi pi-image"
                 class="mt-3"
                 severity="info"
@@ -36,32 +36,32 @@
           <!-- FORM -->
           <div class="col-12 md:col-8">
 
-            <h3 class="text-black mb-3">Profile Information</h3>
+            <h3 class="text-black mb-3">{{ t('editProfile.profileInfo') }}</h3>
 
             <div class="info-grid">
 
               <div class="info-item">
-                <label class="info-label">Full name</label>
+                <label class="info-label">{{ t('editProfile.fullName') }}</label>
                 <pv-input-text v-model="editUser.fullName" class="info-input"/>
               </div>
 
               <div class="info-item">
-                <label class="info-label">Email</label>
+                <label class="info-label">{{ t('editProfile.email') }}</label>
                 <pv-input-text v-model="editUser.email" class="info-input"/>
               </div>
 
               <div class="info-item">
-                <label class="info-label">Phone</label>
+                <label class="info-label">{{ t('editProfile.phone') }}</label>
                 <pv-input-text v-model="editUser.phone" class="info-input"/>
               </div>
 
               <div class="info-item">
-                <label class="info-label">Password</label>
+                <label class="info-label">{{ t('editProfile.password') }}</label>
                 <pv-input-text type="password" v-model="editUser.password" class="info-input"/>
               </div>
 
               <div class="info-item">
-                <label class="info-label">Role</label>
+                <label class="info-label">{{ t('editProfile.role') }}</label>
                 <pv-dropdown
                     v-model="editUser.role"
                     :options="['customer','provider','admin']"
@@ -70,15 +70,14 @@
                 />
               </div>
 
-
               <div v-if="editUser.role === 'provider'" class="info-item">
-                <label class="info-label">Provider ID</label>
+                <label class="info-label">{{ t('editProfile.providerId') }}</label>
                 <pv-input-text v-model="editUser.providerId" class="info-input"/>
               </div>
             </div>
 
             <!-- MÉTODOS DE PAGO -->
-            <h3 class="text-black mt-4">Payment Methods</h3>
+            <h3 class="text-black mt-4">{{ t('editProfile.paymentMethods') }}</h3>
 
             <div v-if="editUser.paymentMethods.length === 0" class="muted">—</div>
 
@@ -87,7 +86,8 @@
                 :key="method.id"
                 class="payment-item"
             >
-              {{ method.type }} **** {{ String(method.number).slice(-4) }} (exp: {{ method.expiry }})
+              {{ method.type }} **** {{ String(method.number).slice(-4) }}
+              (exp: {{ method.expiry }})
 
               <pv-button
                   icon="pi pi-trash"
@@ -100,8 +100,8 @@
 
             <!-- ACCIONES -->
             <div class="flex justify-content-end mt-4 gap-2">
-              <pv-button label="Cancel" severity="secondary" @click="router.push('/profile')" />
-              <pv-button label="Save changes" severity="success" @click="saveUser" />
+              <pv-button :label="t('common.cancel')" severity="secondary" @click="router.push('/profile')" />
+              <pv-button :label="t('common.save')" severity="success" @click="saveUser" />
             </div>
 
           </div>
@@ -110,7 +110,6 @@
     </pv-card>
   </div>
 </template>
-
 
 
 <script setup>

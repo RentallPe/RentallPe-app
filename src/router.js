@@ -23,6 +23,7 @@ import Subscription from "./Subscription/presentation/views/subscription.vue";
 import ProjectDetail from "@/Monitoring/presentation/views/ProjectDetail.vue";
 import ProjectDevices from "@/Monitoring/presentation/views/ProjectDevices.vue";
 import Projects from "@/Monitoring/presentation/views/Projects.vue";
+import Notifications from "@/Monitoring/presentation/views/Notifications.vue";
 
 
 const routes = [
@@ -52,7 +53,7 @@ const routes = [
     { path: "/projects", name: "Projects", component: Projects },
     { path: "/projects/:id", component: ProjectDetail, props: true },
     { path: "/projects/:id/devices", component: ProjectDevices, props: true },
-
+    { path: "/notifications", component: Notifications,props:true}
 
 
 

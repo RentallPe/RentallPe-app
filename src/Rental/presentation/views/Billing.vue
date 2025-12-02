@@ -2,7 +2,15 @@
   <div class="billing-wrapper">
     <pv-card class="profile-card">
       <template #title>
-        <h2 class="page-title">{{ t('billing.title') }}</h2>
+        <div class="billing-header">
+          <div class="title-block">
+            <i class="pi pi-credit-card header-icon"></i>
+            <h2 class="page-title">{{ t('billing.title') }}</h2>
+          </div>
+          <span class="payment-count">
+            {{ pendingPayments.length }} {{ t('billing.pending') }}
+          </span>
+        </div>
       </template>
 
       <template #content>
@@ -14,32 +22,37 @@
           >
             <pv-card class="billing-card">
               <template #title>
-                <h3 class="m-0 text-black">{{ payment.propertyName }}</h3>
+                <div class="billing-card-header">
+                  <h3 class="billing-title">{{ payment.propertyName }}</h3>
+                  <span
+                      class="status-chip"
+                      :class="payment.status"
+                  >
+                    {{ t('billing.status.' + payment.status) }}
+                  </span>
+                </div>
               </template>
 
               <template #content>
-                <p class="text-black">
-                  <strong>{{ t('billing.address') }}:</strong> {{ payment.address }}
-                </p>
-                <p class="text-black">
-                  <strong>{{ t('billing.customer') }}:</strong> {{ payment.customerName }}
-                </p>
-                <p class="text-black">
-                  <strong>{{ t('billing.amount') }}:</strong> S/. {{ payment.amount }}
-                </p>
-                <p class="text-black">
-                  <strong>{{ t('billing.dueDate') }}:</strong> {{ payment.maturityDate }}
-                </p>
-                <p class="text-black">
-                  <strong>{{ t('billing.status') }}:</strong> {{ payment.status }}
-                </p>
+                <div class="billing-info">
+                  <p><strong>{{ t('billing.address') }}:</strong> {{ payment.address }}</p>
+                  <p><strong>{{ t('billing.customer') }}:</strong> {{ payment.customerName }}</p>
+                  <p class="amount">
+                    <strong>{{ t('billing.amount') }}:</strong>
+                    S/. {{ payment.amount }}
+                  </p>
+                  <p>
+                    <strong>{{ t('billing.dueDate') }}:</strong>
+                    {{ payment.maturityDate }}
+                  </p>
+                </div>
 
-                <!-- Botón de pago -->
                 <div class="flex justify-content-end mt-3">
                   <pv-button
-                      label="Pagar ahora"
+                      :label="t('billing.payNow')"
                       icon="pi pi-credit-card"
                       severity="success"
+                      class="pay-btn"
                       @click="payCombo(payment)"
                   />
                 </div>
@@ -51,15 +64,42 @@
     </pv-card>
 
     <!-- Diálogo de confirmación -->
-    <pv-dialog v-model:visible="paymentDialogVisible" header="Confirmar Pago" modal :style="{ width: '420px' }">
-      <div v-if="selectedPayment">
-        <p>Vas a pagar con la tarjeta:</p>
-        <p><strong>{{ selectedPayment.cardType }}</strong> **** {{ String(selectedPayment.cardNumber).slice(-4) }}</p>
-        <p>Monto: S/. {{ selectedPayment.amount }}</p>
+    <pv-dialog
+        v-model:visible="paymentDialogVisible"
+        :header="t('billing.confirmPayment')"
+        modal
+        class="payment-dialog"
+        :style="{ width: '420px' }"
+    >
+      <div v-if="selectedPayment" class="payment-summary">
+        <div class="card-preview">
+          <i class="pi pi-credit-card"></i>
+          <div>
+            <p class="card-type">{{ selectedPayment.cardType }}</p>
+            <p class="card-number">
+              **** **** **** {{ String(selectedPayment.cardNumber).slice(-4) }}
+            </p>
+          </div>
+        </div>
+
+        <div class="amount-preview">
+          <span>{{ t('billing.totalToPay') }}</span>
+          <strong>S/. {{ selectedPayment.amount }}</strong>
+        </div>
       </div>
+
       <template #footer>
-        <pv-button label="Cancelar" severity="secondary" @click="paymentDialogVisible=false" />
-        <pv-button label="Confirmar" severity="success" @click="confirmPayment" />
+        <pv-button
+            :label="t('billing.cancel')"
+            severity="secondary"
+            @click="paymentDialogVisible=false"
+        />
+        <pv-button
+            :label="t('billing.confirm')"
+            severity="success"
+            icon="pi pi-check"
+            @click="confirmPayment"
+        />
       </template>
     </pv-dialog>
   </div>
@@ -81,11 +121,10 @@ const pendingPayments = computed(() => {
   if (!currentUser.value) return [];
   return store.payments
       .filter(p => {
-        const isPending = (p.status || "").toLowerCase() !== "paid";
+        const isPending = (p.status || "").toLowerCase() === "pending";
         const isMine =
             String(p.customerId) === String(currentUser.value.id) ||
-            String(p.userId) === String(currentUser.value.id); // 👈 acepta ambos
-        console.log("Comparando:", p.customerId, p.userId, currentUser.value.id, "=>", isMine);
+            String(p.userId) === String(currentUser.value.id);
         return isPending && isMine;
       })
       .map(p => ({
@@ -100,6 +139,7 @@ const pendingPayments = computed(() => {
         cardNumber: p.cardNumber || "0000 0000 0000 0000"
       }));
 });
+
 
 
 onMounted(async () => {
@@ -151,28 +191,157 @@ async function confirmPayment() {
   padding: 2rem;
   display: flex;
   justify-content: center;
-  background-color: #f9fafb;
+  background: linear-gradient(180deg, #f9fafb, #f3f4f6);
   min-height: 100vh;
 }
-.page-title {
-  font-size: 1.8rem;
-  margin-bottom: 1.5rem;
-  color: #000;
-}
-.billing-card {
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
-}
-.text-black {
-  color: #000;
-}
+
+/* MAIN CARD */
 .profile-card {
   width: 100%;
   max-width: 1000px;
   background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
+}
+
+/* HEADER */
+.billing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-block {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.header-icon {
+  font-size: 1.6rem;
+  color: #b22222;
+}
+
+.page-title {
+  font-size: 1.9rem;
+  margin: 0;
+  color: #000;
+  font-weight: 800;
+}
+
+.payment-count {
+  background: #b22222;
+  color: #fff;
+  font-size: 0.75rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+/* BILLING CARD */
+.billing-card {
   border-radius: 16px;
+  transition: all 0.25s ease;
+  background: #fafafa;
+  border: 1px solid #eee;
 }
-.p-component {
-  background-color: #fff;
+
+.billing-card:hover {
+  transform: translateY(-3px);
+  background: #fff;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
+
+.billing-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.billing-title {
+  margin: 0;
+  font-weight: 700;
+  color: #000;
+}
+
+/* INFO */
+.billing-info p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  color: #222;
+}
+
+.amount {
+  font-size: 1.05rem;
+  color: #000;
+}
+
+/* STATUS */
+.status-chip {
+  font-size: 0.7rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.status-chip.pending {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.status-chip.paid {
+  background: #d4edda;
+  color: #155724;
+}
+
+/* BUTTON */
+.pay-btn {
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+/* PAYMENT DIALOG */
+.payment-dialog :deep(.p-dialog-content) {
+  padding-top: 1rem;
+}
+
+.payment-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.card-preview {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(135deg, #1f2933, #374151);
+  color: #fff;
+  padding: 1rem;
+  border-radius: 14px;
+}
+
+.card-preview i {
+  font-size: 2rem;
+}
+
+.card-type {
+  font-weight: 700;
+  margin: 0;
+}
+
+.card-number {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+.amount-preview {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
 </style>

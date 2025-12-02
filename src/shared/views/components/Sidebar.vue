@@ -1,10 +1,13 @@
-
 <template>
   <aside class="sidebar">
+
+    <!-- LOGO -->
     <div class="sidebar-logo">
+      <img src="@/assets/logo-rentalpe.png" alt="RentallPe Logo" class="logo-img" />
       <span class="logo-text">RentallPe</span>
     </div>
 
+    <!-- MENU -->
     <nav class="sidebar-nav">
       <router-link to="/dashboard" class="nav-item" active-class="active">
         <i class="pi pi-home"></i>
@@ -31,6 +34,11 @@
         <span>{{ t('menu.support') }}</span>
       </router-link>
 
+      <router-link to="/notifications" class="nav-item" active-class="active">
+        <i class="pi pi-inbox"></i>
+        <span>{{ t('notifications.title') }}</span>
+      </router-link>
+
       <router-link to="/projects" class="nav-item" active-class="active">
         <i class="pi pi-briefcase"></i>
         <span>{{ t('menu.projects') }}</span>
@@ -39,11 +47,6 @@
       <router-link to="/alerts" class="nav-item" active-class="active">
         <i class="pi pi-bell"></i>
         <span>{{ t('menu.alerts') }}</span>
-      </router-link>
-
-      <router-link to="/consumption" class="nav-item" active-class="active">
-        <i class="pi pi-chart-line"></i>
-        <span>{{ t('menu.consumption') }}</span>
       </router-link>
 
       <router-link to="/billing" class="nav-item" active-class="active">
@@ -55,18 +58,18 @@
         <i class="pi pi-star"></i>
         <span>{{ t('menu.subscription') }}</span>
       </router-link>
-
     </nav>
 
-    <!-- Footer con selector de idioma -->
+    <!-- FOOTER -->
     <div class="sidebar-footer">
       <pv-select-button v-model="locale" :options="availableLocales" />
+
       <button class="logout-btn" @click="logout">
         <i class="pi pi-sign-out"></i>
-        <span>Logout</span>
+        <span>{{ t('menu.logout') }}</span>
       </button>
-
     </div>
+
   </aside>
 </template>
 
@@ -80,75 +83,113 @@ const router = useRouter();
 const userStore = useUserStore();
 
 function logout() {
-
   localStorage.removeItem("currentUser");
   userStore.logout?.();
   router.push("/login");
 }
-
 </script>
 
 <style scoped>
 .sidebar {
-  width: 230px;
-  background-color: #f76c6c;
-  color: #000;
+  width: 240px;
   height: 100vh;
+  position: fixed;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 1.5rem 0;
-  position: fixed;
+  background: linear-gradient(180deg, #f76c6c 0%, #e74c3c 100%);
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
 }
 
+/* LOGO */
 .sidebar-logo {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-weight: bold;
-  font-size: 1.1rem;
-  padding: 0 1rem;
+  gap: 0.6rem;
+  padding: 0 1.2rem;
+  font-weight: 800;
+  font-size: 1.2rem;
+  color: #fff;
 }
 
 .logo-img {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
 }
 
+.logo-text {
+  letter-spacing: 1px;
+}
+
+/* NAV */
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem;
+  gap: 0.5rem;
+  padding: 1rem 0.8rem;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 1rem;
-  border-radius: 8px;
+  gap: 0.8rem;
+  padding: 0.7rem 1rem;
+  border-radius: 10px;
   text-decoration: none;
-  color: black;
+  color: #fff;
   font-weight: 500;
-  transition: background 0.2s;
+  transition: all 0.25s ease;
+}
+
+.nav-item i {
+  font-size: 1.1rem;
+  min-width: 20px;
 }
 
 .nav-item:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateX(4px);
 }
 
 .active {
-  background-color: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
 }
 
+/* FOOTER */
 .sidebar-footer {
   display: flex;
-  justify-content: space-evenly;
-  padding: 1rem 0;
-  font-size: 1.2rem;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
 }
+
+/* LOGOUT */
+.logout-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: none;
+  background: rgba(0, 0, 0, 0.25);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+/* PRIME SELECT BUTTON */
 .p-togglebutton {
-  background: #a14949;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 </style>

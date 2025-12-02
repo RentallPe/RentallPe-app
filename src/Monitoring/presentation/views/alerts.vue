@@ -9,11 +9,14 @@
       </template>
 
       <template #content>
-        <div v-if="loading" class="empty-text">Cargando alertas...</div>
-        <div v-else-if="error" class="empty-text">Error: {{ error }}</div>
+        <div v-if="loading" class="empty-text">{{ t('alerts.loading') }}</div>
+
+        <div v-else-if="error" class="empty-text">{{ t('alerts.error') }}: {{ error }}</div>
+
         <div v-else-if="!properties.length" class="empty-text">
-          No hay propiedades para este usuario.
+          {{ t('alerts.noProperties') }}
         </div>
+
 
         <div
             v-for="property in properties"

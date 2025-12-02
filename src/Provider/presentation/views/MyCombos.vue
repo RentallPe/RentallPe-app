@@ -74,7 +74,7 @@ return [];
               <template #content>
                 <h3 class="combo-title">
                   {{ combo.name }}
-                  <span :class="['plan-badge', combo.planType]">{{ combo.planType }}</span>
+                  <span :class="['plan-badge', combo.planType]"> {{ t('myCombos.planOptions.' + combo.planType) }}</span>
                 </h3>
                 <p class="combo-description">{{ combo.description }}</p>
                 <p><strong>{{ t("myCombos.price") }}:</strong> ${{ combo.price }}</p>

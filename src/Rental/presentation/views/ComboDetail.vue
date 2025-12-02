@@ -24,28 +24,31 @@
 
           <!-- Descripción -->
           <div class="col-12 md:col-4">
-            <h3>Description</h3>
+            <h3>{{ t("comboDetail.description") }}</h3>
             <p>{{ combo?.description }}</p>
-            <p><strong>Installation time:</strong> {{ combo?.installDays }} days</p>
+            <p>
+              <strong>{{ t("comboDetail.installTime") }}:</strong>
+              {{ combo?.installDays }} {{ t("comboDetail.days") }}
+            </p>
           </div>
 
           <!-- Acciones del proveedor -->
           <div class="col-12 md:col-4 flex flex-column justify-content-between">
             <div>
-              <h3>Price</h3>
+              <h3>{{ t("comboDetail.price") }}</h3>
               <p class="price-text">$ {{ combo?.price }}</p>
             </div>
 
             <div class="mt-auto flex gap-2">
               <pv-button
-                  label="Edit"
+                  :label="t('comboDetail.edit')"
                   icon="pi pi-pencil"
                   severity="info"
                   class="w-full"
                   @click="editCombo"
               />
               <pv-button
-                  label="Delete"
+                  :label="t('comboDetail.delete')"
                   icon="pi pi-trash"
                   severity="danger"
                   class="w-full"

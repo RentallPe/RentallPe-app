@@ -131,31 +131,34 @@ function onImageChange(e) {
 
               <!-- PLAN TYPE -->
               <div class="info-item">
-                <label class="info-label">Plan Type</label>
+                <label class="info-label">{{ t("addCombo.planType") }}</label>
                 <pv-dropdown
                     v-model="form.planType"
-                    :options="['basic','premium','enterprise']"
+                    :options="[
+                      { label: t('addCombo.planOptions.basic'), value: 'basic' },
+                      { label: t('addCombo.planOptions.premium'), value: 'premium' },
+                      { label: t('addCombo.planOptions.enterprise'), value: 'enterprise' }
+                    ]"
                     class="info-input"
                 />
-                <span :class="['plan-badge', form.planType]">{{ form.planType }}</span>
+                <span :class="['plan-badge', form.planType]">{{ t('addCombo.planOptions.' + form.planType) }}</span>
               </div>
-
 
             </div>
 
             <!-- DEVICES -->
-            <h3 class="text-black mt-4">Devices in this combo</h3>
+            <h3 class="text-black mt-4">{{ t("addCombo.devicesTitle") }}</h3>
 
             <div class="flex gap-2 mb-2">
               <pv-input-text
                   v-model="deviceInput"
-                  placeholder="Smart Lock, Camera..."
+                  :placeholder="t('addCombo.devicePlaceholder')"
                   class="info-input w-full"
               />
               <pv-button icon="pi pi-plus" @click="addDevice"/>
             </div>
 
-            <div v-if="form.devices.length === 0" class="muted">No devices added</div>
+            <div v-if="form.devices.length === 0" class="muted">{{ t("addCombo.noDevices") }}</div>
 
             <div v-for="(d,i) in form.devices" :key="i" class="device-item">
               {{ d }}

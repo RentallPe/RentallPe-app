@@ -4,43 +4,43 @@
       <template #title>
         <div class="flex align-items-center gap-2">
           <i class="pi pi-home text-primary text-2xl"></i>
-          <h2 class="m-0 text-black">Detalle del Proyecto</h2>
+          <h2 class="m-0 text-black">{{ t('projectDetail.title') }}</h2>
         </div>
       </template>
 
       <template #content>
         <div v-if="!project">
-          <p>Proyecto no encontrado.</p>
+          <p>{{ t('projectDetail.notFound') }}</p>
         </div>
 
         <div v-else>
           <h3>{{ project.name }}</h3>
           <p>{{ project.description }}</p>
-          <p><strong>Status:</strong> {{ project.status }}</p>
-          <p><strong>Inicio:</strong> {{ new Date(project.startDate).toLocaleString("es-PE") }}</p>
+          <p><strong>{{ t('projectDetail.status') }}:</strong> {{ project.status }}</p>
+          <p><strong>{{ t('projectDetail.start') }}:</strong> {{ new Date(project.startDate).toLocaleString("es-PE") }}</p>
 
-          <h4>Dispositivos IoT</h4>
+          <h4>{{ t('projectDetail.devices') }}</h4>
           <ul>
             <li v-for="d in projectDevices" :key="d.id">
               {{ d.type }} - {{ d.status }}
             </li>
           </ul>
 
-          <h4>Notificaciones</h4>
+          <h4>{{ t('projectDetail.notifications') }}</h4>
           <ul>
             <li v-for="n in projectNotifications" :key="n.id">
               {{ n.message }} ({{ new Date(n.createdAt).toLocaleString("es-PE") }})
             </li>
           </ul>
 
-          <h4>Lecturas recientes</h4>
+          <h4>{{ t('projectDetail.readings') }}</h4>
           <ul>
             <li v-for="r in projectReadings" :key="r.id">
               {{ r.metricName }}: {{ r.value }} {{ r.unit }} ({{ new Date(r.timestamp).toLocaleString("es-PE") }})
             </li>
           </ul>
 
-          <h4>Workitems</h4>
+          <h4>{{ t('projectDetail.workitems') }}</h4>
           <ul>
             <li v-for="w in projectWorkitems" :key="w.id">
               {{ w.description }} - {{ w.status }}
@@ -48,7 +48,7 @@
           </ul>
 
           <router-link :to="`/projects/${project.id}/devices`">
-            <pv-button label="Ver dispositivos" icon="pi pi-cog" severity="success" />
+            <pv-button :label="t('projectDetail.viewDevices')" icon="pi pi-cog" severity="success" />
           </router-link>
         </div>
       </template>
@@ -60,10 +60,11 @@
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
+import {useI18n} from "vue-i18n";
 
 const route = useRoute();
 const monitoringStore = useMonitoringStore();
-
+const { t } = useI18n();
 const projectId = String(route.params.id);
 
 const project = computed(() =>

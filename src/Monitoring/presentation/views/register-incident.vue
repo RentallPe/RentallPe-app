@@ -5,12 +5,12 @@
         <div class="flex align-items-center justify-content-between">
           <div class="flex align-items-center gap-2">
             <i class="pi pi-exclamation-triangle text-danger text-2xl"></i>
-            <h2 class="m-0 text-black">Register incident</h2>
+            <h2 class="m-0 text-black">{{ t('incident.title') }}</h2>
           </div>
           <!-- Botón de regresar -->
           <router-link to="/support">
             <pv-button
-                label="Back"
+                :label="t('incident.back')"
                 icon="pi pi-arrow-left"
                 class="back-button"
             />
@@ -19,19 +19,19 @@
       </template>
 
       <template #content>
-        <h3 class="text-black mb-3">Tell us your problem</h3>
+        <h3 class="text-black mb-3">{{ t('incident.subtitle') }}</h3>
 
         <pv-textarea
             v-model="incident.description"
             autoResize
             rows="6"
-            placeholder="Describe the issue you're experiencing..."
+            :placeholder="t('incident.placeholder')"
             class="incident-textarea"
         />
 
         <div class="flex justify-content-end mt-4">
           <pv-button
-              label="Send"
+              :label="t('incident.send')"
               icon="pi pi-send"
               class="send-button"
               @click="submitIncident"
@@ -46,12 +46,12 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
-
+import { useI18n } from "vue-i18n";
 const router = useRouter();
 const store = useMonitoringStore();
 
 const incident = ref({ description: "" });
-
+const { t } = useI18n();
 async function submitIncident() {
   if (!incident.value.description?.trim()) {
     alert("Please describe the incident before submitting.");

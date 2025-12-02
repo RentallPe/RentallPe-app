@@ -1,62 +1,109 @@
 <template>
   <div class="dash-wrap">
     <pv-card class="dash-card">
+      <!-- Título -->
       <template #title>
         <h2 class="page-title">{{ t('dashboard.welcome') }}</h2>
       </template>
 
       <template #content>
         <div class="grid grid-reset">
-          <!-- My Properties -->
+
+          <!-- KPIs -->
+          <div class="col-12">
+            <div class="kpi-grid">
+              <div class="kpi-card fancy-hover">
+                <h4>{{ properties.length }}</h4>
+                <p>{{ t('dashboard.kpis.properties') }}</p>
+              </div>
+
+              <div class="kpi-card fancy-hover">
+                <h4>{{ pendingPayments.length }}</h4>
+                <p>{{ t('dashboard.kpis.pendingPayments') }}</p>
+              </div>
+
+              <div class="kpi-card fancy-hover">
+                <h4>{{ subscription?.plan || '—' }}</h4>
+                <p>{{ t('dashboard.kpis.subscription') }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Propiedad destacada -->
           <div class="col-12 md:col-6 lg:col-4">
-            <div class="section">
+            <div class="section fancy-card">
               <h3 class="section-title">{{ t('dashboard.myProperties') }}</h3>
-              <ul class="summary-list" v-if="user?.properties?.length">
-                <li v-for="p in user.properties.slice(0,3)" :key="p.id">
-                  <img :src="p.image" class="thumb" />
-                  <div>
-                    <p class="text-black">{{ p.name }}</p>
-                    <small>{{ p.address }}</small>
-                  </div>
-                </li>
-              </ul>
+
+              <div v-if="properties?.length" class="featured-property">
+                <img :src="properties[0].image" class="featured-img" />
+                <h4 class="text-black">{{ properties[0].name }}</h4>
+                <small>{{ properties[0].address }}</small>
+              </div>
+
               <router-link to="/my-properties">
                 <pv-button :label="t('dashboard.viewAll')" text />
               </router-link>
             </div>
           </div>
 
-          <!-- Latest Alerts -->
+          <!-- Suscripción -->
           <div class="col-12 md:col-6 lg:col-4">
-            <div class="section">
-              <h3 class="section-title">{{ t('dashboard.latestAlerts') }}</h3>
-              <ul class="summary-list" v-if="latestAlerts?.length">
-                <li v-for="a in latestAlerts" :key="a.id">
-                  <span class="time">{{ formatDate(a.time) }}</span>
-                  <span class="text-black">{{ a.message }}</span>
-                </li>
-              </ul>
-              <router-link to="/alerts">
-                <pv-button :label="t('dashboard.seeAlerts')" text />
+            <div class="section fancy-card">
+              <h3 class="section-title">{{ t('dashboard.subscription') }}</h3>
+
+              <div v-if="subscription">
+                <p class="text-black">
+                  <strong>{{ t('dashboard.currentPlan') }}:</strong>
+                  {{ subscription.plan }}
+                  <span class="sub-badge">{{ subscription.status }}</span>
+                </p>
+
+                <p class="text-black">
+                  <strong>{{ t('dashboard.price') }}:</strong>
+                  S/. {{ subscription.price }}
+                </p>
+              </div>
+
+              <router-link to="/subscription">
+                <pv-button :label="t('dashboard.manageSubscription')" text />
               </router-link>
             </div>
           </div>
 
-          <!-- Incidents -->
+          <!-- Pagos pendientes -->
           <div class="col-12 md:col-6 lg:col-4">
-            <div class="section">
-              <h3 class="section-title">{{ t('dashboard.incidents') }}</h3>
-              <ul class="summary-list" v-if="user?.incidents?.length">
-                <li v-for="inc in user.incidents" :key="inc.id">
-                  <p class="text-black">{{ inc.incNumber }}</p>
-                  <small>{{ t('dashboard.status') }}: {{ inc.status }}</small>
+            <div class="section fancy-card">
+              <h3 class="section-title">{{ t('dashboard.pendingPayments') }}</h3>
+
+              <ul class="summary-list" v-if="pendingPayments?.length">
+                <li
+                    v-for="pay in pendingPayments.slice(0,3)"
+                    :key="pay.id"
+                    class="summary-item"
+                >
+                  <div>
+                    <p class="text-black">{{ pay.propertyName }}</p>
+                    <small>
+                      S/. {{ pay.amount }} — {{ formatDate(pay.date) }}
+                    </small>
+                  </div>
                 </li>
               </ul>
-              <router-link to="/support">
-                <pv-button :label="t('dashboard.manageIncidents')" text />
+
+              <router-link to="/billing">
+                <pv-button :label="t('dashboard.viewPayments')" text />
               </router-link>
             </div>
           </div>
+
+          <!-- Gráfico -->
+          <div class="col-12">
+            <div class="section fancy-card">
+              <h3 class="section-title">{{ t('dashboard.paymentsChart') }}</h3>
+              <v-chart class="chart" :option="paymentChartOptions" autoresize />
+            </div>
+          </div>
+
         </div>
       </template>
     </pv-card>
@@ -65,28 +112,72 @@
 
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
 import { useUserStore } from "@/IAM/application/user.store.js";
+import { useSubscriptionStore } from "@/Subscription/application/subscription-store.js";
+import { usePaymentStore } from "@/Rental/application/payment-store.js";
+import { usePropertyStore } from "@/Property/application/property-store.js";
 
-const userStore = useUserStore();
+// vue-echarts
+import { use } from "echarts/core";
+import { CanvasRenderer } from "echarts/renderers";
+import { BarChart } from "echarts/charts";
+import { TitleComponent, TooltipComponent, LegendComponent, GridComponent } from "echarts/components";
+import ECharts from "vue-echarts";
+
+use([CanvasRenderer, BarChart, TitleComponent, TooltipComponent, LegendComponent, GridComponent]);
+const propertyStore = usePropertyStore();
+
 const { t } = useI18n();
+const userStore = useUserStore();
+const subscriptionStore = useSubscriptionStore();
+const paymentStore = usePaymentStore();
 
-const user = ref({ properties: [], incidents: [] });
+const currentUser = computed(() => userStore.user);
+
+const properties = ref([]);
+const subscription = ref(null);
 const pendingPayments = ref([]);
-const latestAlerts = ref([]);
+
+const paymentChartOptions = ref({
+  title: { text: "Pagos Pendientes" },
+  tooltip: {},
+  legend: { data: ["Monto"] },
+  xAxis: { type: "category", data: [] },
+  yAxis: { type: "value" },
+  series: [{ name: "Monto", type: "bar", data: [] }]
+});
 
 onMounted(async () => {
-  const data = await userStore.fetchUser(); // ahora sí existe
-  if (data) {
-    user.value = data;
+  // Usuario
+  const data = await userStore.fetchUser();
 
-    pendingPayments.value = data.payments || [
-      { id: 1, propertyName: "Urban Cottage", amount: 1200, date: "12/11/2025" },
-      { id: 2, propertyName: "Hillside Home", amount: 3000, date: "20/11/2025" }
-    ];
+  // Propiedades
+  await propertyStore.fetchProperties();
+  properties.value = propertyStore.properties.filter(
+      p => String(p.ownerId) === String(currentUser.value.id)
+  );
 
-    latestAlerts.value = data.properties?.flatMap(p => p.alerts || []).slice(0, 3) || [];
+  // Suscripción
+  await subscriptionStore.load(currentUser.value?.id);
+  if (!subscriptionStore.subscription) {
+    // Simulación: suscribir al plan básico si no hay nada
+    await subscriptionStore.subscribe(subscriptionStore.plans[0], currentUser.value.id);
+  }
+  subscription.value = subscriptionStore.subscription;
+
+  // Pagos
+  await paymentStore.fetchPayments();
+  pendingPayments.value = paymentStore.payments.filter(
+      p => (p.status || "").toLowerCase() !== "paid" &&
+          String(p.customerId) === String(currentUser.value?.id)
+  );
+
+  // Gráfico
+  if (pendingPayments.value.length) {
+    paymentChartOptions.value.xAxis.data = pendingPayments.value.map(p => p.propertyName);
+    paymentChartOptions.value.series[0].data = pendingPayments.value.map(p => p.amount);
   }
 });
 
@@ -95,74 +186,192 @@ function formatDate(dateStr) {
   return d.toLocaleString("es-PE", {
     day: "2-digit",
     month: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit"
+    year: "numeric"
   });
 }
 </script>
 
 
 <style scoped>
-
-.dash-wrap{
-  --sbw: 260px;         
-  --gutter: .75rem;    
-  box-sizing: border-box;
+/* ================= BASE ================= */
+.dash-wrap {
+  --sbw: 260px;
   margin-left: 0;
   width: 100%;
   padding: 1rem;
   min-height: 100dvh;
-  background: #f9fafb;
-  overflow-x: hidden;  
+  background: linear-gradient(180deg, #f9fafb, #eef1f5);
+  overflow-x: hidden;
 }
 
-@media (min-width: 993px){
-  .dash-wrap{
+@media (min-width: 993px) {
+  .dash-wrap {
     margin-left: var(--sbw);
     width: calc(100% - var(--sbw));
     padding: 2rem;
   }
 }
 
-.dash-card{
-  width: min(100%, 1100px);
+.dash-card {
+  width: min(100%, 1120px);
   margin: 0 auto;
-  background: #fff;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.08);
+  padding: 1rem 1.5rem;
+}
+
+/* ================= TITULOS ================= */
+.page-title {
+  font-size: 1.9rem;
+  margin: 0;
+  color: #000;
+  font-weight: 700;
+}
+
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: .6rem;
+  color: #b22222;
+  letter-spacing: .3px;
+}
+
+/* ================= TARJETAS ================= */
+.fancy-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transition: all .25s ease;
+}
+
+.fancy-hover:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+}
+
+/* ================= KPI ================= */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.kpi-card {
   border-radius: 16px;
-  overflow: hidden;
+  padding: 1.2rem 1rem;
+  text-align: center;
+  background: linear-gradient(135deg, #ffffff, #f3f4f6);
 }
 
-
-.grid-reset{ margin-left: 0 !important; margin-right: 0 !important; }
-.grid-reset > [class^="col-"],
-.grid-reset > [class*=" col-"]{
-  padding-left: var(--gutter) !important;
-  padding-right: var(--gutter) !important;
-  min-width: 0;  
+.kpi-card h4 {
+  font-size: 1.8rem;
+  margin: 0;
+  color: #b22222;
+  font-weight: 800;
 }
 
-.page-title{ font-size: 1.8rem; margin: 0; color:#000; }
+.kpi-card p {
+  margin: 0;
+  color: #111;
+  font-size: .85rem;
+  opacity: .8;
+}
 
-.section{ padding: .5rem 0; }
-.section-title{
-  font-size: 1.1rem;
-  font-weight: 600;
+/* ================= FEATURED PROPERTY ================= */
+.featured-property {
+  margin-bottom: 1rem;
+}
+
+.featured-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 14px;
   margin-bottom: .5rem;
-  color:#b22222;
 }
 
-.summary-list{ list-style:none; padding:0; margin:0 0 .5rem 0; }
-.summary-list li{
-  display:flex; align-items:center; gap:.8rem;
-  padding:.4rem 0; border-bottom:1px solid #eee;
+.featured-property h4 {
+  color: #000;
+  margin: .3rem 0 0;
 }
-.thumb{ width:40px; height:40px; border-radius:6px; object-fit:cover; flex: 0 0 40px; }
-.text-black{ color:#000; }
-.time{ font-size:.8rem; color:#666; min-width:84px; }
 
+.featured-property small {
+  color: #444;
+}
 
-@media (max-width: 480px){
-  .page-title{ font-size: 1.4rem; }
-  .section-title{ font-size: 1rem; }
+/* ================= LISTAS ================= */
+.summary-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 .5rem 0;
+}
+
+.summary-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: .55rem 0;
+  border-bottom: 1px solid #ececec;
+}
+
+.summary-item p {
+  margin: 0;
+  color: #000;
+  font-weight: 600;
+}
+
+.summary-item small {
+  color: #444;
+}
+
+/* ================= TEXTO ================= */
+.text-black {
+  color: #000;
+}
+
+/* ================= GRAFICO ================= */
+.chart {
+  width: 100%;
+  height: 320px;
+  padding: 1rem;
+}
+
+/* ================= BADGE SUSCRIPCION ================= */
+.sub-badge {
+  background: #b22222;
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: .7rem;
+  font-weight: 600;
+  margin-left: .4rem;
+}
+
+/* ================= BOTONES PRIME ================= */
+:deep(.p-button.p-button-text) {
+  color: #b22222 !important;
+  font-weight: 600;
+}
+
+:deep(.p-button.p-button-text:hover) {
+  background: rgba(178, 34, 34, 0.08);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 768px) {
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-title {
+    font-size: 1.45rem;
+  }
+
+  .section-title {
+    font-size: 1rem;
+  }
 }
 </style>

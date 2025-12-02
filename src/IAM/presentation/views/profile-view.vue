@@ -49,12 +49,12 @@
               </div>
 
               <div class="info-item">
-                <span class="info-label">Role</span>
+                <span class="info-label">{{ t('profile.role') }}</span>
                 <span class="info-value role-badge">{{ user.role }}</span>
               </div>
 
               <div class="info-item">
-                <span class="info-label">Created At</span>
+                <span class="info-label">{{ t('profile.createdAt') }}</span>
                 <span class="info-value">{{ createdAtText }}</span>
               </div>
             </div>
@@ -69,7 +69,9 @@
           <h3 class="section">{{ t('profile.paymentMethods') }}</h3>
 
           <div class="payment-box">
-            <div v-if="!payments || payments.length === 0" class="muted">—</div>
+            <div v-if="!payments || payments.length === 0" class="muted">
+              {{ t('profile.noPaymentMethods') || '—' }}
+            </div>
 
             <div
                 v-for="method in payments"
@@ -95,7 +97,7 @@
                 v-if="!userProps || userProps.length === 0"
                 class="muted"
             >
-              No properties yet.
+              {{ t('profile.noProperties') }}
             </div>
 
             <div
@@ -138,14 +140,14 @@
         <!-- ================= PROVIDER ================= -->
         <div class="mt-6" v-if="!loading && user?.role === 'provider'">
 
-          <h3 class="section">My Combos</h3>
+          <h3 class="section">{{ t('profile.myCombos') }}</h3>
 
           <div class="grid grid-reset">
             <div
                 v-if="!providerCombos || providerCombos.length === 0"
                 class="muted"
             >
-              No combos yet.
+              {{ t('profile.noCombos') }}
             </div>
 
             <div
@@ -190,7 +192,12 @@
 
           <div class="flex justify-content-end mt-4">
             <router-link to="/add-combo">
-              <pv-button label="Add Combo" icon="pi pi-plus" severity="success" class="soft-btn" />
+              <pv-button
+                  :label="t('profile.addCombo')"
+                  icon="pi pi-plus"
+                  severity="success"
+                  class="soft-btn"
+              />
             </router-link>
           </div>
 

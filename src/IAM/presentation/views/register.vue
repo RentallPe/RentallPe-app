@@ -4,23 +4,28 @@
       <img src="/src/assets/logo-rentalpe.png" alt="RentalPe Logo" class="logo" />
       <h2 class="brand">RENTALPE</h2>
 
-      <input v-model="fullName" placeholder="Nombre" class="form-control" />
-      <input v-model="email" type="email" placeholder="Correo Electrónico" class="form-control" />
-      <input v-model="password" type="password" placeholder="Contraseña" class="form-control" />
-      <input v-model="repeatPassword" type="password" placeholder="Repetir contraseña" class="form-control" />
+      <input v-model="fullName" :placeholder="t('register.fullName')" class="form-control" />
+      <input v-model="email" type="email" :placeholder="t('register.email')" class="form-control" />
+      <input v-model="password" type="password" :placeholder="t('register.password')" class="form-control" />
+      <input v-model="repeatPassword" type="password" :placeholder="t('register.repeatPassword')" class="form-control" />
 
-      <!-- Selector de rol -->
       <select v-model="role" class="form-control">
-        <option disabled value="">Selecciona tu rol</option>
-        <option value="customer">Cliente</option>
-        <option value="provider">Proveedor</option>
+        <option disabled value="">{{ t('register.selectRole') }}</option>
+        <option value="customer">{{ t('roles.customer') }}</option>
+        <option value="provider">{{ t('roles.provider') }}</option>
       </select>
 
-      <button class="btn btn-register" @click="registerUser">Registrar</button>
+      <button class="btn btn-register" @click="registerUser">
+        {{ t('register.register') }}
+      </button>
 
       <p class="text-muted mt-3">
-        <a @click="$router.push('/login')" class="link">Log In</a> |
-        <a href="#" class="link">¿olvidó su contraseña?</a>
+        <a @click="$router.push('/login')" class="link">
+          {{ t('register.login') }}
+        </a> |
+        <a href="#" class="link">
+          {{ t('login.forgotPassword') }}
+        </a>
       </p>
     </div>
   </div>

@@ -4,13 +4,13 @@
       <template #title>
         <div class="flex align-items-center gap-2">
           <i class="pi pi-briefcase text-primary text-2xl"></i>
-          <h2 class="m-0 text-black">Mis Proyectos</h2>
+          <h2 class="m-0 text-black">{{ t('projects.title') }}</h2>
         </div>
       </template>
 
       <template #content>
         <div v-if="myProjects.length === 0">
-          <p class="denyy">No tienes proyectos creados aún.</p>
+          <p class="denyy">{{ t('projects.noProjects') }}</p>
         </div>
 
         <div v-else class="grid">
@@ -18,12 +18,22 @@
             <div class="project-card">
               <h3 class="project-title">{{ p.name }}</h3>
               <p>{{ p.description }}</p>
-              <p><strong>Status:</strong> {{ p.status }}</p>
-              <p><strong>Inicio:</strong> {{ new Date(p.startDate).toLocaleDateString("es-PE") }}</p>
+              <p><strong>{{ t('projects.status') }}:</strong> {{ p.status }}</p>
+              <p><strong>{{ t('projects.start') }}:</strong> {{ new Date(p.startDate).toLocaleDateString("es-PE") }}</p>
 
-              <router-link :to="`/projects/${p.id}`">
-                <pv-button label="Ver detalle" icon="pi pi-search" severity="info" />
+              <!-- Botón de detalle SOLO para customer -->
+              <router-link v-if="!isProvider" :to="`/projects/${p.id}`">
+                <pv-button :label="t('projects.viewDetail')" icon="pi pi-search" severity="info" />
               </router-link>
+
+              <!-- Botón de confirmación SOLO para provider -->
+              <pv-button
+                  v-if="isProvider && p.status === 'paid'"
+                  :label="t('projects.confirmInstall')"
+                  icon="pi pi-check"
+                  severity="success"
+                  @click="confirmInstallation(p.id)"
+              />
             </div>
           </div>
         </div>
@@ -32,53 +42,66 @@
   </div>
 </template>
 
+
 <script setup>
-import { onMounted, computed, watch } from "vue";
+import { onMounted, computed } from "vue";
 import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
 import { useUserStore } from "@/IAM/application/user.store.js";
+import { usePaymentStore } from "@/Rental/application/payment-store.js";
 
 const monitoringStore = useMonitoringStore();
 const userStore = useUserStore();
+const paymentStore = usePaymentStore();
 
 onMounted(async () => {
-  // Primero asegúrate que el usuario esté cargado
   if (!userStore.user) {
-    await userStore.fetchCurrentUser(); // si tienes este método
+    await userStore.fetchCurrentUser();
   }
-
   await monitoringStore.fetchProjects();
   await monitoringStore.fetchDevices();
   await monitoringStore.fetchWorkitems();
+  await paymentStore.fetchPayments(); // importante para que el provider vea pagos pendientes
 });
 
+const isProvider = computed(() => userStore.user?.role === "provider");
+
 const myProjects = computed(() => {
+  if (!userStore.user?.id) return [];
+
+  if (isProvider.value) {
+    // Mostrar pagos pendientes de confirmación
+    return paymentStore.payments
+        .filter(
+            p =>
+                String(p.providerId) === String(userStore.user.providerId) &&
+                p.status === "paid"
+        )
+        .map(p => ({
+          id: p.id,
+          name: `Proyecto pendiente: ${p.propertyName}`,
+          description: `Instalación del combo ${p.comboId}`,
+          status: p.status,
+          startDate: p.date
+        }));
+  }
+
+  // Caso customer → proyectos ya confirmados
   const list = Array.isArray(monitoringStore.projects)
       ? monitoringStore.projects
       : [];
-
-  if (!userStore.user?.id) return [];
-
-  return list.filter(
-      p => String(p.userId) === String(userStore.user.id)
-  );
+  return list.filter(p => String(p.userId) === String(userStore.user.id));
 });
 
-
-watch(
-    () => userStore.user,
-    (val) => {
-      console.log("Usuario cargado:", val);
-    },
-    { immediate: true }
-);
-
-watch(
-    () => monitoringStore.projects,
-    (val) => {
-      console.log("Proyectos cargados:", val);
-    },
-    { immediate: true }
-);
+async function confirmInstallation(id) {
+  try {
+    await paymentStore.confirmPaymentByProvider(id);
+    alert("Proyecto confirmado y creado con éxito");
+    await monitoringStore.fetchProjects(); // refrescar proyectos del customer
+  } catch (err) {
+    console.error(err);
+    alert("No se pudo confirmar el proyecto");
+  }
+}
 </script>
 
 <style scoped>
@@ -123,7 +146,7 @@ watch(
   border-left-color: #f76c6c;
 }
 
-/* TITULO */
+
 .project-title {
   font-weight: 700;
   font-size: 1.1rem;
@@ -131,19 +154,19 @@ watch(
   margin-bottom: 0.3rem;
 }
 
-/* TEXTO */
+
 .project-card p {
   margin: 0.3rem 0;
   color: #444444;
   font-size: 0.95rem;
 }
 
-/* STATUS DESTACADO */
+
 .project-card strong {
   color: #a14949;
 }
 
-/* BOTÓN */
+
 .project-card .p-button {
   margin-top: 0.6rem;
   background: #a14949 !important;
@@ -154,12 +177,12 @@ watch(
   background: #f76c6c !important;
 }
 
-/* TEXTO GENERAL */
+
 .text-black {
   color: #111111;
 }
 
-/* MENSAJE SIN PROYECTOS */
+
 .denyy {
   color: #666666;
   font-size: 1rem;

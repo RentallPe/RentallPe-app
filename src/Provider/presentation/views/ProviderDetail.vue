@@ -20,11 +20,11 @@
       <template #content>
 
         <p class="provider-contact">
-          <strong>Contact:</strong> {{ provider?.contact }}
+          <strong>{{ t("providerDetail.contact") }}:</strong> {{ provider?.contact }}
         </p>
 
         <!-- COMBOS -->
-        <h3 class="section-title mt-4">Combos</h3>
+        <h3 class="section-title mt-4">{{ t("providerDetail.combos") }}</h3>
 
         <div class="grid">
           <div
@@ -42,12 +42,12 @@
                   <span
                       v-if="combo.planType === 'premium'"
                       class="badge premium"
-                  >Premium</span>
+                  >{{ t("providerDetail.premium") }}</span>
 
                   <span
                       v-if="combo.planType === 'enterprise'"
                       class="badge enterprise"
-                  >Enterprise</span>
+                  >{{ t("providerDetail.enterprise") }}</span>
                 </h3>
 
                 <p class="price">${{ combo.price }}</p>
@@ -74,11 +74,11 @@
             <h2>{{ selectedCombo.name }}</h2>
 
             <span v-if="selectedCombo.planType === 'premium'" class="badge premium">
-              Premium
+              {{ t("providerDetail.premium") }}
             </span>
 
             <span v-if="selectedCombo.planType === 'enterprise'" class="badge enterprise">
-              Enterprise
+              {{ t("providerDetail.enterprise") }}
             </span>
           </div>
         </div>
@@ -92,7 +92,7 @@
           <div class="combo-detail-grid">
             <div class="detail-box">
               <i class="pi pi-clock"></i>
-              <strong>{{ selectedCombo.installDays }} days</strong>
+              <strong>{{ selectedCombo.installDays }} {{ t("providerDetail.days") }}</strong>
             </div>
 
             <div class="detail-box">
@@ -108,10 +108,10 @@
 
           <!-- ADDRESS -->
           <div class="address-select">
-            <span>Send to:</span>
+            <span>{{ t("providerDetail.sendTo") }}</span>
             <pv-button
                 class="address-btn"
-                :label="selectedAddress?.address || 'Select address'"
+                :label="selectedAddress?.address || t('providerDetail.selectAddress')"
                 icon="pi pi-map-marker"
                 @click="addressDialog = true"
             />
@@ -120,7 +120,7 @@
           <!-- ACTION -->
           <div class="combo-detail-actions">
             <pv-button
-                label="Buy Now"
+                :label="t('providerDetail.buyNow')"
                 icon="pi pi-shopping-cart"
                 severity="danger"
                 class="buy-btn"
@@ -132,7 +132,7 @@
     </pv-dialog>
 
     <!-- DIALOG ADDRESS -->
-    <pv-dialog v-model:visible="addressDialog" header="Select Address" modal :style="{ width: '30vw' }">
+    <pv-dialog v-model:visible="addressDialog" :header="t('providerDetail.selectAddress')" modal :style="{ width: '30vw' }">
       <ul class="address-list">
         <li
             v-for="property in properties"
