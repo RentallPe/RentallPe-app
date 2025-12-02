@@ -157,6 +157,9 @@ import { useSubscriptionStore } from "@/Subscription/application/subscription-st
 import { useUserStore } from "@/IAM/application/user.store.js";
 import { usePaymentStore } from "@/Rental/application/payment-store.js";
 import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const router = useRouter();
 const route = useRoute();
