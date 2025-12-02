@@ -173,7 +173,20 @@
       "available": "Disponible",
       "sold": "Vendida",
       "maintenance": "Mantenimiento"
-    }
+    },
+    "title": "Agregar Propiedad",
+    "uploadPhoto": "Subir Foto",
+    "propertyInformation": "Información de la Propiedad",
+    "name": "Nombre",
+    "description": "Descripción",
+    "pricePerHour": "Precio por hora",
+    "type": "Tipo",
+    "address": "Dirección",
+    "services": "Servicios",
+    "areaM2": "Área en m²",
+    "status": "Estado",
+    "done": "Guardar"
+
   },
   "properties": {
     "title": "Mis Propiedades",

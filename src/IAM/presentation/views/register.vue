@@ -46,7 +46,6 @@ import {useProviderStore} from "@/Provider/application/provider-store.js"
 import {useI18n} from 'vue-i18n'
 
 const {t, locale} = useI18n()
-
 const router = useRouter()
 const userStore = useUserStore()
 const providerStore = useProviderStore()
@@ -66,56 +65,36 @@ function toggleLang() {
 
 async function registerUser() {
   if (password.value !== repeatPassword.value) {
-    alert("Las contraseñas no coinciden")
-    return
-  }
-
-  if (!role.value) {
-    alert("Debes seleccionar si eres Cliente o Proveedor")
-    return
-  }
-
-  let providerId = null
-
-  if (role.value === "provider") {
-    const newProvider = {
-      id: String(Date.now()),
-      name: fullName.value,
-      contact: email.value
-    }
-
-    try {
-      const createdProvider = await providerStore.createProvider(newProvider)
-      providerId = createdProvider.id
-    } catch (error) {
-      alert("Error al crear el proveedor")
-      return
-    }
+    alert("Las contraseñas no coinciden");
+    return;
   }
 
   const newUser = {
-    id: String(Date.now()),
     fullName: fullName.value,
     email: email.value,
     password: password.value,
     phone: "",
-    createdAt: new Date().toISOString(),
     role: role.value,
-    providerId
-  }
+    providerId: null,
+    photo: "https://randomuser.me/api/portraits/men/75.jpg"
+  };
+
+
 
   try {
-    const user = await userStore.createUser(newUser)
+    const user = await userStore.registerUser(newUser)
     localStorage.setItem("currentUser", JSON.stringify(user))
     userStore.setUser(user)
-
     alert("Registro exitoso, bienvenido " + user.fullName)
     router.push("/dashboard")
   } catch (error) {
+    console.error(error)
     alert("Error al registrar el usuario")
   }
 }
+
 </script>
+
 
 <style scoped>
 .auth-container {

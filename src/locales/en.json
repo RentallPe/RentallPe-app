@@ -174,7 +174,20 @@
       "available": "Available",
       "sold": "Sold",
       "maintenance": "Maintenance"
-    }
+    },
+    "title": "Add Property",
+    "uploadPhoto": "Upload Photo",
+    "propertyInformation": "Property Information",
+    "name": "Name",
+    "description": "Description",
+    "pricePerHour": "Price per hour",
+    "type": "Type",
+    "address": "Address",
+    "services": "Services",
+    "areaM2": "Area (m²)",
+    "status": "Status",
+    "done": "Save"
+
   },
   "properties": {
     "title": "My Properties",

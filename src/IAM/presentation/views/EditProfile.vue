@@ -123,7 +123,8 @@ const store = useUserStore();
 
 // Usuario dinámico desde localStorage
 const saved = localStorage.getItem("currentUser");
-const USER_ID = saved ? JSON.parse(saved).id : null;
+const USER_ID = saved ? JSON.parse(saved).id : 1;
+
 
 const user = ref(null);
 const editUser = ref({

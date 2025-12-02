@@ -257,9 +257,11 @@ const store = useUserStore();
 const propertyStore = usePropertyStore();
 const providerStore = useProviderStore();
 
-// Usuario dinámico desde localStorage
+
 const saved = localStorage.getItem("currentUser");
 const USER_ID = saved ? JSON.parse(saved).id : 1;
+
+
 
 const user       = ref(null);
 const loading    = ref(true);

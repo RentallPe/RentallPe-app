@@ -52,23 +52,32 @@ function toggleLang() {
 }
 
 async function loginUser() {
-  await userStore.fetchUsers()
-  const users = userStore.users ?? []
+  const credentials = { email: email.value, password: password.value };
 
-  const user = users.find(
-      u => u.email.trim().toLowerCase() === email.value.trim().toLowerCase() &&
-          u.password.trim() === password.value.trim()
-  )
+  try {
+    const user = await userStore.loginUser(credentials);
 
-  if (user) {
-    alert(`Bienvenido ${user.fullName}`)
-    localStorage.setItem("currentUser", JSON.stringify(user))
-    userStore.setUser(user)
-    router.push("/dashboard")
-  } else {
-    alert("Correo o contraseña incorrectos")
+    const normalizedUser = {
+      id: user.id ?? user.userId,
+      fullName: user.fullName,
+      email: user.email,
+      role: user.role,
+      providerId: user.providerId,
+      photo: user.photo,
+      token: user.token
+    };
+
+    localStorage.setItem("currentUser", JSON.stringify(normalizedUser));
+    userStore.setUser(normalizedUser);
+    router.push("/dashboard");
+  } catch (error) {
+    console.error("Detalles del error:", error.response?.data);
+    alert("Error al iniciar sesión");
   }
 }
+
+
+
 </script>
 
 <style scoped>

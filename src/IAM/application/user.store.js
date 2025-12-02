@@ -29,6 +29,20 @@ export const useUserStore = defineStore("user", {
             const res = await api.getEndpoint("users").getAll();
             this.users = UserAssembler.toEntitiesFromResponse(res);
         },
+        async registerUser(payload) {
+            const res = await api.getEndpoint("users").customPost("register", payload);
+            return UserAssembler.toEntityFromResource(res);
+        },
+
+        async loginUser(payload) {
+            const res = await api.getEndpoint("users").customPost("login", payload);
+            const logged = UserAssembler.toEntityFromResource(res);
+            this.setUser(logged);
+            localStorage.setItem("currentUser", JSON.stringify(logged));
+            return logged;
+        }
+        ,
+
         async fetchUserById(id) {
             const res = await api.getEndpoint("users").getById(id);
             return UserAssembler.toEntityFromResource(res);

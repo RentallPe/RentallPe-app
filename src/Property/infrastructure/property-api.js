@@ -6,7 +6,7 @@ export class PropertyApi {
     constructor() {
         const api = new BaseApi();
         this.endpoints = {
-            properties: new BaseEndpoint(api, "/properties")
+            properties: new BaseEndpoint(api, "/space")
         };
     }
 
