@@ -1,43 +1,23 @@
 {
-  "menu": {
-    "dashboard": "Panel",
-    "profile": "Perfil",
-    "newProject": "Nuevo proyecto +",
-    "myProperties": "Mis propiedades",
-    "support": "Soporte",
-    "alerts": "Alertas",
-    "consumption": "Consumo",
-    "billing": "Facturación"
-  },
-  "menu": {
-    "dashboard": "Panel",
-    "myCombos": "Mis Combos",
-    "store": "Tienda",
-    "support": "Soporte",
-    "alerts": "Alertas",
-    "payment": "Pagos",
-    "profile": "Perfil",
-    "subscription": "Subscripcion"
-
-  },
-
-
 
   "editProfile": {
-    "title": "Editar Perfil",
-    "loading": "Cargando…",
+    "title": "Editar perfil",
     "changePhoto": "Cambiar foto",
-    "profileInfo": "Información del Perfil",
+    "profileInfo": "Información del perfil",
     "fullName": "Nombre completo",
     "email": "Correo electrónico",
     "phone": "Teléfono",
     "password": "Contraseña",
     "role": "Rol",
-    "providerId": "ID del Proveedor",
-    "paymentMethods": "Métodos de Pago",
-    "cancel": "Cancelar",
-    "save": "Guardar cambios"
+    "providerId": "ID del proveedor",
+    "paymentMethods": "Métodos de pago"
   },
+  "common": {
+    "loading": "Cargando...",
+    "cancel": "Cancelar",
+    "save": "Guardar"
+  }
+,
 
   "login": {
     "email": "Correo electrónico",
@@ -262,12 +242,14 @@
     "customer": "Cliente",
     "date": "Fecha",
     "status": {
-      "paid": "Pagado",
       "pending": "Pendiente",
+      "paid": "Pagado",
+      "completed": "Completado",
       "failed": "Fallido"
     },
     "noPayments": "No hay pagos registrados aún."
   },
+
   "providerDetail": {
     "contact": "Contacto",
     "combos": "Combos",
@@ -305,22 +287,29 @@
     "delete": "Eliminar"
   },
   "dashboard": {
-    "welcome": "Bienvenido al Panel",
+    "welcome": "Bienvenido a tu panel",
     "kpis": {
       "properties": "Propiedades",
       "pendingPayments": "Pagos pendientes",
-      "subscription": "Suscripción"
+      "subscription": "Suscripción",
+      "combos": "Combos",
+      "pendingInstalls": "Instalaciones pendientes",
+      "income": "Ingresos"
     },
-    "myProperties": "Mis Propiedades",
-    "viewAll": "Ver todas",
+    "myProperties": "Mis propiedades",
+    "viewAll": "Ver todo",
     "subscription": "Suscripción",
     "currentPlan": "Plan actual",
     "price": "Precio",
-    "manageSubscription": "Administrar suscripción",
+    "manageSubscription": "Gestionar suscripción",
     "pendingPayments": "Pagos pendientes",
     "viewPayments": "Ver pagos",
-    "paymentsChart": "Gráfico de pagos"
-  },
+    "paymentsChart": "Gráfico de pagos",
+    "myCombos": "Mis combos",
+    "pendingApprovals": "Pendientes de aprobación",
+    "incomeChart": "Gráfico de ingresos"
+  }
+,
   "menu": {
     "dashboard": "Panel",
     "profile": "Perfil",
@@ -332,7 +321,8 @@
     "alerts": "Alertas",
     "billing": "Facturación",
     "subscription": "Suscripción",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "payment": "Pagos"
   },
   "subscription": {
     "title": "Suscripción",

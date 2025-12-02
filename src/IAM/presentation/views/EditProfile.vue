@@ -111,12 +111,13 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "@/IAM/application/user.store.js";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const router = useRouter();
 const store = useUserStore();
 
@@ -129,6 +130,9 @@ const editUser = ref({
   fullName: "",
   email: "",
   phone: "",
+  password: "",
+  role: "",
+  providerId: "",
   photo: "https://randomuser.me/api/portraits/men/75.jpg",
   paymentMethods: [],
 });
@@ -150,6 +154,9 @@ onMounted(async () => {
           fullName: user.value.fullName ?? "",
           email: user.value.email ?? "",
           phone: user.value.phone ?? "",
+          password: user.value.password ?? "",
+          role: user.value.role ?? "",
+          providerId: user.value.providerId ?? "",
           photo: user.value.photo || "https://randomuser.me/api/portraits/men/75.jpg",
           paymentMethods: Array.isArray(user.value.paymentMethods)
               ? [...user.value.paymentMethods]
@@ -200,9 +207,7 @@ function onPhotoChange(e) {
 }
 </script>
 
-
 <style scoped>
-
 .edit-profile-wrapper {
   padding: 2rem;
   padding-left: 260px;
@@ -273,6 +278,7 @@ function onPhotoChange(e) {
     grid-template-columns: 1fr;
   }
 }
+
 /* Forzar texto negro en todo el card */
 .edit-profile-card,
 .edit-profile-card h1,
@@ -292,26 +298,8 @@ function onPhotoChange(e) {
 /* Inputs con fondo gris y texto negro */
 .info-input {
   background-color: #e5e7eb; /* gris claro */
-  color: #000;              /* texto negro */
+  color: #000; /* texto negro */
   border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 0.6rem;
-}
-
-/* Labels también en negro */
-.info-label {
-  color: #000 !important;
-  font-weight: 600;
-}
-
-/* Payment items con texto negro */
-.payment-item {
-  color: #000;
-  background-color: #f3f4f6; /* gris más suave */
-  border-radius: 6px;
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
 }
 
 </style>
-

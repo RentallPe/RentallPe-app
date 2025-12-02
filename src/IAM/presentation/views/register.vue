@@ -27,15 +27,25 @@
           {{ t('login.forgotPassword') }}
         </a>
       </p>
+
+      <!-- Botón para cambiar idioma -->
+      <div class="mt-3">
+        <button class="btn btn-lang" @click="toggleLang">
+          🌐 {{ currentLocale.toUpperCase() }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from "vue-router"
-import { useUserStore } from "@/IAM/application/user.store.js"
-import { useProviderStore } from "@/Provider/application/provider-store.js"
+import {ref} from 'vue'
+import {useRouter} from "vue-router"
+import {useUserStore} from "@/IAM/application/user.store.js"
+import {useProviderStore} from "@/Provider/application/provider-store.js"
+import {useI18n} from 'vue-i18n'
+
+const {t, locale} = useI18n()
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -46,6 +56,13 @@ const email = ref('')
 const password = ref('')
 const repeatPassword = ref('')
 const role = ref('')
+
+const currentLocale = ref(locale.value)
+
+function toggleLang() {
+  locale.value = locale.value === 'es' ? 'en' : 'es'
+  currentLocale.value = locale.value
+}
 
 async function registerUser() {
   if (password.value !== repeatPassword.value) {
@@ -61,7 +78,6 @@ async function registerUser() {
   let providerId = null
 
   if (role.value === "provider") {
-    // Crear nuevo provider
     const newProvider = {
       id: String(Date.now()),
       name: fullName.value,
@@ -85,16 +101,15 @@ async function registerUser() {
     phone: "",
     createdAt: new Date().toISOString(),
     role: role.value,
-    providerId // solo si es provider
+    providerId
   }
 
   try {
     const user = await userStore.createUser(newUser)
     localStorage.setItem("currentUser", JSON.stringify(user))
-    userStore.setUser(user) // guardar en Pinia
+    userStore.setUser(user)
 
     alert("Registro exitoso, bienvenido " + user.fullName)
-
     router.push("/dashboard")
   } catch (error) {
     alert("Error al registrar el usuario")
@@ -102,14 +117,13 @@ async function registerUser() {
 }
 </script>
 
-
 <style scoped>
 .auth-container {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #1f1f1f;
+  background: #ffffff;
 }
 
 .auth-box {
@@ -118,7 +132,7 @@ async function registerUser() {
   padding: 2rem;
   width: 350px;
   text-align: center;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
@@ -151,6 +165,20 @@ async function registerUser() {
   font-weight: bold;
 }
 
+.btn-lang {
+  background: #1f1f1f;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-lang:hover {
+  background: #333;
+}
+
 .link {
   color: #ff7070;
   cursor: pointer;
@@ -160,10 +188,4 @@ async function registerUser() {
 .link:hover {
   text-decoration: underline;
 }
-
-
-.auth-container[data-v-a58de6a7] {
-  background-color: #ffffff;
-}
 </style>
-

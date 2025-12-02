@@ -1,32 +1,42 @@
 <template>
   <div class="payment-wrapper">
     <pv-card class="payment-card">
+      <!-- HEADER -->
       <template #title>
-        <div class="flex align-items-center gap-2">
-          <i class="pi pi-credit-card text-2xl"></i>
-          <h2 class="m-0 text-black">{{ t("payments.title") }}</h2>
+        <div class="header">
+          <i class="pi pi-credit-card"></i>
+          <h2>{{ t("payments.title") }}</h2>
         </div>
       </template>
 
+      <!-- CONTENT -->
       <template #content>
-        <div v-if="filteredPayments.length > 0">
-          <ul class="payment-list">
-            <li v-for="pay in filteredPayments" :key="pay.id" class="payment-item">
-              <div class="flex justify-content-between align-items-center">
-                <div>
-                  <p class="text-black"><strong>{{ t("payments.combo") }}:</strong> {{ pay.comboName }}</p>
-                  <p><strong>{{ t("payments.customer") }}:</strong> {{ pay.customerName }}</p>
-                  <p><strong>{{ t("payments.date") }}:</strong> {{ formatDate(pay.date) }}</p>
-                </div>
-                <div>
-                  <p class="amount">S/ {{ pay.amount }}</p>
-                  <span class="status" :class="pay.status">{{ t("payments.status." + pay.status) }}</span>
-                </div>
-              </div>
-            </li>
-          </ul>
+        <div v-if="filteredPayments.length > 0" class="payments-container">
+          <div
+              v-for="pay in filteredPayments"
+              :key="pay.id"
+              class="payment-item"
+          >
+            <div class="payment-left">
+              <p><strong>{{ t("payments.combo") }}:</strong> {{ pay.comboName }}</p>
+              <p><strong>{{ t("payments.customer") }}:</strong> {{ pay.customerName }}</p>
+              <p class="date">
+                <i class="pi pi-calendar"></i>
+                {{ formatDate(pay.date) }}
+              </p>
+            </div>
+
+            <div class="payment-right">
+              <p class="amount">S/ {{ pay.amount }}</p>
+              <span class="status" :class="pay.status">
+                {{ t("payments.status." + pay.status) }}
+              </span>
+            </div>
+          </div>
         </div>
-        <div v-else>
+
+        <div v-else class="no-payments">
+          <i class="pi pi-inbox"></i>
           <p>{{ t("payments.noPayments") }}</p>
         </div>
       </template>
@@ -35,40 +45,40 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import { useProviderStore } from "@/Provider/application/provider-store.js";
-
+import {ref, onMounted, computed} from "vue";
 import axios from "axios";
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n";
 
-const { t } = useI18n();
-const rental = useProviderStore();
+const {t} = useI18n();
 
 const payments = ref([]);
-
 const currentUser = JSON.parse(localStorage.getItem("currentUser") || "{}");
-const filteredPayments = ref([]);
 
+// Cargar pagos al montar
 onMounted(async () => {
   try {
     const resPayments = await axios.get("http://localhost:3000/payments");
     payments.value = resPayments.data;
-
-    if (currentUser.role === "provider") {
-      filteredPayments.value = payments.value.filter(
-          payment => payment.providerId === currentUser.providerId
-      );
-    } else if (currentUser.role === "customer") {
-      filteredPayments.value = payments.value.filter(
-          payment => payment.customerId === currentUser.id
-      );
-    }
   } catch (err) {
     console.error("Error cargando payments:", err);
   }
 });
 
+// Filtrar según rol
+const filteredPayments = computed(() => {
+  if (!currentUser.role) return [];
+  if (currentUser.role === "provider") {
+    return payments.value.filter(p => p.providerId === currentUser.providerId);
+  }
+  if (currentUser.role === "customer") {
+    return payments.value.filter(p => p.customerId === currentUser.id);
+  }
+  return [];
+});
+
+// Formatear fecha
 function formatDate(dateStr) {
+  if (!dateStr) return "—";
   const d = new Date(dateStr);
   return d.toLocaleString("es-PE", {
     day: "2-digit",
@@ -81,47 +91,151 @@ function formatDate(dateStr) {
 </script>
 
 <style scoped>
-h2, p {
-  color: #111111;
-}
 .payment-wrapper {
-  padding: 2rem;
-  background: #f9fafb;
   min-height: 100vh;
+  background: linear-gradient(135deg, #f4f6f9, #e9eef3);
+  padding: 2rem;
   display: flex;
   justify-content: center;
 }
+
 .payment-card {
   width: 100%;
   max-width: 900px;
-  background: #fff;
-  border-radius: 16px;
-}
-.payment-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-.payment-item {
-  border-bottom: 1px solid #eee;
-  padding: 1rem 0;
-}
-.amount {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: #b22222;
-}
-.status {
-  font-size: 0.9rem;
-  padding: 0.2rem 0.6rem;
-  border-radius: 6px;
-  text-transform: capitalize;
-}
-.status.pending { background: #fff3cd; color: #856404; }
-.status.paid {
-  background: #d4edda; /* verde claro */
-  color: #155724;      /* verde oscuro */
+  border-radius: 20px;
+  background: #ffffff;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
 }
 
-.status.completed { background: #d4edda; color: #155724; }
+/* HEADER */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #111;
+}
+
+.header i {
+  font-size: 1.8rem;
+  color: #6366f1;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+/* PAYMENTS CONTAINER */
+.payments-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* EACH PAYMENT ITEM */
+.payment-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 1rem 1.2rem;
+  transition: all 0.25s ease;
+  border: 1px solid #e5e7eb;
+}
+
+.payment-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+}
+
+/* LEFT SIDE */
+.payment-left p {
+  margin: 0.2rem 0;
+  color: #111;
+  font-size: 0.95rem;
+}
+
+.payment-left strong {
+  font-weight: 600;
+}
+
+.payment-left .date {
+  font-size: 0.85rem;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* RIGHT SIDE */
+.payment-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.4rem;
+}
+
+/* AMOUNT */
+.amount {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+/* STATUS BADGES */
+.status {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  text-transform: capitalize;
+}
+
+/* STATUS COLORS */
+.status.pending {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.status.paid,
+.status.completed {
+  background: #ecfdf5;
+  color: #065f46;
+}
+
+.status.failed {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+/* EMPTY STATE */
+.no-payments {
+  text-align: center;
+  color: #6b7280;
+  padding: 3rem 0;
+}
+
+.no-payments i {
+  font-size: 3rem;
+  margin-bottom: 0.8rem;
+  display: block;
+  color: #9ca3af;
+}
+
+/* RESPONSIVE */
+@media (max-width: 640px) {
+  .payment-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .payment-right {
+    align-items: flex-start;
+  }
+}
 </style>

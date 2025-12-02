@@ -19,27 +19,42 @@
           {{ t('login.forgotPassword') }}
         </a>
       </p>
+
+      <!-- Botón para cambiar idioma -->
+      <div class="mt-3">
+        <button class="btn btn-lang" @click="toggleLang">
+          🌐 {{ currentLocale.toUpperCase() }}
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import { useUserStore } from "@/IAM/application/user.store.js"
-import { useRouter } from 'vue-router'
+import {ref} from 'vue'
+import {useUserStore} from "@/IAM/application/user.store.js"
+import {useRouter} from 'vue-router'
+import {useI18n} from 'vue-i18n'
+
+const {t, locale} = useI18n()
 
 const email = ref('')
 const password = ref('')
 const userStore = useUserStore()
 const router = useRouter()
 
+const currentLocale = ref(locale.value)
+
+function toggleLang() {
+  // alternar entre 'es' y 'en'
+  locale.value = locale.value === 'es' ? 'en' : 'es'
+  currentLocale.value = locale.value
+}
+
 async function loginUser() {
   await userStore.fetchUsers()
   const users = userStore.users ?? []
 
-  console.log("Usuarios cargados en login:", users)
-
-  // Buscar coincidencia
   const user = users.find(
       u => u.email.trim().toLowerCase() === email.value.trim().toLowerCase() &&
           u.password.trim() === password.value.trim()
@@ -47,26 +62,14 @@ async function loginUser() {
 
   if (user) {
     alert(`Bienvenido ${user.fullName}`)
-
-    // Guardar en localStorage
     localStorage.setItem("currentUser", JSON.stringify(user))
-
-    // Guardar en Pinia
     userStore.setUser(user)
-
-    // Redirigir según rol
-    if (user.role === 'provider') {
-      router.push("/dashboard")
-    } else {
-      router.push("/dashboard")
-    }
+    router.push("/dashboard")
   } else {
     alert("Correo o contraseña incorrectos")
   }
 }
 </script>
-
-
 
 <style scoped>
 .auth-container {
@@ -74,7 +77,7 @@ async function loginUser() {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #1f1f1f;
+  background: #ffffff;
 }
 
 .auth-box {
@@ -83,7 +86,7 @@ async function loginUser() {
   padding: 2rem;
   width: 350px;
   text-align: center;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .logo {
@@ -116,6 +119,20 @@ async function loginUser() {
   font-weight: bold;
 }
 
+.btn-lang {
+  background: #1f1f1f;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-lang:hover {
+  background: #333;
+}
+
 .link {
   color: #ff7070;
   cursor: pointer;
@@ -124,8 +141,5 @@ async function loginUser() {
 
 .link:hover {
   text-decoration: underline;
-}
-.auth-container {
-  background-color: #ffffff;
 }
 </style>

@@ -48,6 +48,10 @@ import { onMounted, computed } from "vue";
 import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
 import { useUserStore } from "@/IAM/application/user.store.js";
 import { usePaymentStore } from "@/Rental/application/payment-store.js";
+import { useI18n } from 'vue-i18n' // 👈 importar
+
+const { t } = useI18n() // 👈 ahora t está disponible
+
 
 const monitoringStore = useMonitoringStore();
 const userStore = useUserStore();

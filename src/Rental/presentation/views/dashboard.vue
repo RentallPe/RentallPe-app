@@ -1,109 +1,145 @@
 <template>
   <div class="dash-wrap">
     <pv-card class="dash-card">
-      <!-- Título -->
       <template #title>
         <h2 class="page-title">{{ t('dashboard.welcome') }}</h2>
       </template>
 
       <template #content>
         <div class="grid grid-reset">
-
-          <!-- KPIs -->
-          <div class="col-12">
-            <div class="kpi-grid">
-              <div class="kpi-card fancy-hover">
-                <h4>{{ properties.length }}</h4>
-                <p>{{ t('dashboard.kpis.properties') }}</p>
-              </div>
-
-              <div class="kpi-card fancy-hover">
-                <h4>{{ pendingPayments.length }}</h4>
-                <p>{{ t('dashboard.kpis.pendingPayments') }}</p>
-              </div>
-
-              <div class="kpi-card fancy-hover">
-                <h4>{{ subscription?.plan || '—' }}</h4>
-                <p>{{ t('dashboard.kpis.subscription') }}</p>
+          <!-- Vista para CUSTOMER -->
+          <template v-if="currentUser?.role === 'customer'">
+            <!-- KPIs -->
+            <div class="col-12">
+              <div class="kpi-grid">
+                <div class="kpi-card fancy-hover">
+                  <h4>{{ properties.length }}</h4>
+                  <p>{{ t('dashboard.kpis.properties') }}</p>
+                </div>
+                <div class="kpi-card fancy-hover">
+                  <h4>{{ pendingPayments.length }}</h4>
+                  <p>{{ t('dashboard.kpis.pendingPayments') }}</p>
+                </div>
+                <div class="kpi-card fancy-hover">
+                  <h4>{{ subscription?.plan || '—' }}</h4>
+                  <p>{{ t('dashboard.kpis.subscription') }}</p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Propiedad destacada -->
-          <div class="col-12 md:col-6 lg:col-4">
-            <div class="section fancy-card">
-              <h3 class="section-title">{{ t('dashboard.myProperties') }}</h3>
-
-              <div v-if="properties?.length" class="featured-property">
-                <img :src="properties[0].image" class="featured-img" />
-                <h4 class="text-black">{{ properties[0].name }}</h4>
-                <small>{{ properties[0].address }}</small>
+            <!-- Propiedad destacada -->
+            <div class="col-12 md:col-6 lg:col-4">
+              <div class="section fancy-card">
+                <h3 class="section-title">{{ t('dashboard.myProperties') }}</h3>
+                <div v-if="properties?.length" class="featured-property">
+                  <img :src="properties[0].image" class="featured-img" />
+                  <h4 class="text-black">{{ properties[0].name }}</h4>
+                  <small>{{ properties[0].address }}</small>
+                </div>
+                <router-link to="/my-properties">
+                  <pv-button :label="t('dashboard.viewAll')" text />
+                </router-link>
               </div>
-
-              <router-link to="/my-properties">
-                <pv-button :label="t('dashboard.viewAll')" text />
-              </router-link>
             </div>
-          </div>
 
-          <!-- Suscripción -->
-          <div class="col-12 md:col-6 lg:col-4">
-            <div class="section fancy-card">
-              <h3 class="section-title">{{ t('dashboard.subscription') }}</h3>
-
-              <div v-if="subscription">
-                <p class="text-black">
-                  <strong>{{ t('dashboard.currentPlan') }}:</strong>
-                  {{ subscription.plan }}
-                  <span class="sub-badge">{{ subscription.status }}</span>
-                </p>
-
-                <p class="text-black">
-                  <strong>{{ t('dashboard.price') }}:</strong>
-                  S/. {{ subscription.price }}
-                </p>
+            <!-- Suscripción -->
+            <div class="col-12 md:col-6 lg:col-4">
+              <div class="section fancy-card">
+                <h3 class="section-title">{{ t('dashboard.subscription') }}</h3>
+                <div v-if="subscription">
+                  <p class="text-black">
+                    <strong>{{ t('dashboard.currentPlan') }}:</strong>
+                    {{ subscription.plan }}
+                    <span class="sub-badge">{{ subscription.status }}</span>
+                  </p>
+                  <p class="text-black">
+                    <strong>{{ t('dashboard.price') }}:</strong>
+                    S/. {{ subscription.price }}
+                  </p>
+                </div>
+                <router-link to="/subscription">
+                  <pv-button :label="t('dashboard.manageSubscription')" text />
+                </router-link>
               </div>
-
-              <router-link to="/subscription">
-                <pv-button :label="t('dashboard.manageSubscription')" text />
-              </router-link>
             </div>
-          </div>
 
-          <!-- Pagos pendientes -->
-          <div class="col-12 md:col-6 lg:col-4">
-            <div class="section fancy-card">
-              <h3 class="section-title">{{ t('dashboard.pendingPayments') }}</h3>
-
-              <ul class="summary-list" v-if="pendingPayments?.length">
-                <li
-                    v-for="pay in pendingPayments.slice(0,3)"
-                    :key="pay.id"
-                    class="summary-item"
-                >
-                  <div>
-                    <p class="text-black">{{ pay.propertyName }}</p>
-                    <small>
-                      S/. {{ pay.amount }} — {{ formatDate(pay.date) }}
-                    </small>
-                  </div>
-                </li>
-              </ul>
-
-              <router-link to="/billing">
-                <pv-button :label="t('dashboard.viewPayments')" text />
-              </router-link>
+            <!-- Pagos pendientes -->
+            <div class="col-12 md:col-6 lg:col-4">
+              <div class="section fancy-card">
+                <h3 class="section-title">{{ t('dashboard.pendingPayments') }}</h3>
+                <ul class="summary-list" v-if="pendingPayments?.length">
+                  <li v-for="pay in pendingPayments.slice(0,3)" :key="pay.id" class="summary-item">
+                    <div>
+                      <p class="text-black">{{ pay.propertyName }}</p>
+                      <small>S/. {{ pay.amount }} — {{ formatDate(pay.date) }}</small>
+                    </div>
+                  </li>
+                </ul>
+                <router-link to="/billing">
+                  <pv-button :label="t('dashboard.viewPayments')" text />
+                </router-link>
+              </div>
             </div>
-          </div>
+          </template>
 
-          <!-- Gráfico -->
-          <div class="col-12">
-            <div class="section fancy-card">
-              <h3 class="section-title">{{ t('dashboard.paymentsChart') }}</h3>
-              <v-chart class="chart" :option="paymentChartOptions" autoresize />
+          <!-- Vista para PROVIDER -->
+          <template v-else-if="currentUser?.role === 'provider'">
+            <!-- KPIs -->
+            <div class="col-12">
+              <div class="kpi-grid">
+                <div class="kpi-card fancy-hover">
+                  <h4>{{ combos.length }}</h4>
+                  <p>{{ t('dashboard.kpis.combos') }}</p>
+                </div>
+                <div class="kpi-card fancy-hover">
+                  <h4>{{ pendingInstalls.length }}</h4>
+                  <p>{{ t('dashboard.kpis.pendingInstalls') }}</p>
+                </div>
+                <div class="kpi-card fancy-hover">
+                  <h4>{{ totalIncome }}</h4>
+                  <p>{{ t('dashboard.kpis.income') }}</p>
+                </div>
+              </div>
             </div>
-          </div>
 
+            <!-- Combos destacados -->
+            <div class="col-12 md:col-6 lg:col-4">
+              <div class="section fancy-card">
+                <h3 class="section-title">{{ t('dashboard.myCombos') }}</h3>
+                <div v-if="combos?.length" class="featured-property">
+                  <img :src="combos[0].image" class="featured-img" />
+                  <h4 class="text-black">{{ combos[0].name }}</h4>
+                  <small>{{ combos[0].description }}</small>
+                </div>
+                <router-link to="/my-combos">
+                  <pv-button :label="t('dashboard.viewAll')" text />
+                </router-link>
+              </div>
+            </div>
+
+            <!-- Pendientes de aprobación -->
+            <div class="col-12 md:col-6 lg:col-4">
+              <div class="section fancy-card">
+                <h3 class="section-title">{{ t('dashboard.pendingApprovals') }}</h3>
+                <ul class="summary-list" v-if="pendingInstalls?.length">
+                  <li v-for="install in pendingInstalls.slice(0,3)" :key="install.id" class="summary-item">
+                    <div>
+                      <p class="text-black">{{ install.comboName }}</p>
+                      <small>{{ formatDate(install.date) }}</small>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Gráfico de ingresos -->
+            <div class="col-12">
+              <div class="section fancy-card">
+                <h3 class="section-title">{{ t('dashboard.incomeChart') }}</h3>
+                <v-chart class="chart" :option="incomeChartOptions" autoresize />
+              </div>
+            </div>
+          </template>
         </div>
       </template>
     </pv-card>
@@ -114,10 +150,15 @@
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useI18n } from "vue-i18n";
+// Stores principales
 import { useUserStore } from "@/IAM/application/user.store.js";
 import { useSubscriptionStore } from "@/Subscription/application/subscription-store.js";
 import { usePaymentStore } from "@/Rental/application/payment-store.js";
 import { usePropertyStore } from "@/Property/application/property-store.js";
+
+// Stores adicionales para provider
+import { useProviderStore } from "@/Provider/application/provider-store.js";
+import { useMonitoringStore } from "@/Monitoring/application/monitoring-store.js";
 
 // vue-echarts
 import { use } from "echarts/core";
@@ -133,12 +174,16 @@ const { t } = useI18n();
 const userStore = useUserStore();
 const subscriptionStore = useSubscriptionStore();
 const paymentStore = usePaymentStore();
-
+const providerStore = useProviderStore();
+const monitoringStore = useMonitoringStore();
 const currentUser = computed(() => userStore.user);
 
 const properties = ref([]);
 const subscription = ref(null);
 const pendingPayments = ref([]);
+const combos = ref([]);
+const pendingInstalls = ref([]);
+const totalIncome = ref(0);
 
 const paymentChartOptions = ref({
   title: { text: "Pagos Pendientes" },
@@ -151,35 +196,45 @@ const paymentChartOptions = ref({
 
 onMounted(async () => {
   // Usuario
-  const data = await userStore.fetchUser();
+  await userStore.fetchUser();
 
-  // Propiedades
+  // Propiedades (solo customer)
   await propertyStore.fetchProperties();
-  properties.value = propertyStore.properties.filter(
-      p => String(p.ownerId) === String(currentUser.value.id)
+  properties.value = (propertyStore.properties || []).filter(
+      p => String(p.ownerId) === String(currentUser.value?.id)
   );
 
-  // Suscripción
+  // Suscripción (solo customer)
   await subscriptionStore.load(currentUser.value?.id);
-  if (!subscriptionStore.subscription) {
-    // Simulación: suscribir al plan básico si no hay nada
-    await subscriptionStore.subscribe(subscriptionStore.plans[0], currentUser.value.id);
-  }
   subscription.value = subscriptionStore.subscription;
 
   // Pagos
   await paymentStore.fetchPayments();
-  pendingPayments.value = paymentStore.payments.filter(
+  pendingPayments.value = (paymentStore.payments || []).filter(
       p => (p.status || "").toLowerCase() !== "paid" &&
           String(p.customerId) === String(currentUser.value?.id)
   );
 
-  // Gráfico
-  if (pendingPayments.value.length) {
-    paymentChartOptions.value.xAxis.data = pendingPayments.value.map(p => p.propertyName);
-    paymentChartOptions.value.series[0].data = pendingPayments.value.map(p => p.amount);
-  }
+  // Combos del provider
+  await providerStore.fetchCombos();
+  combos.value = (providerStore.combos || []).filter(
+      c => String(c.providerId) === String(currentUser.value?.providerId)
+  );
+
+  // Pendientes de aprobación/instalación → workitems en monitoring
+  await monitoringStore.fetchWorkitems();
+  pendingInstalls.value = (monitoringStore.workitems || []).filter(
+      w => String(w.providerId) === String(currentUser.value?.providerId) &&
+          (w.status || "").toLowerCase() === "pending"
+  );
+
+  // Ingresos totales del provider
+  totalIncome.value = paymentStore.payments
+      .filter(p => String(p.providerId) === String(currentUser.value?.providerId))
+      .reduce((sum, p) => sum + (p.amount || 0), 0);
+
 });
+
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);

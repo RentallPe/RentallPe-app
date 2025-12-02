@@ -2,20 +2,23 @@
 
 
   "editProfile": {
-    "title": "Edit Profile",
-    "loading": "Loading…",
+    "title": "Edit profile",
     "changePhoto": "Change photo",
-    "profileInfo": "Profile Information",
-    "fullName": "Full Name",
+    "profileInfo": "Profile information",
+    "fullName": "Full name",
     "email": "Email",
     "phone": "Phone",
     "password": "Password",
     "role": "Role",
     "providerId": "Provider ID",
-    "paymentMethods": "Payment Methods",
-    "cancel": "Cancel",
-    "save": "Save changes"
+    "paymentMethods": "Payment methods"
   },
+  "common": {
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "save": "Save"
+  }
+,
 
   "login": {
     "email": "Email",
@@ -240,12 +243,14 @@
     "customer": "Customer",
     "date": "Date",
     "status": {
-      "paid": "Paid",
       "pending": "Pending",
+      "paid": "Paid",
+      "completed": "Completed",
       "failed": "Failed"
     },
     "noPayments": "No payments registered yet."
   },
+
   "providerDetail": {
     "contact": "Contact",
     "combos": "Combos",
@@ -283,22 +288,29 @@
     "delete": "Delete"
   },
   "dashboard": {
-    "welcome": "Welcome to Dashboard",
+    "welcome": "Welcome to your dashboard",
     "kpis": {
       "properties": "Properties",
-      "pendingPayments": "Pending Payments",
-      "subscription": "Subscription"
+      "pendingPayments": "Pending payments",
+      "subscription": "Subscription",
+      "combos": "Combos",
+      "pendingInstalls": "Pending installs",
+      "income": "Income"
     },
-    "myProperties": "My Properties",
+    "myProperties": "My properties",
     "viewAll": "View all",
     "subscription": "Subscription",
-    "currentPlan": "Current Plan",
+    "currentPlan": "Current plan",
     "price": "Price",
     "manageSubscription": "Manage subscription",
-    "pendingPayments": "Pending Payments",
+    "pendingPayments": "Pending payments",
     "viewPayments": "View payments",
-    "paymentsChart": "Payments Chart"
-  },
+    "paymentsChart": "Payments chart",
+    "myCombos": "My combos",
+    "pendingApprovals": "Pending approvals",
+    "incomeChart": "Income chart"
+  }
+,
   "menu": {
     "dashboard": "Dashboard",
     "profile": "Profile",
@@ -310,7 +322,8 @@
     "alerts": "Alerts",
     "billing": "Billing",
     "subscription": "Subscription",
-    "logout": "Logout"
+    "logout": "Logout",
+    "payment": "Payments"
   },
   "subscription": {
     "title": "Subscription",

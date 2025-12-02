@@ -61,6 +61,10 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useMonitoringStore } from '@/Monitoring/application/monitoring-store.js';
+import { useI18n } from 'vue-i18n' // 👈 importar
+
+const { t } = useI18n() // 👈 ahora t está disponible
+
 
 const store = useMonitoringStore();
 onMounted(() => store.fetchIncidents());

@@ -562,6 +562,16 @@
       "date": "2025-12-01T23:25:40.515Z",
       "status": "pending",
       "type": "subscription"
+    },
+    {
+      "id": "1764636387142",
+      "customerId": "1761608000000",
+      "customerName": "Cliente",
+      "propertyName": "Suscripción Basic",
+      "amount": 50,
+      "date": "2025-12-02T00:46:27.142Z",
+      "status": "pending",
+      "type": "subscription"
     }
   ],
   "subscriptions": [
@@ -665,6 +675,14 @@
       "price": 50,
       "status": "active",
       "startDate": "2025-12-01T23:25:40.504Z"
+    },
+    {
+      "id": "1764636387125",
+      "customerId": "1761608000000",
+      "plan": "basic",
+      "price": 50,
+      "status": "active",
+      "startDate": "2025-12-02T00:46:27.125Z"
     }
   ],
   "owners": [

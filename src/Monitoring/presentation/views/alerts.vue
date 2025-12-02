@@ -145,44 +145,81 @@ function formatDate(dateStr) {
 
 <style scoped>
 .alerts-wrapper {
-  padding: 2rem;
-  background: #f9fafb;
   min-height: 100vh;
+  background: linear-gradient(135deg, #f4f6f9, #e9eef3);
+  padding: 2rem;
   display: flex;
   justify-content: center;
 }
 
 .alerts-card {
   width: 100%;
-  max-width: 900px;
-  background: #fff;
-  border-radius: 16px;
+  max-width: 950px;
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
 }
 
+/* ===== PROPERTY CARD ===== */
 .property-alert {
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 1rem;
+  background: #f9fafb;
+  border-radius: 16px;
+  padding: 1.2rem 1.4rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e5e7eb;
+  transition: all 0.25s ease;
 }
 
+.property-alert:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.07);
+}
+
+/* ===== PROPERTY HEADER ===== */
 .property-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #000;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #111;
 }
 
 .property-address {
-  color: #555;
-  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin: 0.2rem 0 0.8rem;
 }
 
+/* ===== EXTRA INFO (PROVIDER) ===== */
+.extra-info {
+  background: #eef2ff;
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #1e3a8a;
+}
+
+.extra-info p {
+  margin: 0.2rem 0;
+}
+
+.extra-info strong {
+  font-weight: 600;
+}
+
+/* ===== SECTION TITLES ===== */
 .section-title {
   font-size: 1rem;
   font-weight: 600;
-  margin: 0.5rem 0;
-  color: #b22222;
+  margin: 1rem 0 0.4rem;
+  color: #7c2d12;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
+/* ===== LISTS ===== */
 .alert-list,
 .lock-list {
   list-style: none;
@@ -193,32 +230,75 @@ function formatDate(dateStr) {
 .alert-list li,
 .lock-list li {
   display: flex;
+  align-items: center;
   gap: 1rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid #f0f0f0;
+  padding: 0.5rem 0;
+  border-bottom: 1px dashed #e5e7eb;
 }
 
+.alert-list li:last-child,
+.lock-list li:last-child {
+  border-bottom: none;
+}
+
+/* ===== TIME ===== */
 .alert-time,
 .lock-time {
-  font-size: 0.85rem;
-  color: #666;
-  min-width: 150px;
+  font-size: 0.8rem;
+  color: #6b7280;
+  min-width: 140px;
+  font-weight: 500;
 }
 
-.alert-message,
+/* ===== MESSAGE ===== */
+.alert-message {
+  font-size: 0.9rem;
+  color: #dc2626;
+  font-weight: 500;
+}
+
 .lock-action {
-  color: #000;
+  font-size: 0.9rem;
+  color: #065f46;
+  font-weight: 500;
 }
 
+/* ===== EMPTY STATE ===== */
 .empty-text {
-  font-size: 0.9rem;
-  color: #888;
-  margin-bottom: 1rem;
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.95rem;
+  padding: 1rem 0;
 }
 
-.extra-info {
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-  color: #333;
+/* ===== LOADING / ERROR TEXT ===== */
+.empty-text.loading {
+  color: #6366f1;
+}
+
+.empty-text.error {
+  color: #b91c1c;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 640px) {
+  .property-alert {
+    padding: 1rem;
+  }
+
+  .alert-list li,
+  .lock-list li {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .alert-time,
+  .lock-time {
+    min-width: auto;
+  }
+}
+.text-black {
+  color: #111111;
 }
 </style>
